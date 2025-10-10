@@ -27,6 +27,12 @@
       color: var(--vmc-text-dark);
     }
 
+    /* ✅ Fix book title color in dark mode */
+    body.dark h3 {
+      color: #f9fafb;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+    }
+
     /* Loading Screen */
     #loadingScreen {
       position: fixed;
@@ -133,19 +139,6 @@
     .featured-card:hover {
       transform: scale(1.03);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    @media (min-width: 640px) {
-      .featured-card { flex: 0 0 40%; }
-    }
-    @media (min-width: 1024px) {
-      .featured-card { flex: 0 0 25%; }
-    }
-
-    .book-cover {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      border-radius: 0.75rem;
     }
 
     /* Modal / Glass */
@@ -259,7 +252,6 @@
       </div>
     </div>
   </div>
-
   <!-- About Section -->
   <section id="aboutVMCTK" class="px-6 py-10 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-900 text-center">
     <img src="LOGO VMC.png" class="w-20 mx-auto mb-4 dark:hidden">
@@ -270,7 +262,7 @@
         <strong>VMCTK Digital Library</strong> is a volunteer project by
         <em>Volunteer for My Community</em>, helping youths access
         <span class="text-blue-500 dark:text-blue-300 font-medium">free books</span> in
-        <span class="font-semibold">English</span> & <span class="font-semibold">Khmer</span>.
+        <span class="font-semibold">English</span> and <span class="font-semibold">Khmer</span>.
       </p>
     </div>
     <div id="aboutKH" class="hidden">
@@ -283,7 +275,7 @@
     </div>
   </section>
 
-  <!-- Contact (Form) -->
+  <!-- Contact -->
   <section id="contactSection" class="px-6 py-10 bg-gradient-to-r from-indigo-100 to-blue-100 dark:from-gray-900 dark:to-gray-800 text-center">
     <div id="contactEN">
       <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">📬 Contact Us</h2>
@@ -302,7 +294,7 @@
       class="rounded-lg shadow-lg max-w-3xl mx-auto"></iframe>
   </section>
 
-  <!-- Footer with Contact Info -->
+  <!-- Footer -->
   <footer class="text-center p-4">
     <div id="footerEN">
       <p>📘 Facebook: <a href="https://www.facebook.com/profile.php?id=61576745039709" target="_blank">Volunteer for My Community</a></p>
@@ -318,12 +310,45 @@
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
-    // Core config
+    // === Basic setup ===
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
-
+    const body = document.body;
+    const themeToggle = document.getElementById("themeToggle");
     const loadingScreen = document.getElementById("loadingScreen");
-    const quoteText = document.getElementById("quoteText");
-    const quotes = [
+
+    // Default Light mode
+    body.classList.remove("dark");
+
+    // Toggle Theme
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("dark");
+      themeToggle.textContent = body.classList.contains("dark") ? "☀️" : "🌙";
+    });
+
+    // Language buttons
+    const enBtn = document.getElementById("enBtn");
+    const khBtn = document.getElementById("khBtn");
+    const sections = ["aboutEN","aboutKH","contactEN","contactKH","footerEN","footerKH"];
+
+    function setLang(lang) {
+      sections.forEach(id=>{
+        document.getElementById(id).classList.toggle("hidden", !id.endsWith(lang.toUpperCase()));
+      });
+      document.getElementById("subtitle").textContent =
+        lang==="en" ? "Volunteer for My Community" : "ស្ម័គ្រចិត្តសម្រាប់សហគមន៍របស់ខ្ញុំ";
+    }
+
+    enBtn.onclick=()=>setLang("en");
+    khBtn.onclick=()=>setLang("kh");
+
+    // Loading animation + quote fade
+    window.addEventListener("load",()=>{
+      setTimeout(()=>loadingScreen.classList.add("fade-out"),1500);
+    });
+
+    // Random quotes
+    const quoteText=document.getElementById("quoteText");
+    const quotes=[
       "📖 A reader lives a thousand lives before he dies.",
       "🌱 Knowledge shared is knowledge multiplied.",
       "🚀 The future belongs to those who learn today.",
@@ -335,163 +360,62 @@
       "❤️ Learn not for school, but for life.",
       "🎓 Reading is dreaming with open eyes."
     ];
+    quoteText.textContent=quotes[Math.floor(Math.random()*quotes.length)];
 
-    function showRandomQuote() {
-      let current = quotes[Math.floor(Math.random() * quotes.length)];
-      quoteText.textContent = current;
-      setTimeout(() => {
-        quoteText.style.opacity = "0";
-        setTimeout(() => {
-          let nextQ;
-          do {
-            nextQ = quotes[Math.floor(Math.random() * quotes.length)];
-          } while (nextQ === current);
-          quoteText.textContent = nextQ;
-          quoteText.style.opacity = "1";
-        }, 1000);
-      }, 4000);
-    }
-    showRandomQuote();
+    // === Book Loading ===
+    const bookList=document.getElementById("bookList");
+    const featuredList=document.getElementById("featuredList");
+    const modal=document.getElementById("bookModal");
+    const modalCover=document.getElementById("modalCover");
+    const modalTitle=document.getElementById("modalTitle");
+    const modalAuthor=document.getElementById("modalAuthor");
+    const modalLang=document.getElementById("modalLang");
+    const modalDesc=document.getElementById("modalDesc");
+    const modalRead=document.getElementById("modalRead");
+    const modalDownload=document.getElementById("modalDownload");
 
-    let books = [];
-    let currentIndex = 0;
-
-    function getHdCover(url) {
-      if (!url) return "";
-      const match = url.match(/[-\w]{25,}/);
-      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
+    function hdCover(url){
+      const m=url?.match(/[-\w]{25,}/);
+      return m?`https://drive.google.com/thumbnail?id=${m[0]}&sz=w2000`:url;
     }
 
-    async function loadBooks() {
-      const resp = await fetch(CSV_URL);
-      const text = await resp.text();
-      const parsed = Papa.parse(text, { header: true });
-      books = parsed.data.filter(b => b.Title);
-
-      const bookList = document.getElementById("bookList");
-      const featuredList = document.getElementById("featuredList");
-      bookList.innerHTML = "";
-      featuredList.innerHTML = "";
-
-      books.forEach((b, idx) => {
-        // Normal Book Card
-        const card = document.createElement("div");
-        card.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
-        card.innerHTML = `
-          <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2">
-          <h3 class="font-bold">${b.Title}</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
-          <p class="text-sm text-blue-500">${b.Language}</p>
-        `;
-        card.onclick = () => openModal(idx);
-        bookList.appendChild(card);
-
-        // Featured (top 5)
-        if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
-          const f = document.createElement("div");
-          f.className = "featured-card";
-          f.innerHTML = `
-            <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2">
-            <h3 class="font-semibold">${b.Title}</h3>
-          `;
-          f.onclick = () => openModal(idx);
+    async function loadBooks(){
+      const resp=await fetch(CSV_URL);
+      const text=await resp.text();
+      const data=Papa.parse(text,{header:true}).data.filter(b=>b.Title);
+      bookList.innerHTML="";
+      featuredList.innerHTML="";
+      data.forEach((b,i)=>{
+        const c=document.createElement("div");
+        c.className="rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
+        c.innerHTML=`<img src="${hdCover(b['Cover Link'])}" class="mb-2 rounded-md"><h3 class="font-bold">${b.Title}</h3>
+        <p class='text-sm text-gray-500 dark:text-gray-300'>${b.Author}</p><p class='text-sm text-blue-600 dark:text-blue-300'>${b.Language}</p>`;
+        c.onclick=()=>{
+          modalCover.src=hdCover(b['Cover Link']);
+          modalTitle.textContent=b.Title;
+          modalAuthor.textContent=b.Author;
+          modalLang.textContent=b.Language;
+          modalDesc.textContent=b.Description||"";
+          modalRead.href=b["Read Link"];
+          modalDownload.href=b["Download Link"];
+          modal.classList.add("show");
+        };
+        bookList.appendChild(c);
+        if(i<6){
+          const f=c.cloneNode(true);
+          f.className="featured-card";
           featuredList.appendChild(f);
         }
       });
-
-      loadingScreen.classList.add("fade-out");
     }
+    loadBooks();
 
-    // Modal
-    const modal = document.getElementById("bookModal");
-    const closeBtn = document.getElementById("closeModal");
-    closeBtn.onclick = () => modal.classList.remove("show");
-    window.onclick = e => { if (e.target === modal) modal.classList.remove("show"); };
+    document.getElementById("closeModal").onclick=()=>modal.classList.remove("show");
+    modal.onclick=e=>{if(e.target===modal)modal.classList.remove("show");};
 
-    function openModal(idx) {
-      currentIndex = idx;
-      const b = books[idx];
-      document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
-      document.getElementById("modalTitle").textContent = b.Title;
-      document.getElementById("modalAuthor").textContent = b.Author;
-      document.getElementById("modalLang").textContent = b.Language;
-      document.getElementById("modalDesc").textContent = b.Description;
-      document.getElementById("modalRead").href = b["PDF Link"];
-      document.getElementById("modalDownload").href = b["PDF Link"];
-      modal.classList.add("show");
-    }
-
-    // Language Toggle
-    const enBtn = document.getElementById("enBtn");
-    const khBtn = document.getElementById("khBtn");
-    enBtn.onclick = () => {
-      document.getElementById("aboutEN").classList.remove("hidden");
-      document.getElementById("aboutKH").classList.add("hidden");
-      document.getElementById("contactEN").classList.remove("hidden");
-      document.getElementById("contactKH").classList.add("hidden");
-      document.getElementById("footerEN").classList.remove("hidden");
-      document.getElementById("footerKH").classList.add("hidden");
-    };
-    khBtn.onclick = () => {
-      document.getElementById("aboutKH").classList.remove("hidden");
-      document.getElementById("aboutEN").classList.add("hidden");
-      document.getElementById("contactKH").classList.remove("hidden");
-      document.getElementById("contactEN").classList.add("hidden");
-      document.getElementById("footerKH").classList.remove("hidden");
-      document.getElementById("footerEN").classList.add("hidden");
-    };
-
-    // Theme Toggle
-    const themeToggle = document.getElementById("themeToggle");
-    const logoImage = document.getElementById("logoImage");
-    themeToggle.onclick = () => {
-      document.body.classList.toggle("dark");
-      const isDark = document.body.classList.contains("dark");
-      themeToggle.textContent = isDark ? "☀️" : "🌙";
-      logoImage.src = isDark ? "LOGO_VMC_white.png" : "LOGO VMC.png";
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    };
-    // On load: restore theme if set
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark");
-      themeToggle.textContent = "☀️";
-      logoImage.src = "LOGO_VMC_white.png";
-    }
-
-    // Featured scroll arrows
-    document.getElementById("scrollLeft").onclick = () => {
-      document.getElementById("featuredList").scrollBy({ left: -250, behavior: "smooth" });
-    };
-    document.getElementById("scrollRight").onclick = () => {
-      document.getElementById("featuredList").scrollBy({ left: 250, behavior: "smooth" });
-    };
-
-    // Auto-scroll Featured
-    let autoScrollActive = true;
-    const fList = document.getElementById("featuredList");
-    function autoScroll() {
-      if (!autoScrollActive) return;
-      fList.scrollBy({ left: 1, behavior: "smooth" });
-      if (fList.scrollLeft + fList.clientWidth >= fList.scrollWidth - 1) {
-        fList.scrollTo({ left: 0, behavior: "smooth" });
-      }
-    }
-    setInterval(autoScroll, 40);
-    ["mouseenter","touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
-    ["mouseleave","touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
-
-    // Search filter
-    document.getElementById("searchInput").addEventListener("input", e => {
-      const term = e.target.value.toLowerCase();
-      document.querySelectorAll("#bookList > div").forEach(card => {
-        const title = card.querySelector("h3").textContent.toLowerCase();
-        const author = card.querySelector("p").textContent.toLowerCase();
-        card.style.display = title.includes(term) || author.includes(term) ? "block" : "none";
-      });
-    });
-
-    // Initialize
-    window.onload = loadBooks;
+    // Featured scroll
+    document.getElementById("scrollLeft").onclick=()=>featuredList.scrollBy({left:-300,behavior:"smooth"});
+    document.getElementById("scrollRight").onclick=()=>featuredList.scrollBy({left:300,behavior:"smooth"});
   </script>
 </body>
 </html>
