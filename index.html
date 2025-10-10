@@ -13,11 +13,11 @@
 
     .book-cover {
       width: 100%;
-      height: auto;               /* keep original shape */
-      max-height: 26rem;          /* prevent oversized covers */
-      object-fit: contain;        /* show full image (no crop) */
+      height: auto;
+      max-height: 26rem;
+      object-fit: contain;
       border-radius: 0.75rem;
-      background-color: #f9fafb;  /* light background behind covers */
+      background-color: #f9fafb;
       padding: 0.5rem;
       display: block;
       margin: 0 auto 0.75rem auto;
@@ -27,6 +27,7 @@
     .book-cover:hover {
       transform: scale(1.03);
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
     }
 
     #bookList > div {
@@ -46,8 +47,49 @@
       margin: auto;
     }
 
-    .search-box {
-      max-width: 600px;
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 50;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 1rem;
+      max-width: 28rem;
+      width: 100%;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal img {
+      width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.75rem;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -65,93 +107,84 @@
 
   <!-- Search Bar -->
   <section class="p-4 flex justify-center">
-    <input id="searchInput" type="text" placeholder="Search books..." class="search-box w-full p-2 border rounded shadow">
+    <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
   </section>
 
   <!-- Books Grid -->
   <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-    <!-- Book cards will load here -->
+    <!-- Book cards go here -->
   </section>
+
+  <!-- Modal -->
+  <div id="bookModal" class="modal">
+    <div class="modal-content">
+      <button id="closeModal" class="close-btn">✕</button>
+      <img id="modalCover" src="" alt="Book Cover">
+      <h2 id="modalTitle" class="font-bold text-lg mb-1"></h2>
+      <p id="modalAuthor" class="text-gray-600 mb-1"></p>
+      <p id="modalLang" class="text-blue-500 mb-3"></p>
+      <p id="modalDesc" class="text-gray-700 mb-4"></p>
+      <div class="flex justify-between">
+        <a id="modalRead" href="#" target="_blank" class="text-green-600 font-semibold">Read Online</a>
+        <a id="modalDownload" href="#" download class="text-blue-600 font-semibold">Download</a>
+      </div>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="bg-gray-800 text-white text-center p-4 mt-8">
     <p id="footerText">© 2025 VMCTK Digital Library — All books are free for learning</p>
   </footer>
 
-  <!-- PapaParse for CSV -->
+  <!-- PapaParse -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
   <script>
-    // CSV link from your Google Sheet (replace if you have a new one)
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
 
-    // Load and display books
     async function loadBooks() {
       try {
         const response = await fetch(CSV_URL);
         const csvText = await response.text();
         const results = Papa.parse(csvText, { header: true });
         const data = results.data;
-
         const container = document.getElementById("bookList");
         container.innerHTML = "";
 
         data.forEach(book => {
-          if (!book.Title) return; // skip empty rows
+          if (!book.Title) return;
 
           const card = document.createElement("div");
           card.className = "book-card bg-white rounded-lg shadow hover:shadow-lg transition p-4";
 
-          // Book Cover
           const img = document.createElement("img");
           img.src = book["Cover Link"] || "covers/placeholder.jpg";
           img.onerror = () => (img.src = "covers/placeholder.jpg");
           img.className = "book-cover";
+          img.addEventListener("click", () => openModal(book));
           card.appendChild(img);
 
-          // Title
           const h2 = document.createElement("h2");
-          h2.className = "book-title font-bold text-lg text-center";
+          h2.className = "book-title font-bold text-lg text-center cursor-pointer";
           h2.textContent = book.Title;
+          h2.addEventListener("click", () => openModal(book));
           card.appendChild(h2);
 
-          // Author
           const pAuth = document.createElement("p");
           pAuth.className = "book-author text-gray-600 text-center";
           pAuth.textContent = book.Author;
           card.appendChild(pAuth);
 
-          // Language
           const pLang = document.createElement("p");
           pLang.className = "book-lang text-sm text-blue-500 text-center";
           pLang.textContent = book.Language;
           card.appendChild(pLang);
 
-          // Description
           const pDesc = document.createElement("p");
           pDesc.className = "book-desc text-gray-700 mt-2 text-center";
           pDesc.textContent = book.Description;
           card.appendChild(pDesc);
 
-          // Buttons
-          const btnDiv = document.createElement("div");
-          btnDiv.className = "flex justify-between mt-3 w-full";
-
-          const read = document.createElement("a");
-          read.href = book["PDF Link"];
-          read.target = "_blank";
-          read.className = "text-green-600 font-medium";
-          read.textContent = (book.Language?.toLowerCase().includes("khmer") ? "អានអនឡាញ" : "Read Online");
-          btnDiv.appendChild(read);
-
-          const dl = document.createElement("a");
-          dl.href = book["PDF Link"];
-          dl.download = "";
-          dl.className = "text-blue-600 font-medium";
-          dl.textContent = (book.Language?.toLowerCase().includes("khmer") ? "ទាញយក" : "Download");
-          btnDiv.appendChild(dl);
-
-          card.appendChild(btnDiv);
           container.appendChild(card);
         });
       } catch (err) {
@@ -159,7 +192,30 @@
       }
     }
 
-    // Search functionality
+    // Modal controls
+    const modal = document.getElementById("bookModal");
+    const closeModalBtn = document.getElementById("closeModal");
+
+    function openModal(book) {
+      document.getElementById("modalCover").src = book["Cover Link"];
+      document.getElementById("modalTitle").textContent = book.Title;
+      document.getElementById("modalAuthor").textContent = book.Author;
+      document.getElementById("modalLang").textContent = book.Language;
+      document.getElementById("modalDesc").textContent = book.Description;
+      document.getElementById("modalRead").href = book["PDF Link"];
+      document.getElementById("modalDownload").href = book["PDF Link"];
+      modal.style.display = "flex";
+    }
+
+    closeModalBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    window.addEventListener("click", e => {
+      if (e.target === modal) modal.style.display = "none";
+    });
+
+    // Search
     document.getElementById("searchInput").addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
       document.querySelectorAll("#bookList > div").forEach(book => {
@@ -191,7 +247,6 @@
       enBtn.classList.add("bg-gray-300");
     });
 
-    // Initialize
     loadBooks();
   </script>
 </body>
