@@ -7,206 +7,214 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-  :root {
-    --bg-light: #f3f4f6;
-    --bg-dark: #1f2937;
-    --text-light: #1f2937;
-    --text-dark: #f9fafb;
-    --muted-dark: #d1d5db;
-    --card-light: #ffffff;
-    --card-dark: #374151;
-    --accent: #3b82f6; /* blue-500 */
-  }
+    :root {
+      --bg-light: #f3f4f6;
+      --bg-dark: #1f2937;
+      --text-light: #1f2937;
+      --text-dark: #f9fafb;
+      --muted-dark: #d1d5db;
+      --card-light: #ffffff;
+      --card-dark: #374151;
+      --accent: #3b82f6;
+    }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-light);
-    color: var(--text-light);
-    transition: background-color 0.5s ease, color 0.5s ease;
-  }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.6s ease, color 0.6s ease;
+    }
 
-  body.dark {
-    background-color: var(--bg-dark);
-    color: var(--text-dark);
-  }
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
 
-  /* Header & footer */
-  header, footer {
-    transition: background-color 0.5s ease, color 0.5s ease;
-  }
+    header, footer {
+      transition: background-color 0.6s ease, color 0.6s ease;
+    }
 
-  body.dark header {
-    background-color: #111827;
-    color: var(--text-dark);
-  }
+    body.dark header {
+      background-color: #111827;
+      color: var(--text-dark);
+    }
 
-  body.dark footer {
-    background-color: #111827;
-    color: var(--muted-dark);
-  }
+    body.dark footer {
+      background-color: #111827;
+      color: var(--muted-dark);
+    }
 
-  /* Book covers */
-  .book-cover {
-    width: 100%;
-    height: auto;
-    max-height: 26rem;
-    object-fit: contain;
-    border-radius: 0.75rem;
-    background-color: #f9fafb;
-    padding: 0.5rem;
-    margin-bottom: 0.75rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
+    /* Book cover */
+    .book-cover {
+      width: 100%;
+      height: auto;
+      max-height: 26rem;
+      object-fit: contain;
+      border-radius: 0.75rem;
+      background-color: #f9fafb;
+      padding: 0.5rem;
+      margin-bottom: 0.75rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-  body.dark .book-cover {
-    background-color: #1f2937;
-  }
+    body.dark .book-cover {
+      background-color: #1f2937;
+    }
 
-  .book-cover:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-  }
+    .book-cover:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
 
-  /* Book card */
-  .book-card {
-    max-width: 20rem;
-    margin: auto;
-    background-color: var(--card-light);
-    color: inherit;
-    transition: background-color 0.5s, color 0.5s;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.6s ease forwards;
-  }
+    /* Book card */
+    .book-card {
+      max-width: 20rem;
+      margin: auto;
+      background-color: var(--card-light);
+      color: inherit;
+      transition: background-color 0.6s ease, color 0.6s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease forwards;
+    }
 
-  body.dark .book-card {
-    background-color: var(--card-dark);
-    color: var(--text-dark);
-  }
+    body.dark .book-card {
+      background-color: var(--card-dark);
+      color: var(--text-dark);
+    }
 
-  .book-title {
-    font-weight: bold;
-    color: var(--text-light);
-    transition: color 0.5s;
-  }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  body.dark .book-title {
-    color: #ffffff;
-  }
+    .book-title {
+      font-weight: bold;
+      transition: color 0.6s;
+      color: var(--text-light);
+    }
+    body.dark .book-title { color: #ffffff; }
 
-  .book-author {
-    color: #4b5563;
-    transition: color 0.5s;
-  }
+    .book-author {
+      color: #4b5563;
+      transition: color 0.6s;
+    }
+    body.dark .book-author { color: #9ca3af; }
 
-  body.dark .book-author {
-    color: #9ca3af;
-  }
+    .book-lang { color: #3b82f6; }
 
-  .book-lang {
-    color: #3b82f6;
-  }
+    .book-desc {
+      color: #374151;
+      transition: color 0.6s;
+    }
+    body.dark .book-desc { color: #d1d5db; }
 
-  .book-desc {
-    color: #374151;
-    transition: color 0.5s;
-  }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 50;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(8px);
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
-  body.dark .book-desc {
-    color: #d1d5db;
-  }
+    .modal.show { display: flex; opacity: 1; }
 
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    .modal-content {
+      background: var(--card-light);
+      border-radius: 1rem;
+      max-width: 28rem;
+      width: 100%;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      animation: popUp 0.3s ease forwards;
+      transition: background-color 0.6s, color 0.6s;
+    }
 
-  /* Modal */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 50;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(8px);
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
+    body.dark .modal-content {
+      background: var(--card-dark);
+      color: var(--text-dark);
+    }
 
-  .modal.show { display: flex; opacity: 1; }
+    @keyframes popUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
 
-  .modal-content {
-    background: var(--card-light);
-    border-radius: 1rem;
-    max-width: 28rem;
-    width: 100%;
-    padding: 1.5rem;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: popUp 0.3s ease forwards;
-    transition: background-color 0.5s, color 0.5s;
-  }
+    .close-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.75rem;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+    .close-btn:hover { background: #dc2626; }
 
-  body.dark .modal-content {
-    background: var(--card-dark);
-    color: var(--text-dark);
-  }
+    /* Smooth logo transition */
+    #logoImage {
+      transition: opacity 0.6s ease-in-out, transform 0.4s ease-in-out;
+    }
 
-  @keyframes popUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
+    #logoImage.fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+    }
 
-  .close-btn {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.75rem;
-    background: #ef4444;
-    color: white;
-    border: none;
-    border-radius: 0.375rem;
-    padding: 0.25rem 0.5rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.3s;
-  }
+    #logoImage.fade-in {
+      opacity: 1;
+      transform: scale(1);
+    }
 
-  .close-btn:hover { background: #dc2626; }
+    /* Theme toggle button */
+    #themeToggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      padding: 0.5rem 0.8rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
 
-  /* Theme toggle */
-  #themeToggle {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 9999px;
-    padding: 0.5rem 0.8rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-  }
-
-  #themeToggle:hover { background: #2563eb; transform: scale(1.1); }
-</style>
+    #themeToggle:hover {
+      background: #2563eb;
+      transform: scale(1.1);
+    }
+  </style>
 </head>
 
 <body class="text-gray-800">
   <!-- Header -->
   <header class="bg-white dark:bg-gray-800 shadow p-4 flex flex-col items-center relative transition-colors duration-300">
     <button id="themeToggle" title="Toggle dark mode">🌙</button>
-    <img src="LOGO VMC.png" alt="VMCTK Logo" class="w-24 mb-2">
+    <img id="logoImage" src="LOGO VMC.png" alt="VMCTK Logo"
+      class="w-24 mb-2 transition duration-300 ease-in-out opacity-100">
     <h1 class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
-    <p id="subtitle" class="text-gray-500 dark:text-gray-300 text-center">Volunteer for My Community</p>
+    <p id="subtitle" class="text-gray-500 dark:text-gray-300 text-center">
+      Volunteer for My Community
+    </p>
     <div class="mt-2">
       <button id="enBtn" class="px-3 py-1 bg-blue-500 text-white rounded">English</button>
       <button id="khBtn" class="px-3 py-1 bg-gray-300 ml-2 rounded">ខ្មែរ</button>
@@ -215,11 +223,14 @@
 
   <!-- Search -->
   <section class="p-4 flex justify-center">
-    <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
+    <input id="searchInput" type="text" placeholder="Search books..."
+      class="w-full max-w-xl p-2 border rounded shadow">
   </section>
 
   <!-- Books Grid -->
-  <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
+  <section id="bookList"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+  </section>
 
   <!-- Modal -->
   <div id="bookModal" class="modal">
@@ -306,7 +317,7 @@
       });
     }
 
-    // Modal
+    // Modal control
     const modal = document.getElementById("bookModal");
     const closeModalBtn = document.getElementById("closeModal");
 
@@ -356,21 +367,32 @@
       enBtn.classList.add("bg-gray-300");
     });
 
-    // 🌙 Theme toggle
+    // 🌙 Theme toggle with smooth logo fade
     const themeToggle = document.getElementById("themeToggle");
     const body = document.body;
+    const logoImage = document.getElementById("logoImage");
 
-    // Load saved preference
+    // Load saved theme preference
     if (localStorage.getItem("theme") === "dark") {
       body.classList.add("dark");
       themeToggle.textContent = "☀️";
+      logoImage.src = "LOGO_VMC_white.png";
+    } else {
+      logoImage.src = "LOGO VMC.png";
     }
 
     themeToggle.addEventListener("click", () => {
-      body.classList.toggle("dark");
-      const isDark = body.classList.contains("dark");
-      themeToggle.textContent = isDark ? "☀️" : "🌙";
-      localStorage.setItem("theme", isDark ? "dark" : "light");
+      logoImage.classList.add("fade-out");
+      setTimeout(() => {
+        body.classList.toggle("dark");
+        const isDark = body.classList.contains("dark");
+        themeToggle.textContent = isDark ? "☀️" : "🌙";
+        logoImage.src = isDark ? "LOGO_VMC_white.png" : "LOGO VMC.png";
+        logoImage.classList.remove("fade-out");
+        logoImage.classList.add("fade-in");
+        setTimeout(() => logoImage.classList.remove("fade-in"), 600);
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+      }, 300);
     });
 
     loadBooks();
