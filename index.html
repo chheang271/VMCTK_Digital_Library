@@ -24,14 +24,53 @@
       color: var(--text-light);
       transition: background-color 0.6s ease, color 0.6s ease;
     }
-
     body.dark { background-color: var(--bg-dark); color: var(--text-dark); }
 
-    header, footer { transition: background-color 0.6s ease, color 0.6s ease; }
+    /* ===== LOADING SCREEN ===== */
+    #loadingScreen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      z-index: 100;
+      opacity: 1;
+      transition: opacity 0.8s ease-out, visibility 0.8s ease-out, background 0.6s ease;
+    }
+    body.dark #loadingScreen {
+      background: linear-gradient(135deg, #111827, #1f2937);
+    }
 
-    body.dark header { background-color: #111827; color: var(--text-dark); }
-    body.dark footer { background-color: #111827; color: var(--muted-dark); }
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+      transition: border-color 0.6s ease;
+    }
+    body.dark .spinner {
+      border: 4px solid rgba(255,255,255,0.15);
+      border-top: 4px solid #9ca3af;
+    }
 
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    #quoteText {
+      transition: opacity 1s ease-in-out, color 0.6s ease;
+    }
+    body.dark #quoteText { color: #e5e7eb; }
+
+    #loadingScreen.fade-out { opacity: 0; visibility: hidden; }
+
+    /* ===== BOOKS ===== */
     .book-cover {
       width: 100%; max-height: 26rem; object-fit: contain;
       border-radius: 0.75rem; background-color: #f9fafb;
@@ -48,54 +87,35 @@
       opacity: 0; transform: translateY(20px);
       animation: fadeInUp 0.6s ease forwards;
     }
-    body.dark .book-card { background-color: var(--card-dark); color: var(--text-dark);
-      box-shadow: 0 0 20px rgba(59,130,246,0.2); }
+    body.dark .book-card { background-color: var(--card-dark); color: var(--text-dark); box-shadow: 0 0 20px rgba(59,130,246,0.2); }
 
     @keyframes fadeInUp {
       from {opacity: 0; transform: translateY(20px);}
       to {opacity: 1; transform: translateY(0);}
     }
 
-    .book-title { font-weight: bold; color: var(--text-light); transition: color 0.6s; }
-    body.dark .book-title { color: #fff; }
-    .book-author { color: #4b5563; transition: color 0.6s; }
-    body.dark .book-author { color: #9ca3af; }
-    .book-lang { color: #3b82f6; }
-    .book-desc { color: #374151; transition: color 0.6s; }
-    body.dark .book-desc { color: #d1d5db; }
-
-    /* Modal */
-    .modal {
-      display: none; position: fixed; z-index: 50; left: 0; top: 0;
-      width: 100%; height: 100%; backdrop-filter: blur(8px);
-      background-color: rgba(0,0,0,0.55);
+    /* ===== MODAL ===== */
+    .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%;
+      backdrop-filter: blur(8px); background-color: rgba(0,0,0,0.55);
       justify-content: center; align-items: center; padding: 1rem;
       opacity: 0; transition: opacity 0.3s ease;
     }
     .modal.show { display: flex; opacity: 1; animation: fadeIn 0.4s ease forwards; }
-
     @keyframes fadeIn { from{opacity:0; transform:scale(0.97);} to{opacity:1; transform:scale(1);} }
 
     .modal-content {
       background: var(--card-light); border-radius: 1rem; max-width: 30rem; width: 100%;
       padding: 1.8rem; text-align: center; position: relative;
       box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
       transition: background-color 0.5s, color 0.5s, transform 0.3s ease;
     }
     body.dark .modal-content {
       background: rgba(45,55,72,0.7); color: var(--text-dark);
       box-shadow: 0 0 25px rgba(59,130,246,0.3);
-      border: 1px solid rgba(255,255,255,0.15);
     }
 
-    .modal img { width: 100%; border-radius: 0.5rem; margin-bottom: 1rem; transition: transform 0.3s ease; }
-    .modal img:hover { transform: scale(1.03); }
-
-    .modal-nav {
-      display: flex; justify-content: space-between; margin-top: 1rem;
-    }
+    .modal-nav { display: flex; justify-content: space-between; margin-top: 1rem; }
     .nav-btn {
       background: var(--accent); color: white; border: none;
       padding: 0.4rem 1rem; border-radius: 0.5rem; cursor: pointer;
@@ -111,13 +131,9 @@
     }
     .close-btn:hover { background: #dc2626; transform: scale(1.1); }
 
-    body.dark a.text-green-600 { color: #22c55e; }
-    body.dark a.text-blue-600  { color: #60a5fa; }
+    #tooltipHint { transition: opacity 0.6s ease-in-out; }
 
-    #logoImage { transition: opacity 0.6s ease-in-out, transform 0.4s ease-in-out; }
-    #logoImage.fade-out { opacity: 0; transform: scale(0.95); }
-    #logoImage.fade-in { opacity: 1; transform: scale(1); }
-
+    /* ===== THEME TOGGLE ===== */
     #themeToggle {
       position: absolute; top: 1rem; right: 1rem;
       background: var(--accent); color: white; border: none;
@@ -129,11 +145,18 @@
   </style>
 </head>
 
-<body class="text-gray-800">
+<body>
+  <!-- 🌐 Loading Screen -->
+  <div id="loadingScreen">
+    <div class="spinner"></div>
+    <p>📚 Loading VMCTK Digital Library...</p>
+    <p id="quoteText" class="mt-3 text-center text-sm italic opacity-90"></p>
+  </div>
+
+  <!-- 🌟 Main Content -->
   <header class="bg-white dark:bg-gray-800 shadow p-4 flex flex-col items-center relative transition-colors duration-300">
     <button id="themeToggle" title="Toggle dark mode">🌙</button>
-    <img id="logoImage" src="LOGO VMC.png" alt="VMCTK Logo"
-      class="w-24 mb-2 transition duration-300 ease-in-out opacity-100">
+    <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2 transition duration-300 ease-in-out opacity-100">
     <h1 class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
     <p id="subtitle" class="text-gray-500 dark:text-gray-300 text-center">
       Volunteer for My Community
@@ -145,8 +168,7 @@
   </header>
 
   <section class="p-4 flex justify-center">
-    <input id="searchInput" type="text" placeholder="Search books..."
-      class="w-full max-w-xl p-2 border rounded shadow">
+    <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
   </section>
 
   <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
@@ -168,6 +190,9 @@
         <button id="prevBook" class="nav-btn">⏮️ Previous</button>
         <button id="nextBook" class="nav-btn">Next ⏭️</button>
       </div>
+      <p id="tooltipHint" class="text-sm text-gray-400 mt-3 opacity-0 text-center">
+        💡 Tip: Use ← → keys to browse books
+      </p>
     </div>
   </div>
 
@@ -179,6 +204,41 @@
 
   <script>
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
+    const loadingScreen = document.getElementById("loadingScreen");
+
+    // 🌟 Quotes
+    const quotes = [
+      "📖 A reader lives a thousand lives before he dies.",
+      "🌱 Knowledge shared is knowledge multiplied.",
+      "🚀 The future belongs to those who learn today.",
+      "💡 Small steps every day create big change.",
+      "🤝 Sharing a book is sharing a world.",
+      "📚 អ្នកអានសៀវភៅគឺជាអ្នកដឹកនាំនាពេលអនាគត។",
+      "🌞 ការអានសៀវភៅជាគន្លងទៅរកពន្លឺនៃចំណេះដឹង។",
+      "🌈 Education is the most powerful weapon to change the world.",
+      "❤️ Learn not for school, but for life.",
+      "🎓 Reading is dreaming with open eyes."
+    ];
+
+    function showRandomQuote() {
+      const quoteEl = document.getElementById("quoteText");
+      if (!quoteEl) return;
+
+      let currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteEl.textContent = currentQuote;
+
+      setTimeout(() => {
+        quoteEl.style.opacity = "0";
+        setTimeout(() => {
+          let newQuote;
+          do { newQuote = quotes[Math.floor(Math.random() * quotes.length)]; }
+          while (newQuote === currentQuote);
+          quoteEl.textContent = newQuote;
+          quoteEl.style.opacity = "1";
+        }, 1000);
+      }, 4000);
+    }
+    showRandomQuote();
 
     let books = [];
     let currentIndex = 0;
@@ -186,8 +246,7 @@
     function getHdCover(url) {
       if (!url) return "covers/placeholder.jpg";
       const match = url.match(/[-\w]{25,}/);
-      if (match) return `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000`;
-      return url;
+      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
     }
 
     async function loadBooks() {
@@ -201,30 +260,18 @@
         const card = document.createElement("div");
         card.className = "book-card rounded-lg shadow hover:shadow-lg transition p-4";
         card.style.animationDelay = `${index * 0.1}s`;
-        const img = document.createElement("img");
-        img.src = getHdCover(book["Cover Link"]);
-        img.className = "book-cover";
-        img.addEventListener("click", () => openModal(index));
-        card.appendChild(img);
-        const title = document.createElement("h2");
-        title.className = "book-title text-lg text-center cursor-pointer";
-        title.textContent = book.Title;
-        title.addEventListener("click", () => openModal(index));
-        card.appendChild(title);
-        const author = document.createElement("p");
-        author.className = "book-author text-center";
-        author.textContent = book.Author;
-        card.appendChild(author);
-        const lang = document.createElement("p");
-        lang.className = "book-lang text-sm text-blue-500 text-center";
-        lang.textContent = book.Language;
-        card.appendChild(lang);
-        const desc = document.createElement("p");
-        desc.className = "book-desc mt-2 text-center";
-        desc.textContent = book.Description;
-        card.appendChild(desc);
+        card.innerHTML = `
+          <img src="${getHdCover(book["Cover Link"])}" class="book-cover" />
+          <h2 class="book-title text-lg text-center cursor-pointer">${book.Title}</h2>
+          <p class="book-author text-center">${book.Author}</p>
+          <p class="book-lang text-sm text-blue-500 text-center">${book.Language}</p>
+          <p class="book-desc mt-2 text-center">${book.Description}</p>
+        `;
+        card.querySelector(".book-cover").addEventListener("click", () => openModal(index));
+        card.querySelector(".book-title").addEventListener("click", () => openModal(index));
         container.appendChild(card);
       });
+      loadingScreen.classList.add("fade-out");
     }
 
     const modal = document.getElementById("bookModal");
@@ -243,13 +290,35 @@
       document.getElementById("modalRead").href = book["PDF Link"];
       document.getElementById("modalDownload").href = book["PDF Link"];
       modal.classList.add("show");
+
+      const tooltip = document.getElementById("tooltipHint");
+      if (!sessionStorage.getItem("tipShown")) {
+        tooltip.style.opacity = "1";
+        setTimeout(() => (tooltip.style.opacity = "0"), 3000);
+        sessionStorage.setItem("tipShown", "true");
+      }
     }
 
     nextBtn.addEventListener("click", () => {
-      if (currentIndex < books.length - 1) openModal(currentIndex + 1);
+      currentIndex = (currentIndex + 1) % books.length;
+      openModal(currentIndex);
     });
     prevBtn.addEventListener("click", () => {
-      if (currentIndex > 0) openModal(currentIndex - 1);
+      currentIndex = (currentIndex - 1 + books.length) % books.length;
+      openModal(currentIndex);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (!modal.classList.contains("show")) return;
+      if (e.key === "ArrowRight") {
+        currentIndex = (currentIndex + 1) % books.length;
+        openModal(currentIndex);
+      } else if (e.key === "ArrowLeft") {
+        currentIndex = (currentIndex - 1 + books.length) % books.length;
+        openModal(currentIndex);
+      } else if (e.key === "Escape") {
+        modal.classList.remove("show");
+      }
     });
 
     closeModalBtn.addEventListener("click", () => modal.classList.remove("show"));
@@ -268,6 +337,7 @@
     const khBtn = document.getElementById("khBtn");
     const subtitle = document.getElementById("subtitle");
     const footerText = document.getElementById("footerText");
+
     enBtn.addEventListener("click", () => {
       subtitle.textContent = "Volunteer for My Community";
       footerText.textContent = "© 2025 VMCTK Digital Library — All books are free for learning";
@@ -275,6 +345,7 @@
       khBtn.classList.remove("bg-blue-500", "text-white");
       khBtn.classList.add("bg-gray-300");
     });
+
     khBtn.addEventListener("click", () => {
       subtitle.textContent = "អានសៀវភៅដោយឥតគិតថ្លៃសម្រាប់យុវជន";
       footerText.textContent = "© ២០២៥ បណ្ណាល័យឌីជីថល VMCTK — សៀវភៅទាំងអស់គឺឥតគិតថ្លៃសម្រាប់ការសិក្សា";
@@ -300,6 +371,20 @@
         const isDark = body.classList.contains("dark");
         themeToggle.textContent = isDark ? "☀️" : "🌙";
         logoImage.src = isDark ? "LOGO_VMC_white.png" : "LOGO VMC.png";
+
+        // 🎨 Update loading screen & spinner
+        const spinner = document.querySelector(".spinner");
+        const quoteText = document.getElementById("quoteText");
+        if (isDark) {
+          loadingScreen.style.background = "linear-gradient(135deg, #111827, #1f2937)";
+          spinner.style.borderTopColor = "#9ca3af";
+          quoteText.style.color = "#e5e7eb";
+        } else {
+          loadingScreen.style.background = "linear-gradient(135deg, #3b82f6, #2563eb)";
+          spinner.style.borderTopColor = "white";
+          quoteText.style.color = "white";
+        }
+
         logoImage.classList.remove("fade-out");
         logoImage.classList.add("fade-in");
         setTimeout(() => logoImage.classList.remove("fade-in"), 600);
