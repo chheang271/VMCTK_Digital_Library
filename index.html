@@ -30,18 +30,6 @@
       cursor: pointer;
     }
 
-    #bookList > div {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      height: 100%;
-    }
-
-    #bookList {
-      gap: 2rem;
-    }
-
     .book-card {
       max-width: 20rem;
       margin: auto;
@@ -56,10 +44,18 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px); /* 👈 Soft blur background */
+      background-color: rgba(0, 0, 0, 0.4);
       justify-content: center;
       align-items: center;
       padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal.show {
+      display: flex;
+      opacity: 1;
     }
 
     .modal-content {
@@ -70,6 +66,14 @@
       padding: 1.5rem;
       text-align: center;
       position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transform: translateY(20px);
+      animation: popUp 0.3s ease forwards;
+    }
+
+    @keyframes popUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     .modal img {
@@ -90,6 +94,11 @@
       padding: 0.25rem 0.5rem;
       cursor: pointer;
       font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+
+    .close-btn:hover {
+      background: #dc2626;
     }
   </style>
 </head>
@@ -111,9 +120,7 @@
   </section>
 
   <!-- Books Grid -->
-  <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-    <!-- Book cards go here -->
-  </section>
+  <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
 
   <!-- Modal -->
   <div id="bookModal" class="modal">
@@ -215,15 +222,16 @@
       document.getElementById("modalDesc").textContent = book.Description;
       document.getElementById("modalRead").href = book["PDF Link"];
       document.getElementById("modalDownload").href = book["PDF Link"];
-      modal.style.display = "flex";
+      modal.classList.add("show");
     }
 
     closeModalBtn.addEventListener("click", () => {
-      modal.style.display = "none";
+      modal.classList.remove("show");
+      setTimeout(() => modal.style.display = "none", 200);
     });
 
     window.addEventListener("click", e => {
-      if (e.target === modal) modal.style.display = "none";
+      if (e.target === modal) modal.classList.remove("show");
     });
 
     // Search functionality
