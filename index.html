@@ -4,254 +4,175 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VMCTK Digital Library</title>
+  <link rel="icon" href="LOGO VMC.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --vmc-blue: #1e40af;
-      --vmc-light-blue: #3b82f6;
-      --vmc-yellow: #facc15;
-      --vmc-bg-light: #f3f4f6;
-      --vmc-bg-dark: #111827;
-      --vmc-text-light: #1f2937;
-      --vmc-text-dark: #f9fafb;
-    }
-
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--vmc-bg-light);
-      color: var(--vmc-text-light);
-      transition: background-color 0.6s ease, color 0.6s ease;
+      transition: background-color 0.3s, color 0.3s;
     }
-    body.dark {
-      background-color: var(--vmc-bg-dark);
-      color: var(--vmc-text-dark);
-    }
-
-    /* ✅ Fix book title color in dark mode */
-    body.dark h3 {
+    .dark {
+      background-color: #111827;
       color: #f9fafb;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
     }
-
-    /* Loading Screen */
+    .fade-out {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
     #loadingScreen {
       position: fixed;
       inset: 0;
-      background: linear-gradient(135deg, var(--vmc-light-blue), var(--vmc-blue));
-      color: white;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-size: 1.1rem;
-      z-index: 100;
-      transition: opacity 0.8s ease-out;
-    }
-    #loadingScreen.fade-out {
-      opacity: 0;
-      visibility: hidden;
+      background: linear-gradient(135deg, #2563eb, #9333ea);
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      z-index: 50;
     }
     .spinner {
       border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid var(--vmc-yellow);
+      border-top: 4px solid white;
       border-radius: 50%;
       width: 40px;
       height: 40px;
       animation: spin 1s linear infinite;
-      margin-bottom: 1rem;
+      margin-top: 16px;
     }
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-
-    /* Header */
-    header {
-      background: linear-gradient(to right, var(--vmc-light-blue), var(--vmc-blue));
-      color: white;
-      transition: background-color 0.6s ease;
-    }
-    body.dark header {
-      background: linear-gradient(to right, #1e293b, var(--vmc-bg-dark));
-      color: var(--vmc-yellow);
-    }
-
-    #themeToggle {
-      font-size: 1.4rem;
-      color: var(--vmc-yellow);
-    }
-
-    /* Buttons */
-    button, a {
-      transition: background-color 0.3s, color 0.3s, transform 0.2s;
-    }
-    button:hover, a:hover {
-      transform: scale(1.05);
-    }
-
-    #enBtn {
-      background-color: var(--vmc-blue);
-      color: white;
-    }
-    #khBtn {
-      background-color: var(--vmc-yellow);
-      color: black;
-    }
-    #enBtn:hover {
-      background-color: var(--vmc-light-blue);
-    }
-    #khBtn:hover {
-      background-color: #fbbf24;
-    }
-
-    /* Featured Carousel */
-    #featuredSection {
-      background: linear-gradient(to right, #e0f2fe, #fef9c3);
-    }
-    body.dark #featuredSection {
-      background: linear-gradient(to right, #1e293b, #1f2937);
-    }
-    #featuredList {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      padding: 0.5rem;
-      -webkit-overflow-scrolling: touch;
-    }
-    #featuredList::-webkit-scrollbar {
-      height: 6px;
-    }
-    #featuredList::-webkit-scrollbar-thumb {
-      background: var(--vmc-yellow);
-      border-radius: 10px;
-    }
-    .featured-card {
-      flex: 0 0 85%;
-      max-width: 300px;
-      scroll-snap-align: center;
-      border: 2px solid var(--vmc-yellow);
-      background-color: rgba(250, 204, 21, 0.1);
-      border-radius: 1rem;
-      padding: 0.75rem;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .featured-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Modal / Glass */
     .modal {
-      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(8px);
+      display: none;
       justify-content: center;
       align-items: center;
       z-index: 50;
     }
     .modal.show {
       display: flex;
-      animation: fadeIn 0.4s ease forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
     }
     .modal-content {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(10px);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      max-width: 26rem;
-      width: 90%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 420px;
       text-align: center;
-      border: 2px solid var(--vmc-blue);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
     }
-    body.dark .modal-content {
-      background: rgba(55, 65, 81, 0.85);
+    .dark .modal-content {
+      background: rgba(31, 41, 55, 0.9);
+      color: #f9fafb;
     }
-
-    /* Footer */
-    footer {
-      background: linear-gradient(to right, var(--vmc-blue), var(--vmc-light-blue));
-      color: white;
-      transition: background-color 0.5s ease;
+    .modal img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 16px;
     }
-    body.dark footer {
-      background: linear-gradient(to right, var(--vmc-bg-dark), var(--vmc-bg-dark));
-      color: var(--vmc-yellow);
+    .tooltip {
+      position: relative;
+      display: inline-block;
     }
-
-    footer a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.3s;
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 110px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 4px 6px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
-    footer a:hover {
-      color: var(--vmc-yellow);
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    body.dark h3 {
+      color: #f9fafb;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
     }
   </style>
 </head>
 
-<body>
-  <!-- Loading -->
+<body class="bg-gray-100 text-gray-800">
+  <!-- Loading Screen -->
   <div id="loadingScreen">
+    <div>📚 VMCTK Digital Library</div>
     <div class="spinner"></div>
-    <p>📚 Loading VMCTK Digital Library...</p>
-    <p id="quoteText" class="mt-3 text-sm italic opacity-90"></p>
+    <div id="quoteText" class="mt-4 text-lg italic opacity-90"></div>
   </div>
 
   <!-- Header -->
-  <header class="shadow p-4 flex flex-col items-center relative">
-    <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
-    <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2">
-    <h1 class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
-    <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
-    <div class="mt-2">
-      <button id="enBtn" class="px-3 py-1">English</button>
-      <button id="khBtn" class="px-3 py-1 ml-2">ខ្មែរ</button>
+  <header class="flex flex-col items-center p-4">
+    <img src="LOGO VMC.png" alt="Logo" class="w-20 mb-2">
+    <h1 class="text-2xl font-bold">VMCTK Digital Library</h1>
+    <p id="subtitle" class="text-gray-500">Volunteer for My Community</p>
+    <div class="flex space-x-2 mt-3">
+      <button id="enBtn" class="bg-blue-600 text-white px-3 py-1 rounded">English</button>
+      <button id="khBtn" class="bg-gray-300 text-black px-3 py-1 rounded">ខ្មែរ</button>
     </div>
+    <button id="themeToggle" class="absolute right-6 top-6 text-xl">🌙</button>
   </header>
 
-  <!-- Search -->
-  <section class="p-4 flex justify-center">
-    <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
-  </section>
+  <!-- Search Bar -->
+  <div class="p-4 flex justify-center">
+    <input type="text" id="searchInput" placeholder="Search books..."
+      class="w-full max-w-lg border p-2 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+  </div>
 
-  <!-- Featured -->
-  <section id="featuredSection" class="p-4">
+  <!-- Featured Books -->
+  <section class="p-6">
     <div class="flex justify-between items-center mb-3">
-      <h2 class="text-xl sm:text-2xl font-bold text-yellow-500 tracking-wide">⭐ Featured Books</h2>
+      <h2 class="text-xl font-bold text-yellow-500">⭐ Featured Books</h2>
       <div>
-        <button id="scrollLeft" class="text-yellow-400 text-2xl hover:text-yellow-300">◀</button>
-        <button id="scrollRight" class="text-yellow-400 text-2xl hover:text-yellow-300 ml-2">▶</button>
+        <button id="scrollLeft" class="px-3 text-lg">⬅️</button>
+        <button id="scrollRight" class="px-3 text-lg">➡️</button>
       </div>
     </div>
-    <div id="featuredList"></div>
+    <div id="featuredList" class="flex overflow-x-auto gap-4 pb-4"></div>
   </section>
 
   <!-- Book List -->
-  <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
+  <main id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6"></main>
 
   <!-- Modal -->
   <div id="bookModal" class="modal">
-    <div class="modal-content relative">
-      <button id="closeModal" class="absolute top-2 right-3 bg-red-500 text-white rounded px-2">✕</button>
-      <img id="modalCover" src="" alt="Book Cover" class="mx-auto rounded-lg shadow">
-      <h2 id="modalTitle" class="font-bold text-lg mt-2"></h2>
-      <p id="modalAuthor" class="text-gray-600 mb-1"></p>
-      <p id="modalLang" class="text-yellow-500 mb-3"></p>
-      <p id="modalDesc" class="text-gray-700 mb-4"></p>
-      <div class="flex justify-between">
-        <a id="modalRead" href="#" target="_blank" class="text-green-600 font-semibold">Read Online</a>
-        <a id="modalDownload" href="#" download class="text-blue-600 font-semibold">Download</a>
+    <div class="modal-content">
+      <button id="closeModal" class="absolute right-4 top-2 text-xl font-bold">✖</button>
+      <img id="modalCover" src="" alt="Book Cover">
+      <h2 id="modalTitle" class="text-xl font-bold mb-2"></h2>
+      <p id="modalAuthor" class="text-gray-600 dark:text-gray-300"></p>
+      <p id="modalLang" class="text-blue-500 dark:text-blue-300 mb-2"></p>
+      <p id="modalDesc" class="text-gray-700 dark:text-gray-300 mb-4"></p>
+      <div class="flex justify-center gap-4">
+        <div class="tooltip">
+          <a id="modalRead" target="_blank"
+            class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition">Read Online</a>
+          <span class="tooltip-text">Not available</span>
+        </div>
+        <div class="tooltip">
+          <a id="modalDownload" target="_blank"
+            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">Download</a>
+          <span class="tooltip-text">Not available</span>
+        </div>
       </div>
     </div>
   </div>
+
   <!-- About Section -->
   <section id="aboutVMCTK" class="px-6 py-10 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-900 text-center">
     <img src="LOGO VMC.png" class="w-20 mx-auto mb-4 dark:hidden">
@@ -260,9 +181,9 @@
       <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">About VMCTK</h2>
       <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
         <strong>VMCTK Digital Library</strong> is a volunteer project by
-        <em>Volunteer for My Community</em>, helping youths access
-        <span class="text-blue-500 dark:text-blue-300 font-medium">free books</span> in
-        <span class="font-semibold">English</span> and <span class="font-semibold">Khmer</span>.
+        <em>Volunteer for My Community</em>, helping youths access free books in
+        <span class="text-blue-500 dark:text-blue-300 font-medium">English</span> and
+        <span class="font-semibold">Khmer</span>.
       </p>
     </div>
     <div id="aboutKH" class="hidden">
@@ -310,13 +231,12 @@
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
-    // === Basic setup ===
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
     const body = document.body;
     const themeToggle = document.getElementById("themeToggle");
     const loadingScreen = document.getElementById("loadingScreen");
 
-    // Default Light mode
+    // Default Light Mode
     body.classList.remove("dark");
 
     // Toggle Theme
@@ -325,30 +245,30 @@
       themeToggle.textContent = body.classList.contains("dark") ? "☀️" : "🌙";
     });
 
-    // Language buttons
+    // Language Switch
     const enBtn = document.getElementById("enBtn");
     const khBtn = document.getElementById("khBtn");
-    const sections = ["aboutEN","aboutKH","contactEN","contactKH","footerEN","footerKH"];
+    const sections = ["aboutEN", "aboutKH", "contactEN", "contactKH", "footerEN", "footerKH"];
 
     function setLang(lang) {
-      sections.forEach(id=>{
+      sections.forEach(id => {
         document.getElementById(id).classList.toggle("hidden", !id.endsWith(lang.toUpperCase()));
       });
       document.getElementById("subtitle").textContent =
-        lang==="en" ? "Volunteer for My Community" : "ស្ម័គ្រចិត្តសម្រាប់សហគមន៍របស់ខ្ញុំ";
+        lang === "en" ? "Volunteer for My Community" : "ស្ម័គ្រចិត្តសម្រាប់សហគមន៍របស់ខ្ញុំ";
     }
 
-    enBtn.onclick=()=>setLang("en");
-    khBtn.onclick=()=>setLang("kh");
+    enBtn.onclick = () => setLang("en");
+    khBtn.onclick = () => setLang("kh");
 
-    // Loading animation + quote fade
-    window.addEventListener("load",()=>{
-      setTimeout(()=>loadingScreen.classList.add("fade-out"),1500);
+    // Load animation
+    window.addEventListener("load", () => {
+      setTimeout(() => loadingScreen.classList.add("fade-out"), 1500);
     });
 
-    // Random quotes
-    const quoteText=document.getElementById("quoteText");
-    const quotes=[
+    // Random Quotes
+    const quoteText = document.getElementById("quoteText");
+    const quotes = [
       "📖 A reader lives a thousand lives before he dies.",
       "🌱 Knowledge shared is knowledge multiplied.",
       "🚀 The future belongs to those who learn today.",
@@ -360,62 +280,82 @@
       "❤️ Learn not for school, but for life.",
       "🎓 Reading is dreaming with open eyes."
     ];
-    quoteText.textContent=quotes[Math.floor(Math.random()*quotes.length)];
+    quoteText.textContent = quotes[Math.floor(Math.random() * quotes.length)];
 
-    // === Book Loading ===
-    const bookList=document.getElementById("bookList");
-    const featuredList=document.getElementById("featuredList");
-    const modal=document.getElementById("bookModal");
-    const modalCover=document.getElementById("modalCover");
-    const modalTitle=document.getElementById("modalTitle");
-    const modalAuthor=document.getElementById("modalAuthor");
-    const modalLang=document.getElementById("modalLang");
-    const modalDesc=document.getElementById("modalDesc");
-    const modalRead=document.getElementById("modalRead");
-    const modalDownload=document.getElementById("modalDownload");
+    // === Book Section ===
+    const bookList = document.getElementById("bookList");
+    const featuredList = document.getElementById("featuredList");
+    const modal = document.getElementById("bookModal");
+    const modalCover = document.getElementById("modalCover");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalAuthor = document.getElementById("modalAuthor");
+    const modalLang = document.getElementById("modalLang");
+    const modalDesc = document.getElementById("modalDesc");
+    const modalRead = document.getElementById("modalRead");
+    const modalDownload = document.getElementById("modalDownload");
 
-    function hdCover(url){
-      const m=url?.match(/[-\w]{25,}/);
-      return m?`https://drive.google.com/thumbnail?id=${m[0]}&sz=w2000`:url;
+    function hdCover(url) {
+      const m = url?.match(/[-\w]{25,}/);
+      return m ? `https://drive.google.com/thumbnail?id=${m[0]}&sz=w2000` : url;
     }
 
-    async function loadBooks(){
-      const resp=await fetch(CSV_URL);
-      const text=await resp.text();
-      const data=Papa.parse(text,{header:true}).data.filter(b=>b.Title);
-      bookList.innerHTML="";
-      featuredList.innerHTML="";
-      data.forEach((b,i)=>{
-        const c=document.createElement("div");
-        c.className="rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
-        c.innerHTML=`<img src="${hdCover(b['Cover Link'])}" class="mb-2 rounded-md"><h3 class="font-bold">${b.Title}</h3>
-        <p class='text-sm text-gray-500 dark:text-gray-300'>${b.Author}</p><p class='text-sm text-blue-600 dark:text-blue-300'>${b.Language}</p>`;
-        c.onclick=()=>{
-          modalCover.src=hdCover(b['Cover Link']);
-          modalTitle.textContent=b.Title;
-          modalAuthor.textContent=b.Author;
-          modalLang.textContent=b.Language;
-          modalDesc.textContent=b.Description||"";
-          modalRead.href=b["Read Link"];
-          modalDownload.href=b["Download Link"];
+    async function loadBooks() {
+      const resp = await fetch(CSV_URL);
+      const text = await resp.text();
+      const data = Papa.parse(text, { header: true }).data.filter(b => b.Title);
+      bookList.innerHTML = "";
+      featuredList.innerHTML = "";
+
+      data.forEach((b, i) => {
+        const c = document.createElement("div");
+        c.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
+        c.innerHTML = `
+          <img src="${hdCover(b['Cover Link'])}" class="mb-2 rounded-md">
+          <h3 class="font-bold">${b.Title}</h3>
+          <p class='text-sm text-gray-500 dark:text-gray-300'>${b.Author}</p>
+          <p class='text-sm text-blue-600 dark:text-blue-300'>${b.Language}</p>
+        `;
+        c.onclick = () => {
+          modalCover.src = hdCover(b['Cover Link']);
+          modalTitle.textContent = b.Title || "Untitled Book";
+          modalAuthor.textContent = b.Author || "Unknown Author";
+          modalLang.textContent = b.Language || "";
+          modalDesc.textContent = b.Description || "No description available.";
+
+          const readLink = b["Read Link"] && b["Read Link"].startsWith("http")
+            ? b["Read Link"]
+            : null;
+          const downloadLink = b["Download Link"] && b["Download Link"].startsWith("http")
+            ? b["Download Link"]
+            : null;
+
+          modalRead.href = readLink || "#";
+          modalDownload.href = downloadLink || "#";
+
+          modalRead.style.pointerEvents = readLink ? "auto" : "none";
+          modalDownload.style.pointerEvents = downloadLink ? "auto" : "none";
+          modalRead.style.opacity = readLink ? "1" : "0.5";
+          modalDownload.style.opacity = downloadLink ? "1" : "0.5";
+
           modal.classList.add("show");
         };
         bookList.appendChild(c);
-        if(i<6){
-          const f=c.cloneNode(true);
-          f.className="featured-card";
+
+        if (i < 6) {
+          const f = c.cloneNode(true);
           featuredList.appendChild(f);
         }
       });
     }
+
     loadBooks();
 
-    document.getElementById("closeModal").onclick=()=>modal.classList.remove("show");
-    modal.onclick=e=>{if(e.target===modal)modal.classList.remove("show");};
+    document.getElementById("closeModal").onclick = () => modal.classList.remove("show");
+    modal.onclick = (e) => { if (e.target === modal) modal.classList.remove("show"); };
 
-    // Featured scroll
-    document.getElementById("scrollLeft").onclick=()=>featuredList.scrollBy({left:-300,behavior:"smooth"});
-    document.getElementById("scrollRight").onclick=()=>featuredList.scrollBy({left:300,behavior:"smooth"});
+    // Featured Scroll
+    document.getElementById("scrollLeft").onclick = () => featuredList.scrollBy({ left: -300, behavior: "smooth" });
+    document.getElementById("scrollRight").onclick = () => featuredList.scrollBy({ left: 300, behavior: "smooth" });
   </script>
 </body>
 </html>
