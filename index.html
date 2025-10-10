@@ -5,16 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VMCTK Digital Library</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    .book-cover {
-      width: 100%;
-      height: 12rem;
-      object-fit: cover;
-      border-radius: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-  </style>
+ <style>
+  body { font-family: 'Inter', sans-serif; }
+
+  .book-cover {
+    width: 100%;
+    height: 18rem; /* taller covers */
+    object-fit: cover; /* fill the box perfectly */
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .book-cover:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Optional: make cards equal height */
+  #bookList > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  /* Make grid cards cleaner */
+  #bookList {
+    gap: 2rem;
+  }
+</style>
 </head>
 <body class="bg-gray-100 text-gray-800">
   <!-- Header -->
