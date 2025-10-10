@@ -11,6 +11,7 @@
       background-color: #f3f4f6;
     }
 
+    /* --- Book cards --- */
     .book-cover {
       width: 100%;
       height: auto;
@@ -23,7 +24,6 @@
       margin: 0 auto 0.75rem auto;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
     .book-cover:hover {
       transform: scale(1.03);
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
@@ -33,9 +33,18 @@
     .book-card {
       max-width: 20rem;
       margin: auto;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease forwards;
     }
 
-    /* Modal styling */
+    /* --- Animation effect --- */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Modal --- */
     .modal {
       display: none;
       position: fixed;
@@ -44,7 +53,7 @@
       top: 0;
       width: 100%;
       height: 100%;
-      backdrop-filter: blur(8px); /* 👈 Soft blur background */
+      backdrop-filter: blur(8px);
       background-color: rgba(0, 0, 0, 0.4);
       justify-content: center;
       align-items: center;
@@ -52,11 +61,7 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-
-    .modal.show {
-      display: flex;
-      opacity: 1;
-    }
+    .modal.show { display: flex; opacity: 1; }
 
     .modal-content {
       background: white;
@@ -67,15 +72,12 @@
       text-align: center;
       position: relative;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      transform: translateY(20px);
       animation: popUp 0.3s ease forwards;
     }
-
     @keyframes popUp {
       from { transform: translateY(20px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
-
     .modal img {
       width: 100%;
       height: auto;
@@ -96,13 +98,11 @@
       font-size: 0.9rem;
       transition: background 0.3s;
     }
-
-    .close-btn:hover {
-      background: #dc2626;
-    }
+    .close-btn:hover { background: #dc2626; }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
+
   <!-- Header -->
   <header class="bg-white shadow p-4 flex flex-col items-center">
     <img src="LOGO VMC.png" alt="VMCTK Logo" class="w-24 mb-2">
@@ -114,7 +114,7 @@
     </div>
   </header>
 
-  <!-- Search Bar -->
+  <!-- Search -->
   <section class="p-4 flex justify-center">
     <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
   </section>
@@ -149,10 +149,10 @@
   <script>
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
 
-    // Convert Google Drive URL into HD thumbnail link
+    // Create HD Google Drive link
     function getHdCover(url) {
       if (!url) return "covers/placeholder.jpg";
-      const match = url.match(/[-\w]{25,}/); // Extract file ID
+      const match = url.match(/[-\w]{25,}/);
       if (match) {
         const id = match[0];
         return `https://drive.google.com/thumbnail?id=${id}&sz=w2000`;
@@ -161,53 +161,50 @@
     }
 
     async function loadBooks() {
-      try {
-        const response = await fetch(CSV_URL);
-        const csvText = await response.text();
-        const results = Papa.parse(csvText, { header: true });
-        const data = results.data;
-        const container = document.getElementById("bookList");
-        container.innerHTML = "";
+      const response = await fetch(CSV_URL);
+      const csvText = await response.text();
+      const results = Papa.parse(csvText, { header: true });
+      const data = results.data;
+      const container = document.getElementById("bookList");
+      container.innerHTML = "";
 
-        data.forEach(book => {
-          if (!book.Title) return;
+      data.forEach((book, index) => {
+        if (!book.Title) return;
 
-          const card = document.createElement("div");
-          card.className = "book-card bg-white rounded-lg shadow hover:shadow-lg transition p-4";
+        const card = document.createElement("div");
+        card.className = "book-card bg-white rounded-lg shadow hover:shadow-lg transition p-4";
+        card.style.animationDelay = `${index * 0.1}s`; // stagger effect
 
-          const img = document.createElement("img");
-          img.src = getHdCover(book["Cover Link"]);
-          img.onerror = () => (img.src = "covers/placeholder.jpg");
-          img.className = "book-cover";
-          img.addEventListener("click", () => openModal(book));
-          card.appendChild(img);
+        const img = document.createElement("img");
+        img.src = getHdCover(book["Cover Link"]);
+        img.onerror = () => (img.src = "covers/placeholder.jpg");
+        img.className = "book-cover";
+        img.addEventListener("click", () => openModal(book));
+        card.appendChild(img);
 
-          const h2 = document.createElement("h2");
-          h2.className = "book-title font-bold text-lg text-center cursor-pointer";
-          h2.textContent = book.Title;
-          h2.addEventListener("click", () => openModal(book));
-          card.appendChild(h2);
+        const h2 = document.createElement("h2");
+        h2.className = "book-title font-bold text-lg text-center cursor-pointer";
+        h2.textContent = book.Title;
+        h2.addEventListener("click", () => openModal(book));
+        card.appendChild(h2);
 
-          const pAuth = document.createElement("p");
-          pAuth.className = "book-author text-gray-600 text-center";
-          pAuth.textContent = book.Author;
-          card.appendChild(pAuth);
+        const pAuth = document.createElement("p");
+        pAuth.className = "book-author text-gray-600 text-center";
+        pAuth.textContent = book.Author;
+        card.appendChild(pAuth);
 
-          const pLang = document.createElement("p");
-          pLang.className = "book-lang text-sm text-blue-500 text-center";
-          pLang.textContent = book.Language;
-          card.appendChild(pLang);
+        const pLang = document.createElement("p");
+        pLang.className = "book-lang text-sm text-blue-500 text-center";
+        pLang.textContent = book.Language;
+        card.appendChild(pLang);
 
-          const pDesc = document.createElement("p");
-          pDesc.className = "book-desc text-gray-700 mt-2 text-center";
-          pDesc.textContent = book.Description;
-          card.appendChild(pDesc);
+        const pDesc = document.createElement("p");
+        pDesc.className = "book-desc text-gray-700 mt-2 text-center";
+        pDesc.textContent = book.Description;
+        card.appendChild(pDesc);
 
-          container.appendChild(card);
-        });
-      } catch (err) {
-        console.error("Error loading books:", err);
-      }
+        container.appendChild(card);
+      });
     }
 
     // Modal controls
@@ -225,16 +222,10 @@
       modal.classList.add("show");
     }
 
-    closeModalBtn.addEventListener("click", () => {
-      modal.classList.remove("show");
-      setTimeout(() => modal.style.display = "none", 200);
-    });
+    closeModalBtn.addEventListener("click", () => modal.classList.remove("show"));
+    window.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("show"); });
 
-    window.addEventListener("click", e => {
-      if (e.target === modal) modal.classList.remove("show");
-    });
-
-    // Search functionality
+    // Search
     document.getElementById("searchInput").addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
       document.querySelectorAll("#bookList > div").forEach(book => {
