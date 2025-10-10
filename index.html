@@ -44,135 +44,114 @@
   </footer>
 
   <script>
-    // ========== CONFIG =============
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
+<!-- Script -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script>
+  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
 
-    // ========== UTILITY FUNCTIONS =============
-    // parse CSV text into array of objects
-    function parseCSV(text) {
-      const lines = text.trim().split("\\n");
-      const headers = lines[0].split(",");
-      const rows = lines.slice(1);
-      return rows.map(line => {
-        const values = line.split(",");
-        const obj = {};
-        headers.forEach((h, idx) => {
-          obj[h] = values[idx];
-        });
-        return obj;
+  async function loadBooks() {
+    try {
+      const response = await fetch(CSV_URL);
+      const csvText = await response.text();
+
+      // Parse CSV safely (handles commas and quotes)
+      const results = Papa.parse(csvText, { header: true });
+      const data = results.data;
+
+      const container = document.getElementById("bookList");
+      container.innerHTML = "";
+
+      data.forEach(book => {
+        if (!book.Title) return;
+
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-lg shadow hover:shadow-lg transition p-4";
+
+        const img = document.createElement("img");
+        img.src = book["Cover Link"] || "covers/placeholder.jpg";
+        img.onerror = () => (img.src = "covers/placeholder.jpg");
+        img.className = "book-cover";
+        card.appendChild(img);
+
+        const h2 = document.createElement("h2");
+        h2.className = "book-title font-bold text-lg";
+        h2.textContent = book.Title;
+        card.appendChild(h2);
+
+        const pAuth = document.createElement("p");
+        pAuth.className = "book-author text-gray-600";
+        pAuth.textContent = book.Author;
+        card.appendChild(pAuth);
+
+        const pLang = document.createElement("p");
+        pLang.className = "book-lang text-sm text-blue-500";
+        pLang.textContent = book.Language;
+        card.appendChild(pLang);
+
+        const pDesc = document.createElement("p");
+        pDesc.className = "book-desc text-gray-700 mt-2";
+        pDesc.textContent = book.Description;
+        card.appendChild(pDesc);
+
+        const btnDiv = document.createElement("div");
+        btnDiv.className = "flex justify-between mt-3";
+
+        const read = document.createElement("a");
+        read.href = book["PDF Link"];
+        read.target = "_blank";
+        read.className = "text-green-600";
+        read.textContent = (book.Language?.toLowerCase().includes("khmer") ? "អានអនឡាញ" : "Read Online");
+        btnDiv.appendChild(read);
+
+        const dl = document.createElement("a");
+        dl.href = book["PDF Link"];
+        dl.download = "";
+        dl.className = "text-blue-600";
+        dl.textContent = (book.Language?.toLowerCase().includes("khmer") ? "ទាញយក" : "Download");
+        btnDiv.appendChild(dl);
+
+        card.appendChild(btnDiv);
+        container.appendChild(card);
       });
+    } catch (err) {
+      console.error("Error loading books:", err);
     }
+  }
 
-    // ========== RENDERING =============
-    async function loadBooks() {
-      try {
-        const resp = await fetch(CSV_URL);
-        const csvText = await resp.text();
-        const data = parseCSV(csvText);
-        const container = document.getElementById("bookList");
-        container.innerHTML = "";  // clear any existing
-
-        data.forEach(book => {
-          // book.Title, book.Author, book.Language, book.Description, book["PDF Link"], book["Cover Link"]
-          const coverUrl = book["Cover Link"] || "";
-          const pdfUrl = book["PDF Link"] || "";
-          const title = book.Title || "";
-          const author = book.Author || "";
-          const language = book.Language || "";
-          const desc = book.Description || "";
-
-          const card = document.createElement("div");
-          card.className = "bg-white rounded-lg shadow hover:shadow-lg transition p-4";
-
-          const img = document.createElement("img");
-          img.src = coverUrl;
-          img.onerror = () => {
-            img.src = "covers/placeholder.jpg";
-          };
-          img.className = "book-cover";
-          card.appendChild(img);
-
-          const h2 = document.createElement("h2");
-          h2.className = "book-title font-bold text-lg";
-          h2.textContent = title;
-          card.appendChild(h2);
-
-          const pAuth = document.createElement("p");
-          pAuth.className = "book-author text-gray-600";
-          pAuth.textContent = author;
-          card.appendChild(pAuth);
-
-          const pLang = document.createElement("p");
-          pLang.className = "book-lang text-sm text-blue-500";
-          pLang.textContent = language;
-          card.appendChild(pLang);
-
-          const pDesc = document.createElement("p");
-          pDesc.className = "book-desc text-gray-700 mt-2";
-          pDesc.textContent = desc;
-          card.appendChild(pDesc);
-
-          const btnDiv = document.createElement("div");
-          btnDiv.className = "flex justify-between mt-3";
-
-          const readLink = document.createElement("a");
-          readLink.href = pdfUrl;
-          readLink.target = "_blank";
-          readLink.className = "text-green-600";
-          readLink.textContent = (language.toLowerCase().includes("khmer") ? "អានអនឡាញ" : "Read Online");
-          btnDiv.appendChild(readLink);
-
-          const downloadLink = document.createElement("a");
-          downloadLink.href = pdfUrl;
-          downloadLink.download = "";
-          downloadLink.className = "text-blue-600";
-          downloadLink.textContent = (language.toLowerCase().includes("khmer") ? "ទាញយក" : "Download");
-          btnDiv.appendChild(downloadLink);
-
-          card.appendChild(btnDiv);
-
-          container.appendChild(card);
-        });
-
-      } catch (error) {
-        console.error("Error loading CSV:", error);
-      }
-    }
-
-    // ========== SEARCH =============
-    document.getElementById("searchInput").addEventListener("input", function () {
-      const term = this.value.toLowerCase();
-      document.querySelectorAll("#bookList > div").forEach(book => {
-        const title = book.querySelector(".book-title").textContent.toLowerCase();
-        const author = book.querySelector(".book-author").textContent.toLowerCase();
-        book.style.display = title.includes(term) || author.includes(term) ? "block" : "none";
-      });
+  // Search
+  document.getElementById("searchInput").addEventListener("input", e => {
+    const term = e.target.value.toLowerCase();
+    document.querySelectorAll("#bookList > div").forEach(book => {
+      const title = book.querySelector(".book-title").textContent.toLowerCase();
+      const author = book.querySelector(".book-author").textContent.toLowerCase();
+      book.style.display = title.includes(term) || author.includes(term) ? "block" : "none";
     });
+  });
 
-    // ========== LANGUAGE TOGGLE =============
-    const enBtn = document.getElementById("enBtn");
-    const khBtn = document.getElementById("khBtn");
-    const subtitle = document.getElementById("subtitle");
-    const footerText = document.getElementById("footerText");
+  // Language Buttons
+  const enBtn = document.getElementById("enBtn");
+  const khBtn = document.getElementById("khBtn");
+  const subtitle = document.getElementById("subtitle");
+  const footerText = document.getElementById("footerText");
 
-    enBtn.addEventListener("click", () => {
-      subtitle.textContent = "Volunteer for My Community";
-      footerText.textContent = "© 2025 VMCTK Digital Library — All books are free for learning";
-      enBtn.classList.add("bg-blue-500", "text-white");
-      khBtn.classList.remove("bg-blue-500", "text-white");
-      khBtn.classList.add("bg-gray-300");
-      khBtn.classList.remove("bg-blue-500", "text-white");
-    });
-    khBtn.addEventListener("click", () => {
-      subtitle.textContent = "អានសៀវភៅដោយឥតគិតថ្លៃសម្រាប់យុវជន";
-      footerText.textContent = "© ២០២៥ បណ្ណាល័យឌីជីថល VMCTK — សៀវភៅទាំងអស់គឺឥតគិតថ្លៃសម្រាប់ការសិក្សា";
-      khBtn.classList.add("bg-blue-500", "text-white");
-      enBtn.classList.remove("bg-blue-500", "text-white");
-      enBtn.classList.add("bg-gray-300");
-    });
+  enBtn.addEventListener("click", () => {
+    subtitle.textContent = "Volunteer for My Community";
+    footerText.textContent = "© 2025 VMCTK Digital Library — All books are free for learning";
+    enBtn.classList.add("bg-blue-500", "text-white");
+    khBtn.classList.remove("bg-blue-500", "text-white");
+    khBtn.classList.add("bg-gray-300");
+  });
+  khBtn.addEventListener("click", () => {
+    subtitle.textContent = "អានសៀវភៅដោយឥតគិតថ្លៃសម្រាប់យុវជន";
+    footerText.textContent = "© ២០២៥ បណ្ណាល័យឌីជីថល VMCTK — សៀវភៅទាំងអស់គឺឥតគិតថ្លៃសម្រាប់ការសិក្សា";
+    khBtn.classList.add("bg-blue-500", "text-white");
+    enBtn.classList.remove("bg-blue-500", "text-white");
+    enBtn.classList.add("bg-gray-300");
+  });
 
-    // ========== INIT =============
-    loadBooks();
+  loadBooks();
+</script>
+;
   </script>
 </body>
 </html>
