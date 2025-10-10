@@ -5,36 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VMCTK Digital Library</title>
   <script src="https://cdn.tailwindcss.com"></script>
- <style>
-  body { font-family: 'Inter', sans-serif; }
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+    }
 
-  .book-cover {
-    width: 100%;
-    height: 18rem; /* taller covers */
-    object-fit: cover; /* fill the box perfectly */
-    border-radius: 0.5rem;
-    margin-bottom: 0.75rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
+    .book-cover {
+      width: 100%;
+      height: auto;               /* keep original shape */
+      max-height: 26rem;          /* prevent oversized covers */
+      object-fit: contain;        /* show full image (no crop) */
+      border-radius: 0.75rem;
+      background-color: #f9fafb;  /* light background behind covers */
+      padding: 0.5rem;
+      display: block;
+      margin: 0 auto 0.75rem auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-  .book-cover:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  }
+    .book-cover:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
 
-  /* Optional: make cards equal height */
-  #bookList > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-  }
+    #bookList > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+    }
 
-  /* Make grid cards cleaner */
-  #bookList {
-    gap: 2rem;
-  }
-</style>
+    #bookList {
+      gap: 2rem;
+    }
+
+    .book-card {
+      max-width: 20rem;
+      margin: auto;
+    }
+
+    .search-box {
+      max-width: 600px;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
   <!-- Header -->
@@ -50,12 +65,12 @@
 
   <!-- Search Bar -->
   <section class="p-4 flex justify-center">
-    <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
+    <input id="searchInput" type="text" placeholder="Search books..." class="search-box w-full p-2 border rounded shadow">
   </section>
 
   <!-- Books Grid -->
-  <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
-    <!-- Book cards appear here -->
+  <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+    <!-- Book cards will load here -->
   </section>
 
   <!-- Footer -->
@@ -63,19 +78,18 @@
     <p id="footerText">© 2025 VMCTK Digital Library — All books are free for learning</p>
   </footer>
 
-  <!-- Script -->
+  <!-- PapaParse for CSV -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
   <script>
-    // CSV link from your Google Sheet
+    // CSV link from your Google Sheet (replace if you have a new one)
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
 
-    // Load books from CSV
+    // Load and display books
     async function loadBooks() {
       try {
         const response = await fetch(CSV_URL);
         const csvText = await response.text();
-
-        // Parse CSV using PapaParse
         const results = Papa.parse(csvText, { header: true });
         const data = results.data;
 
@@ -86,48 +100,54 @@
           if (!book.Title) return; // skip empty rows
 
           const card = document.createElement("div");
-          card.className = "bg-white rounded-lg shadow hover:shadow-lg transition p-4";
+          card.className = "book-card bg-white rounded-lg shadow hover:shadow-lg transition p-4";
 
+          // Book Cover
           const img = document.createElement("img");
           img.src = book["Cover Link"] || "covers/placeholder.jpg";
           img.onerror = () => (img.src = "covers/placeholder.jpg");
           img.className = "book-cover";
           card.appendChild(img);
 
+          // Title
           const h2 = document.createElement("h2");
-          h2.className = "book-title font-bold text-lg";
+          h2.className = "book-title font-bold text-lg text-center";
           h2.textContent = book.Title;
           card.appendChild(h2);
 
+          // Author
           const pAuth = document.createElement("p");
-          pAuth.className = "book-author text-gray-600";
+          pAuth.className = "book-author text-gray-600 text-center";
           pAuth.textContent = book.Author;
           card.appendChild(pAuth);
 
+          // Language
           const pLang = document.createElement("p");
-          pLang.className = "book-lang text-sm text-blue-500";
+          pLang.className = "book-lang text-sm text-blue-500 text-center";
           pLang.textContent = book.Language;
           card.appendChild(pLang);
 
+          // Description
           const pDesc = document.createElement("p");
-          pDesc.className = "book-desc text-gray-700 mt-2";
+          pDesc.className = "book-desc text-gray-700 mt-2 text-center";
           pDesc.textContent = book.Description;
           card.appendChild(pDesc);
 
+          // Buttons
           const btnDiv = document.createElement("div");
-          btnDiv.className = "flex justify-between mt-3";
+          btnDiv.className = "flex justify-between mt-3 w-full";
 
           const read = document.createElement("a");
           read.href = book["PDF Link"];
           read.target = "_blank";
-          read.className = "text-green-600";
+          read.className = "text-green-600 font-medium";
           read.textContent = (book.Language?.toLowerCase().includes("khmer") ? "អានអនឡាញ" : "Read Online");
           btnDiv.appendChild(read);
 
           const dl = document.createElement("a");
           dl.href = book["PDF Link"];
           dl.download = "";
-          dl.className = "text-blue-600";
+          dl.className = "text-blue-600 font-medium";
           dl.textContent = (book.Language?.toLowerCase().includes("khmer") ? "ទាញយក" : "Download");
           btnDiv.appendChild(dl);
 
