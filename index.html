@@ -13,8 +13,8 @@
       --text-light: #1f2937;
       --text-dark: #f9fafb;
       --muted-dark: #d1d5db;
-      --card-light: #ffffff;
-      --card-dark: #374151;
+      --card-light: #ffffffcc;
+      --card-dark: #374151cc;
       --accent: #3b82f6;
     }
 
@@ -25,188 +25,111 @@
       transition: background-color 0.6s ease, color 0.6s ease;
     }
 
-    body.dark {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-    }
+    body.dark { background-color: var(--bg-dark); color: var(--text-dark); }
 
-    header, footer {
-      transition: background-color 0.6s ease, color 0.6s ease;
-    }
+    header, footer { transition: background-color 0.6s ease, color 0.6s ease; }
 
-    body.dark header {
-      background-color: #111827;
-      color: var(--text-dark);
-    }
+    body.dark header { background-color: #111827; color: var(--text-dark); }
+    body.dark footer { background-color: #111827; color: var(--muted-dark); }
 
-    body.dark footer {
-      background-color: #111827;
-      color: var(--muted-dark);
-    }
-
-    /* Book cover */
     .book-cover {
-      width: 100%;
-      height: auto;
-      max-height: 26rem;
-      object-fit: contain;
-      border-radius: 0.75rem;
-      background-color: #f9fafb;
-      padding: 0.5rem;
-      margin-bottom: 0.75rem;
+      width: 100%; max-height: 26rem; object-fit: contain;
+      border-radius: 0.75rem; background-color: #f9fafb;
+      padding: 0.5rem; margin-bottom: 0.75rem;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+    body.dark .book-cover { background-color: #1f2937; }
+    .book-cover:hover { transform: scale(1.03); box-shadow: 0 8px 20px rgba(0,0,0,0.2); cursor: pointer; }
 
-    body.dark .book-cover {
-      background-color: #1f2937;
-    }
-
-    .book-cover:hover {
-      transform: scale(1.03);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-    }
-
-    /* Book card */
     .book-card {
-      max-width: 20rem;
-      margin: auto;
-      background-color: var(--card-light);
-      color: inherit;
-      transition: background-color 0.6s ease, color 0.6s ease;
-      opacity: 0;
-      transform: translateY(20px);
+      max-width: 20rem; margin: auto; background-color: var(--card-light);
+      backdrop-filter: blur(8px); border-radius: 1rem;
+      transition: background-color 0.6s, color 0.6s, box-shadow 0.3s;
+      opacity: 0; transform: translateY(20px);
       animation: fadeInUp 0.6s ease forwards;
     }
-
-    body.dark .book-card {
-      background-color: var(--card-dark);
-      color: var(--text-dark);
-    }
+    body.dark .book-card { background-color: var(--card-dark); color: var(--text-dark);
+      box-shadow: 0 0 20px rgba(59,130,246,0.2); }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
     }
 
-    .book-title {
-      font-weight: bold;
-      transition: color 0.6s;
-      color: var(--text-light);
-    }
-    body.dark .book-title { color: #ffffff; }
-
-    .book-author {
-      color: #4b5563;
-      transition: color 0.6s;
-    }
+    .book-title { font-weight: bold; color: var(--text-light); transition: color 0.6s; }
+    body.dark .book-title { color: #fff; }
+    .book-author { color: #4b5563; transition: color 0.6s; }
     body.dark .book-author { color: #9ca3af; }
-
     .book-lang { color: #3b82f6; }
-
-    .book-desc {
-      color: #374151;
-      transition: color 0.6s;
-    }
+    .book-desc { color: #374151; transition: color 0.6s; }
     body.dark .book-desc { color: #d1d5db; }
 
     /* Modal */
     .modal {
-      display: none;
-      position: fixed;
-      z-index: 50;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      backdrop-filter: blur(8px);
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      display: none; position: fixed; z-index: 50; left: 0; top: 0;
+      width: 100%; height: 100%; backdrop-filter: blur(8px);
+      background-color: rgba(0,0,0,0.55);
+      justify-content: center; align-items: center; padding: 1rem;
+      opacity: 0; transition: opacity 0.3s ease;
     }
+    .modal.show { display: flex; opacity: 1; animation: fadeIn 0.4s ease forwards; }
 
-    .modal.show { display: flex; opacity: 1; }
+    @keyframes fadeIn { from{opacity:0; transform:scale(0.97);} to{opacity:1; transform:scale(1);} }
 
     .modal-content {
-      background: var(--card-light);
-      border-radius: 1rem;
-      max-width: 28rem;
-      width: 100%;
-      padding: 1.5rem;
-      text-align: center;
-      position: relative;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      animation: popUp 0.3s ease forwards;
-      transition: background-color 0.6s, color 0.6s;
+      background: var(--card-light); border-radius: 1rem; max-width: 30rem; width: 100%;
+      padding: 1.8rem; text-align: center; position: relative;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: background-color 0.5s, color 0.5s, transform 0.3s ease;
     }
-
     body.dark .modal-content {
-      background: var(--card-dark);
-      color: var(--text-dark);
+      background: rgba(45,55,72,0.7); color: var(--text-dark);
+      box-shadow: 0 0 25px rgba(59,130,246,0.3);
+      border: 1px solid rgba(255,255,255,0.15);
     }
 
-    @keyframes popUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+    .modal img { width: 100%; border-radius: 0.5rem; margin-bottom: 1rem; transition: transform 0.3s ease; }
+    .modal img:hover { transform: scale(1.03); }
+
+    .modal-nav {
+      display: flex; justify-content: space-between; margin-top: 1rem;
     }
+    .nav-btn {
+      background: var(--accent); color: white; border: none;
+      padding: 0.4rem 1rem; border-radius: 0.5rem; cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .nav-btn:hover { background: #2563eb; transform: scale(1.05); }
 
     .close-btn {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.75rem;
-      background: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 0.375rem;
-      padding: 0.25rem 0.5rem;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.3s;
+      position: absolute; top: 0.5rem; right: 0.75rem;
+      background: #ef4444; color: white; border: none;
+      border-radius: 0.375rem; padding: 0.25rem 0.5rem; cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
     }
-    .close-btn:hover { background: #dc2626; }
+    .close-btn:hover { background: #dc2626; transform: scale(1.1); }
 
-    /* Smooth logo transition */
-    #logoImage {
-      transition: opacity 0.6s ease-in-out, transform 0.4s ease-in-out;
-    }
+    body.dark a.text-green-600 { color: #22c55e; }
+    body.dark a.text-blue-600  { color: #60a5fa; }
 
-    #logoImage.fade-out {
-      opacity: 0;
-      transform: scale(0.95);
-    }
+    #logoImage { transition: opacity 0.6s ease-in-out, transform 0.4s ease-in-out; }
+    #logoImage.fade-out { opacity: 0; transform: scale(0.95); }
+    #logoImage.fade-in { opacity: 1; transform: scale(1); }
 
-    #logoImage.fade-in {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* Theme toggle button */
     #themeToggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 9999px;
-      padding: 0.5rem 0.8rem;
-      font-size: 1.2rem;
-      cursor: pointer;
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--accent); color: white; border: none;
+      border-radius: 9999px; padding: 0.5rem 0.8rem;
+      font-size: 1.2rem; cursor: pointer;
       transition: background 0.3s, transform 0.3s;
     }
-
-    #themeToggle:hover {
-      background: #2563eb;
-      transform: scale(1.1);
-    }
+    #themeToggle:hover { background: #2563eb; transform: scale(1.1); }
   </style>
 </head>
 
 <body class="text-gray-800">
-  <!-- Header -->
   <header class="bg-white dark:bg-gray-800 shadow p-4 flex flex-col items-center relative transition-colors duration-300">
     <button id="themeToggle" title="Toggle dark mode">🌙</button>
     <img id="logoImage" src="LOGO VMC.png" alt="VMCTK Logo"
@@ -221,16 +144,12 @@
     </div>
   </header>
 
-  <!-- Search -->
   <section class="p-4 flex justify-center">
     <input id="searchInput" type="text" placeholder="Search books..."
       class="w-full max-w-xl p-2 border rounded shadow">
   </section>
 
-  <!-- Books Grid -->
-  <section id="bookList"
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-  </section>
+  <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
 
   <!-- Modal -->
   <div id="bookModal" class="modal">
@@ -245,28 +164,29 @@
         <a id="modalRead" href="#" target="_blank" class="text-green-600 font-semibold">Read Online</a>
         <a id="modalDownload" href="#" download class="text-blue-600 font-semibold">Download</a>
       </div>
+      <div class="modal-nav">
+        <button id="prevBook" class="nav-btn">⏮️ Previous</button>
+        <button id="nextBook" class="nav-btn">Next ⏭️</button>
+      </div>
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="bg-gray-800 text-white text-center p-4 mt-8 transition-colors duration-300">
     <p id="footerText">© 2025 VMCTK Digital Library — All books are free for learning</p>
   </footer>
 
-  <!-- PapaParse -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
   <script>
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
 
-    // Create HD Google Drive link
+    let books = [];
+    let currentIndex = 0;
+
     function getHdCover(url) {
       if (!url) return "covers/placeholder.jpg";
       const match = url.match(/[-\w]{25,}/);
-      if (match) {
-        const id = match[0];
-        return `https://drive.google.com/thumbnail?id=${id}&sz=w2000`;
-      }
+      if (match) return `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000`;
       return url;
     }
 
@@ -274,54 +194,47 @@
       const response = await fetch(CSV_URL);
       const csvText = await response.text();
       const results = Papa.parse(csvText, { header: true });
-      const data = results.data;
+      books = results.data.filter(b => b.Title);
       const container = document.getElementById("bookList");
       container.innerHTML = "";
-
-      data.forEach((book, index) => {
-        if (!book.Title) return;
-
+      books.forEach((book, index) => {
         const card = document.createElement("div");
         card.className = "book-card rounded-lg shadow hover:shadow-lg transition p-4";
         card.style.animationDelay = `${index * 0.1}s`;
-
         const img = document.createElement("img");
         img.src = getHdCover(book["Cover Link"]);
-        img.onerror = () => (img.src = "covers/placeholder.jpg");
         img.className = "book-cover";
-        img.addEventListener("click", () => openModal(book));
+        img.addEventListener("click", () => openModal(index));
         card.appendChild(img);
-
-        const h2 = document.createElement("h2");
-        h2.className = "book-title font-bold text-lg text-center cursor-pointer";
-        h2.textContent = book.Title;
-        h2.addEventListener("click", () => openModal(book));
-        card.appendChild(h2);
-
-        const pAuth = document.createElement("p");
-        pAuth.className = "book-author text-gray-600 text-center";
-        pAuth.textContent = book.Author;
-        card.appendChild(pAuth);
-
-        const pLang = document.createElement("p");
-        pLang.className = "book-lang text-sm text-blue-500 text-center";
-        pLang.textContent = book.Language;
-        card.appendChild(pLang);
-
-        const pDesc = document.createElement("p");
-        pDesc.className = "book-desc text-gray-700 mt-2 text-center";
-        pDesc.textContent = book.Description;
-        card.appendChild(pDesc);
-
+        const title = document.createElement("h2");
+        title.className = "book-title text-lg text-center cursor-pointer";
+        title.textContent = book.Title;
+        title.addEventListener("click", () => openModal(index));
+        card.appendChild(title);
+        const author = document.createElement("p");
+        author.className = "book-author text-center";
+        author.textContent = book.Author;
+        card.appendChild(author);
+        const lang = document.createElement("p");
+        lang.className = "book-lang text-sm text-blue-500 text-center";
+        lang.textContent = book.Language;
+        card.appendChild(lang);
+        const desc = document.createElement("p");
+        desc.className = "book-desc mt-2 text-center";
+        desc.textContent = book.Description;
+        card.appendChild(desc);
         container.appendChild(card);
       });
     }
 
-    // Modal control
     const modal = document.getElementById("bookModal");
     const closeModalBtn = document.getElementById("closeModal");
+    const nextBtn = document.getElementById("nextBook");
+    const prevBtn = document.getElementById("prevBook");
 
-    function openModal(book) {
+    function openModal(index) {
+      currentIndex = index;
+      const book = books[index];
       document.getElementById("modalCover").src = getHdCover(book["Cover Link"]);
       document.getElementById("modalTitle").textContent = book.Title;
       document.getElementById("modalAuthor").textContent = book.Author;
@@ -332,10 +245,16 @@
       modal.classList.add("show");
     }
 
+    nextBtn.addEventListener("click", () => {
+      if (currentIndex < books.length - 1) openModal(currentIndex + 1);
+    });
+    prevBtn.addEventListener("click", () => {
+      if (currentIndex > 0) openModal(currentIndex - 1);
+    });
+
     closeModalBtn.addEventListener("click", () => modal.classList.remove("show"));
     window.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("show"); });
 
-    // Search
     document.getElementById("searchInput").addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
       document.querySelectorAll("#bookList > div").forEach(book => {
@@ -345,12 +264,10 @@
       });
     });
 
-    // Language toggle
     const enBtn = document.getElementById("enBtn");
     const khBtn = document.getElementById("khBtn");
     const subtitle = document.getElementById("subtitle");
     const footerText = document.getElementById("footerText");
-
     enBtn.addEventListener("click", () => {
       subtitle.textContent = "Volunteer for My Community";
       footerText.textContent = "© 2025 VMCTK Digital Library — All books are free for learning";
@@ -358,7 +275,6 @@
       khBtn.classList.remove("bg-blue-500", "text-white");
       khBtn.classList.add("bg-gray-300");
     });
-
     khBtn.addEventListener("click", () => {
       subtitle.textContent = "អានសៀវភៅដោយឥតគិតថ្លៃសម្រាប់យុវជន";
       footerText.textContent = "© ២០២៥ បណ្ណាល័យឌីជីថល VMCTK — សៀវភៅទាំងអស់គឺឥតគិតថ្លៃសម្រាប់ការសិក្សា";
@@ -367,19 +283,15 @@
       enBtn.classList.add("bg-gray-300");
     });
 
-    // 🌙 Theme toggle with smooth logo fade
     const themeToggle = document.getElementById("themeToggle");
     const body = document.body;
     const logoImage = document.getElementById("logoImage");
 
-    // Load saved theme preference
     if (localStorage.getItem("theme") === "dark") {
       body.classList.add("dark");
       themeToggle.textContent = "☀️";
       logoImage.src = "LOGO_VMC_white.png";
-    } else {
-      logoImage.src = "LOGO VMC.png";
-    }
+    } else { logoImage.src = "LOGO VMC.png"; }
 
     themeToggle.addEventListener("click", () => {
       logoImage.classList.add("fade-out");
