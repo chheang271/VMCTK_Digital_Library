@@ -22,6 +22,7 @@
       color: var(--vmc-text-light);
       transition: background-color 0.6s ease, color 0.6s ease;
     }
+
     body.dark {
       background-color: var(--vmc-bg-dark);
       color: var(--vmc-text-dark);
@@ -41,10 +42,12 @@
       z-index: 100;
       transition: opacity 0.8s ease-out;
     }
+
     #loadingScreen.fade-out {
       opacity: 0;
       visibility: hidden;
     }
+
     .spinner {
       border: 4px solid rgba(255, 255, 255, 0.3);
       border-top: 4px solid var(--vmc-yellow);
@@ -54,8 +57,11 @@
       animation: spin 1s linear infinite;
       margin-bottom: 1rem;
     }
+
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     /* Header */
@@ -64,6 +70,7 @@
       color: white;
       transition: background-color 0.6s ease;
     }
+
     body.dark header {
       background: linear-gradient(to right, #1e293b, var(--vmc-bg-dark));
       color: var(--vmc-yellow);
@@ -75,10 +82,13 @@
     }
 
     /* Buttons */
-    button, a {
+    button,
+    a {
       transition: background-color 0.3s, color 0.3s, transform 0.2s;
     }
-    button:hover, a:hover {
+
+    button:hover,
+    a:hover {
       transform: scale(1.05);
     }
 
@@ -86,13 +96,16 @@
       background-color: var(--vmc-blue);
       color: white;
     }
+
     #khBtn {
       background-color: var(--vmc-yellow);
       color: black;
     }
+
     #enBtn:hover {
       background-color: var(--vmc-light-blue);
     }
+
     #khBtn:hover {
       background-color: #fbbf24;
     }
@@ -101,9 +114,11 @@
     #featuredSection {
       background: linear-gradient(to right, #e0f2fe, #fef9c3);
     }
+
     body.dark #featuredSection {
       background: linear-gradient(to right, #1e293b, #1f2937);
     }
+
     #featuredList {
       display: flex;
       gap: 1rem;
@@ -113,13 +128,16 @@
       padding: 0.5rem;
       -webkit-overflow-scrolling: touch;
     }
+
     #featuredList::-webkit-scrollbar {
       height: 6px;
     }
+
     #featuredList::-webkit-scrollbar-thumb {
       background: var(--vmc-yellow);
       border-radius: 10px;
     }
+
     .featured-card {
       flex: 0 0 85%;
       max-width: 300px;
@@ -130,15 +148,22 @@
       padding: 0.75rem;
       transition: transform 0.3s, box-shadow 0.3s;
     }
+
     .featured-card:hover {
       transform: scale(1.03);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
+
     @media (min-width: 640px) {
-      .featured-card { flex: 0 0 40%; }
+      .featured-card {
+        flex: 0 0 40%;
+      }
     }
+
     @media (min-width: 1024px) {
-      .featured-card { flex: 0 0 25%; }
+      .featured-card {
+        flex: 0 0 25%;
+      }
     }
 
     .book-cover {
@@ -159,14 +184,23 @@
       align-items: center;
       z-index: 50;
     }
+
     .modal.show {
       display: flex;
       animation: fadeIn 0.4s ease forwards;
     }
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
+
     .modal-content {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(10px);
@@ -178,8 +212,29 @@
       border: 2px solid var(--vmc-blue);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
+
     body.dark .modal-content {
       background: rgba(55, 65, 81, 0.85);
+    }
+
+    /* Dropdown */
+    #categoryDropdown {
+      border: 2px solid var(--vmc-blue);
+      background-color: white;
+      color: var(--vmc-text-light);
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    body.dark #categoryDropdown {
+      background-color: var(--vmc-bg-dark);
+      color: var(--vmc-text-dark);
+      border-color: var(--vmc-yellow);
+    }
+
+    #categoryDropdown:hover {
+      transform: scale(1.03);
+      border-color: var(--vmc-light-blue);
     }
 
     /* Footer */
@@ -188,6 +243,7 @@
       color: white;
       transition: background-color 0.5s ease;
     }
+
     body.dark footer {
       background: linear-gradient(to right, var(--vmc-bg-dark), var(--vmc-bg-dark));
       color: var(--vmc-yellow);
@@ -198,6 +254,7 @@
       text-decoration: none;
       transition: color 0.3s;
     }
+
     footer a:hover {
       color: var(--vmc-yellow);
     }
@@ -227,6 +284,13 @@
   <!-- Search -->
   <section class="p-4 flex justify-center">
     <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
+  </section>
+
+  <!-- Category Dropdown -->
+  <section id="categorySection" class="p-4 flex justify-center">
+    <select id="categoryDropdown" class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800">
+      <option value="All">All Categories</option>
+    </select>
   </section>
 
   <!-- Featured -->
@@ -267,9 +331,8 @@
     <div id="aboutEN">
       <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">About VMCTK</h2>
       <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
-        <strong>VMCTK Digital Library</strong> is a volunteer project by
-        <em>Volunteer for My Community</em>, helping youths access
-        <span class="text-blue-500 dark:text-blue-300 font-medium">free books</span> in
+        <strong>VMCTK Digital Library</strong> is a volunteer project by <em>Volunteer for My Community</em>,
+        helping youths access <span class="text-blue-500 dark:text-blue-300 font-medium">free books</span> in
         <span class="font-semibold">English</span> & <span class="font-semibold">Khmer</span>.
       </p>
     </div>
@@ -283,7 +346,7 @@
     </div>
   </section>
 
-  <!-- Contact (Form) -->
+  <!-- Contact -->
   <section id="contactSection" class="px-6 py-10 bg-gradient-to-r from-indigo-100 to-blue-100 dark:from-gray-900 dark:to-gray-800 text-center">
     <div id="contactEN">
       <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">📬 Contact Us</h2>
@@ -297,12 +360,15 @@
         មានសំណួរ ឬចង់ចូលរួមជួយស្ម័គ្រចិត្តមែនទេ? យើងរីករាយស្តាប់ពីអ្នក។
       </p>
     </div>
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe4MTbFG2ZmE-9JYGccFdh3yWlW-x7Fbck1DXAIafONQk_vUA/viewform?embedded=true"
-      width="100%" height="600" frameborder="0"
+    <iframe
+      src="https://docs.google.com/forms/d/e/1FAIpQLSe4MTbFG2ZmE-9JYGccFdh3yWlW-x7Fbck1DXAIafONQk_vUA/viewform?embedded=true"
+      width="100%"
+      height="600"
+      frameborder="0"
       class="rounded-lg shadow-lg max-w-3xl mx-auto"></iframe>
   </section>
 
-  <!-- Footer with Contact Info -->
+  <!-- Footer -->
   <footer class="text-center p-4">
     <div id="footerEN">
       <p>📘 Facebook: <a href="https://www.facebook.com/profile.php?id=61576745039709" target="_blank">Volunteer for My Community</a></p>
@@ -320,7 +386,6 @@
   <script>
     // Core config
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
-
     const loadingScreen = document.getElementById("loadingScreen");
     const quoteText = document.getElementById("quoteText");
     const quotes = [
@@ -370,11 +435,48 @@
 
       const bookList = document.getElementById("bookList");
       const featuredList = document.getElementById("featuredList");
+      const categoryDropdown = document.getElementById("categoryDropdown");
+
       bookList.innerHTML = "";
       featuredList.innerHTML = "";
 
+      // ✅ Collect unique categories
+      const categories = [...new Set(books.map(b => b.Category?.trim()).filter(Boolean))];
+
+      // ✅ Populate dropdown
+      categoryDropdown.innerHTML = `<option value="All">All Categories</option>` +
+        categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
+
+      // ✅ Listen for dropdown changes
+      categoryDropdown.addEventListener("change", e => {
+        showBooks(e.target.value);
+      });
+
+      // ✅ Render featured
       books.forEach((b, idx) => {
-        // Normal Book Card
+        if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
+          const f = document.createElement("div");
+          f.className = "featured-card";
+          f.innerHTML = `<img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2">
+                         <h3 class="font-semibold">${b.Title}</h3>`;
+          f.onclick = () => openModal(idx);
+          featuredList.appendChild(f);
+        }
+      });
+
+      // ✅ Initial display
+      showBooks("All");
+
+      loadingScreen.classList.add("fade-out");
+    }
+
+    function showBooks(category) {
+      const bookList = document.getElementById("bookList");
+      bookList.innerHTML = "";
+
+      const filtered = books.filter(b => category === "All" || b.Category?.trim() === category);
+
+      filtered.forEach((b, idx) => {
         const card = document.createElement("div");
         card.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
         card.innerHTML = `
@@ -385,21 +487,11 @@
         `;
         card.onclick = () => openModal(idx);
         bookList.appendChild(card);
-
-        // Featured (top 5)
-        if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
-          const f = document.createElement("div");
-          f.className = "featured-card";
-          f.innerHTML = `
-            <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2">
-            <h3 class="font-semibold">${b.Title}</h3>
-          `;
-          f.onclick = () => openModal(idx);
-          featuredList.appendChild(f);
-        }
       });
 
-      loadingScreen.classList.add("fade-out");
+      if (filtered.length === 0) {
+        bookList.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found in this category.</p>`;
+      }
     }
 
     // Modal
@@ -409,7 +501,6 @@
     window.onclick = e => { if (e.target === modal) modal.classList.remove("show"); };
 
     function openModal(idx) {
-      currentIndex = idx;
       const b = books[idx];
       document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
       document.getElementById("modalTitle").textContent = b.Title;
@@ -421,27 +512,18 @@
       modal.classList.add("show");
     }
 
-    // Language Toggle
-    const enBtn = document.getElementById("enBtn");
-    const khBtn = document.getElementById("khBtn");
-    enBtn.onclick = () => {
-      document.getElementById("aboutEN").classList.remove("hidden");
-      document.getElementById("aboutKH").classList.add("hidden");
-      document.getElementById("contactEN").classList.remove("hidden");
-      document.getElementById("contactKH").classList.add("hidden");
-      document.getElementById("footerEN").classList.remove("hidden");
-      document.getElementById("footerKH").classList.add("hidden");
-    };
-    khBtn.onclick = () => {
-      document.getElementById("aboutKH").classList.remove("hidden");
-      document.getElementById("aboutEN").classList.add("hidden");
-      document.getElementById("contactKH").classList.remove("hidden");
-      document.getElementById("contactEN").classList.add("hidden");
-      document.getElementById("footerKH").classList.remove("hidden");
-      document.getElementById("footerEN").classList.add("hidden");
+    // Language toggle
+    document.getElementById("enBtn").onclick = () => {
+      ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
+      ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
     };
 
-    // Theme Toggle
+    document.getElementById("khBtn").onclick = () => {
+      ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
+      ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
+    };
+
+    // Theme toggle
     const themeToggle = document.getElementById("themeToggle");
     const logoImage = document.getElementById("logoImage");
     themeToggle.onclick = () => {
@@ -451,7 +533,7 @@
       logoImage.src = isDark ? "LOGO_VMC_white.png" : "LOGO VMC.png";
       localStorage.setItem("theme", isDark ? "dark" : "light");
     };
-    // On load: restore theme if set
+
     if (localStorage.getItem("theme") === "dark") {
       document.body.classList.add("dark");
       themeToggle.textContent = "☀️";
@@ -466,7 +548,7 @@
       document.getElementById("featuredList").scrollBy({ left: 250, behavior: "smooth" });
     };
 
-    // Auto-scroll Featured
+    // Auto-scroll featured
     let autoScrollActive = true;
     const fList = document.getElementById("featuredList");
     function autoScroll() {
@@ -477,8 +559,8 @@
       }
     }
     setInterval(autoScroll, 40);
-    ["mouseenter","touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
-    ["mouseleave","touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
+    ["mouseenter", "touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
+    ["mouseleave", "touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
 
     // Search filter
     document.getElementById("searchInput").addEventListener("input", e => {
@@ -490,7 +572,6 @@
       });
     });
 
-    // Initialize
     window.onload = loadBooks;
   </script>
 </body>
