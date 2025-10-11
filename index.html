@@ -15,252 +15,118 @@
       --vmc-text-light: #1f2937;
       --vmc-text-dark: #f9fafb;
     }
-
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--vmc-bg-light);
       color: var(--vmc-text-light);
       transition: background-color 0.6s ease, color 0.6s ease;
     }
-
-    body.dark {
-      background-color: var(--vmc-bg-dark);
-      color: var(--vmc-text-dark);
-    }
+    body.dark { background-color: var(--vmc-bg-dark); color: var(--vmc-text-dark); }
 
     /* Loading Screen */
     #loadingScreen {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: linear-gradient(135deg, var(--vmc-light-blue), var(--vmc-blue));
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.1rem;
-      z-index: 100;
-      transition: opacity 0.8s ease-out;
+      color: white; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      font-size: 1.1rem; z-index: 100; transition: opacity 0.8s ease-out;
     }
-
-    #loadingScreen.fade-out {
-      opacity: 0;
-      visibility: hidden;
-    }
-
+    #loadingScreen.fade-out { opacity: 0; visibility: hidden; }
     .spinner {
       border: 4px solid rgba(255, 255, 255, 0.3);
       border-top: 4px solid var(--vmc-yellow);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin-bottom: 1rem;
+      border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 1rem;
     }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Header */
     header {
       background: linear-gradient(to right, var(--vmc-light-blue), var(--vmc-blue));
-      color: white;
-      transition: background-color 0.6s ease;
+      color: white; transition: background-color 0.6s ease;
     }
-
     body.dark header {
       background: linear-gradient(to right, #1e293b, var(--vmc-bg-dark));
       color: var(--vmc-yellow);
     }
+    #themeToggle { font-size: 1.4rem; color: var(--vmc-yellow); }
 
-    #themeToggle {
-      font-size: 1.4rem;
-      color: var(--vmc-yellow);
-    }
-
-    /* Buttons */
-    button,
-    a {
-      transition: background-color 0.3s, color 0.3s, transform 0.2s;
-    }
-
-    button:hover,
-    a:hover {
-      transform: scale(1.05);
-    }
-
-    #enBtn {
-      background-color: var(--vmc-blue);
-      color: white;
-    }
-
-    #khBtn {
-      background-color: var(--vmc-yellow);
-      color: black;
-    }
-
-    #enBtn:hover {
-      background-color: var(--vmc-light-blue);
-    }
-
-    #khBtn:hover {
-      background-color: #fbbf24;
-    }
+    /* Buttons/Links */
+    button, a { transition: background-color 0.3s, color 0.3s, transform 0.2s; }
+    button:hover, a:hover { transform: scale(1.05); }
+    #enBtn { background-color: var(--vmc-blue); color: white; }
+    #khBtn { background-color: var(--vmc-yellow); color: black; }
+    #enBtn:hover { background-color: var(--vmc-light-blue); }
+    #khBtn:hover { background-color: #fbbf24; }
 
     /* Featured Carousel */
-    #featuredSection {
-      background: linear-gradient(to right, #e0f2fe, #fef9c3);
-    }
-
-    body.dark #featuredSection {
-      background: linear-gradient(to right, #1e293b, #1f2937);
-    }
-
+    #featuredSection { background: linear-gradient(to right, #e0f2fe, #fef9c3); }
+    body.dark #featuredSection { background: linear-gradient(to right, #1e293b, #1f2937); }
     #featuredList {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth;
-      padding: 0.5rem;
-      -webkit-overflow-scrolling: touch;
+      display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      padding: 0.5rem; -webkit-overflow-scrolling: touch;
     }
-
-    #featuredList::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    #featuredList::-webkit-scrollbar-thumb {
-      background: var(--vmc-yellow);
-      border-radius: 10px;
-    }
-
+    #featuredList::-webkit-scrollbar { height: 6px; }
+    #featuredList::-webkit-scrollbar-thumb { background: var(--vmc-yellow); border-radius: 10px; }
     .featured-card {
-      flex: 0 0 85%;
-      max-width: 300px;
-      scroll-snap-align: center;
-      border: 2px solid var(--vmc-yellow);
-      background-color: rgba(250, 204, 21, 0.1);
-      border-radius: 1rem;
-      padding: 0.75rem;
+      flex: 0 0 85%; max-width: 300px; scroll-snap-align: center; border: 2px solid var(--vmc-yellow);
+      background-color: rgba(250, 204, 21, 0.1); border-radius: 1rem; padding: 0.75rem;
       transition: transform 0.3s, box-shadow 0.3s;
     }
-
-    .featured-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    @media (min-width: 640px) {
-      .featured-card {
-        flex: 0 0 40%;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .featured-card {
-        flex: 0 0 25%;
-      }
-    }
-
-    .book-cover {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      border-radius: 0.75rem;
-    }
+    .featured-card:hover { transform: scale(1.03); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    @media (min-width: 640px) { .featured-card { flex: 0 0 40%; } }
+    @media (min-width: 1024px) { .featured-card { flex: 0 0 25%; } }
+    .book-cover { width: 100%; height: auto; object-fit: cover; border-radius: 0.75rem; }
 
     /* Modal / Glass */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(8px);
-      justify-content: center;
-      align-items: center;
-      z-index: 50;
-    }
-
-    .modal.show {
-      display: flex;
-      animation: fadeIn 0.4s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 50; }
+    .modal.show { display: flex; animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1);} }
     .modal-content {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(10px);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      max-width: 26rem;
-      width: 90%;
-      text-align: center;
-      border: 2px solid var(--vmc-blue);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border-radius: 1rem; padding: 1.5rem; max-width: 26rem;
+      width: 90%; text-align: center; border: 2px solid var(--vmc-blue); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
+    body.dark .modal-content { background: rgba(55,65,81,0.85); }
 
-    body.dark .modal-content {
-      background: rgba(55, 65, 81, 0.85);
-    }
-
-    /* Dropdown */
+    /* Category Dropdown */
     #categoryDropdown {
-      border: 2px solid var(--vmc-blue);
-      background-color: white;
-      color: var(--vmc-text-light);
-      font-weight: 500;
-      transition: all 0.3s;
+      border: 2px solid var(--vmc-blue); background-color: white; color: var(--vmc-text-light);
+      font-weight: 500; transition: all 0.3s;
+    }
+    body.dark #categoryDropdown { background-color: var(--vmc-bg-dark); color: var(--vmc-text-dark); border-color: var(--vmc-yellow); }
+    #categoryDropdown:hover { transform: scale(1.03); border-color: var(--vmc-light-blue); }
+
+    /* Heart (favorite) button inline */
+    .heart-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.35rem 0.6rem; border-radius: 0.5rem; font-weight: 600;
+      transition: transform 0.15s ease, background-color 0.2s ease;
+    }
+    .heart-btn:hover { transform: scale(1.03); }
+    .heart-on { background: #ef4444; color: white; }           /* red when favorited */
+    .heart-off { background: #e5e7eb; color: #111827; }       /* gray when not yet */
+    body.dark .heart-off { background: #374151; color: #f9fafb; }
+
+    /* NEW badge (top-left ribbon on cover) */
+    .badge-wrap { position: relative; }
+    .badge-new {
+      position: absolute; top: 0.4rem; left: 0.4rem;
+      background: var(--vmc-yellow); color: #111827; font-weight: 800;
+      font-size: 0.65rem; padding: 0.2rem 0.45rem; border-radius: 0.25rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
-    body.dark #categoryDropdown {
-      background-color: var(--vmc-bg-dark);
-      color: var(--vmc-text-dark);
-      border-color: var(--vmc-yellow);
-    }
-
-    #categoryDropdown:hover {
-      transform: scale(1.03);
-      border-color: var(--vmc-light-blue);
-    }
+    /* Favorites Page */
+    #favoritesPage a { text-decoration: underline; }
 
     /* Footer */
     footer {
       background: linear-gradient(to right, var(--vmc-blue), var(--vmc-light-blue));
-      color: white;
-      transition: background-color 0.5s ease;
+      color: white; transition: background-color 0.5s ease;
     }
-
-    body.dark footer {
-      background: linear-gradient(to right, var(--vmc-bg-dark), var(--vmc-bg-dark));
-      color: var(--vmc-yellow);
-    }
-
-    footer a {
-      color: inherit;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    footer a:hover {
-      color: var(--vmc-yellow);
-    }
+    body.dark footer { background: linear-gradient(to right, var(--vmc-bg-dark), var(--vmc-bg-dark)); color: var(--vmc-yellow); }
+    footer a { color: inherit; text-decoration: none; transition: color 0.3s; }
+    footer a:hover { color: var(--vmc-yellow); }
   </style>
 </head>
-
 <body>
   <!-- Loading -->
   <div id="loadingScreen">
@@ -272,14 +138,27 @@
   <!-- Header -->
   <header class="shadow p-4 flex flex-col items-center relative">
     <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
-    <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2">
+    <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2" alt="VMCTK Logo">
     <h1 class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
     <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
     <div class="mt-2">
       <button id="enBtn" class="px-3 py-1">English</button>
       <button id="khBtn" class="px-3 py-1 ml-2">ខ្មែរ</button>
     </div>
+    <!-- Link to Favorites Page (same page section) -->
+    <a href="#favoritesPage" id="favoritesLink" class="mt-3 text-sm text-yellow-200 dark:text-yellow-400 hover:underline">
+      💖 View Favorite Books
+    </a>
   </header>
+
+  <!-- Continue Reading Banner -->
+  <section id="continueReading" class="hidden bg-yellow-100 dark:bg-yellow-900 p-3 text-center shadow">
+    <p id="continueText" class="text-gray-800 dark:text-gray-100">
+      📖 Continue reading: <span id="continueBook" class="font-semibold"></span>
+      <button id="continueBtn" class="ml-2 bg-blue-600 text-white px-3 py-1 rounded">Open</button>
+      <button id="clearContinue" class="ml-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white px-3 py-1 rounded">Clear</button>
+    </p>
+  </section>
 
   <!-- Search -->
   <section class="p-4 flex justify-center">
@@ -308,8 +187,16 @@
   <!-- Book List -->
   <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
 
+  <!-- Favorites Page (same page section) -->
+  <section id="favoritesPage" class="hidden px-6 py-10 bg-gradient-to-r from-blue-50 to-yellow-50 dark:from-gray-900 dark:to-gray-800 text-center">
+    <h2 class="text-2xl font-bold text-blue-600 dark:text-yellow-400 mb-6">💖 Your Favorite Books</h2>
+    <div id="favoritesList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    <p id="noFavMsg" class="text-gray-500 dark:text-gray-400 mt-4">You haven’t added any favorites yet.</p>
+    <button id="backToHome" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded">⬅ Back to Library</button>
+  </section>
+
   <!-- Modal -->
-  <div id="bookModal" class="modal">
+  <div id="bookModal" class="modal" aria-modal="true" role="dialog">
     <div class="modal-content relative">
       <button id="closeModal" class="absolute top-2 right-3 bg-red-500 text-white rounded px-2">✕</button>
       <img id="modalCover" src="" alt="Book Cover" class="mx-auto rounded-lg shadow">
@@ -326,8 +213,8 @@
 
   <!-- About Section -->
   <section id="aboutVMCTK" class="px-6 py-10 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-900 text-center">
-    <img src="LOGO VMC.png" class="w-20 mx-auto mb-4 dark:hidden">
-    <img src="LOGO_VMC_white.png" class="w-20 mx-auto mb-4 hidden dark:block">
+    <img src="LOGO VMC.png" class="w-20 mx-auto mb-4 dark:hidden" alt="VMCTK Logo">
+    <img src="LOGO_VMC_white.png" class="w-20 mx-auto mb-4 hidden dark:block" alt="VMCTK Logo Dark">
     <div id="aboutEN">
       <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">About VMCTK</h2>
       <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
@@ -341,34 +228,26 @@
       <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
         <strong>បណ្ណាល័យឌីជីថល VMCTK</strong> គឺជាគម្រោងស្ម័គ្រចិត្ត
         <em>Volunteer for My Community</em> ដើម្បីជួយ
-        <span class="text-blue-500 dark:text-blue-300 font-medium">យុវជនអានសៀវភៅឥតគិតថ្លៃ</span>។
+        <span class="text-blue-ភូ dark:text-blue-300 font-medium">យុវជនអានសៀវភៅឥតគិតថ្លៃ</span>។
       </p>
     </div>
   </section>
 
-  <!-- Contact -->
+  <!-- Contact (Form) -->
   <section id="contactSection" class="px-6 py-10 bg-gradient-to-r from-indigo-100 to-blue-100 dark:from-gray-900 dark:to-gray-800 text-center">
     <div id="contactEN">
       <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">📬 Contact Us</h2>
-      <p class="text-gray-700 dark:text-gray-300 mb-6">
-        Have a question, suggestion, or want to volunteer? We’d love to hear from you!
-      </p>
+      <p class="text-gray-700 dark:text-gray-300 mb-6"> Have a question, suggestion, or want to volunteer? We’d love to hear from you! </p>
     </div>
     <div id="contactKH" class="hidden">
       <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">📬 ទំនាក់ទំនងមកយើង</h2>
-      <p class="text-gray-700 dark:text-gray-300 mb-6">
-        មានសំណួរ ឬចង់ចូលរួមជួយស្ម័គ្រចិត្តមែនទេ? យើងរីករាយស្តាប់ពីអ្នក។
-      </p>
+      <p class="text-gray-700 dark:text-gray-300 mb-6"> មានសំណួរ ឬចង់ចូលរួមជួយស្ម័គ្រចិត្តមែនទេ? យើងរីករាយស្តាប់ពីអ្នក។ </p>
     </div>
-    <iframe
-      src="https://docs.google.com/forms/d/e/1FAIpQLSe4MTbFG2ZmE-9JYGccFdh3yWlW-x7Fbck1DXAIafONQk_vUA/viewform?embedded=true"
-      width="100%"
-      height="600"
-      frameborder="0"
-      class="rounded-lg shadow-lg max-w-3xl mx-auto"></iframe>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe4MTbFG2ZmE-9JYGccFdh3yWlW-x7Fbck1DXAIafONQk_vUA/viewform?embedded=true"
+      width="100%" height="600" frameborder="0" class="rounded-lg shadow-lg max-w-3xl mx-auto"></iframe>
   </section>
 
-  <!-- Footer -->
+  <!-- Footer with Contact Info -->
   <footer class="text-center p-4">
     <div id="footerEN">
       <p>📘 Facebook: <a href="https://www.facebook.com/profile.php?id=61576745039709" target="_blank">Volunteer for My Community</a></p>
@@ -384,8 +263,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
-    // Core config
+    // ===== Core config =====
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
+    const NEW_DAYS_WINDOW = 30; // days
     const loadingScreen = document.getElementById("loadingScreen");
     const quoteText = document.getElementById("quoteText");
     const quotes = [
@@ -400,7 +280,6 @@
       "❤️ Learn not for school, but for life.",
       "🎓 Reading is dreaming with open eyes."
     ];
-
     function showRandomQuote() {
       let current = quotes[Math.floor(Math.random() * quotes.length)];
       quoteText.textContent = current;
@@ -408,11 +287,8 @@
         quoteText.style.opacity = "0";
         setTimeout(() => {
           let nextQ;
-          do {
-            nextQ = quotes[Math.floor(Math.random() * quotes.length)];
-          } while (nextQ === current);
-          quoteText.textContent = nextQ;
-          quoteText.style.opacity = "1";
+          do { nextQ = quotes[Math.floor(Math.random() * quotes.length)]; } while (nextQ === current);
+          quoteText.textContent = nextQ; quoteText.style.opacity = "1";
         }, 1000);
       }, 4000);
     }
@@ -421,12 +297,41 @@
     let books = [];
     let currentIndex = 0;
 
+    // ===== Utilities =====
     function getHdCover(url) {
       if (!url) return "";
       const match = url.match(/[-\w]{25,}/);
       return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
     }
+    function isNewByDate(dateStr) {
+      if (!dateStr) return false;
+      const added = new Date(dateStr);
+      if (isNaN(added)) return false;
+      const now = new Date();
+      const diffDays = (now - added) / (1000 * 60 * 60 * 24);
+      return diffDays <= NEW_DAYS_WINDOW;
+    }
 
+    // ===== Continue Reading banner =====
+    function updateContinueBanner() {
+      const data = JSON.parse(localStorage.getItem("lastReadBook") || "null");
+      const banner = document.getElementById("continueReading");
+      const title = document.getElementById("continueBook");
+      const btn = document.getElementById("continueBtn");
+      if (data && books[data.index]) {
+        banner.classList.remove("hidden");
+        title.textContent = data.Title;
+        btn.onclick = () => openModal(data.index);
+      } else {
+        banner.classList.add("hidden");
+      }
+    }
+    document.getElementById("clearContinue").onclick = () => {
+      localStorage.removeItem("lastReadBook");
+      updateContinueBanner();
+    };
+
+    // ===== Load Books =====
     async function loadBooks() {
       const resp = await fetch(CSV_URL);
       const text = await resp.text();
@@ -440,52 +345,124 @@
       bookList.innerHTML = "";
       featuredList.innerHTML = "";
 
-      // ✅ Collect unique categories
-      const categories = [...new Set(books.map(b => b.Category?.trim()).filter(Boolean))];
+      // Collect unique categories
+      const categories = [...new Set(books.map(b => (b.Category || "").trim()).filter(Boolean))];
+      categoryDropdown.innerHTML = `<option value="All">All Categories</option>` + categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
 
-      // ✅ Populate dropdown
-      categoryDropdown.innerHTML = `<option value="All">All Categories</option>` +
-        categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
+      // Category change
+      categoryDropdown.addEventListener("change", e => { showBooks(e.target.value); });
 
-      // ✅ Listen for dropdown changes
-      categoryDropdown.addEventListener("change", e => {
-        showBooks(e.target.value);
-      });
-
-      // ✅ Render featured
+      // Featured cards (top 5 marked yes)
       books.forEach((b, idx) => {
-        if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
+        if (b.Featured && String(b.Featured).toLowerCase() === "yes" && featuredList.childElementCount < 5) {
           const f = document.createElement("div");
-          f.className = "featured-card";
-          f.innerHTML = `<img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2">
-                         <h3 class="font-semibold">${b.Title}</h3>`;
+          f.className = "featured-card cursor-pointer";
+          const cover = `
+            <div class="badge-wrap">
+              <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2" alt="${b.Title}">
+              ${isNewByDate(b["Date Added"]) ? `<span class="badge-new">NEW</span>` : ``}
+            </div>
+          `;
+          f.innerHTML = `
+            ${cover}
+            <h3 class="font-semibold">${b.Title}</h3>
+          `;
           f.onclick = () => openModal(idx);
           featuredList.appendChild(f);
         }
       });
 
-      // ✅ Initial display
+      // Initial display
       showBooks("All");
+
+      // Show continue banner (after books are ready)
+      updateContinueBanner();
 
       loadingScreen.classList.add("fade-out");
     }
 
+    // ===== Favorites helpers =====
+    function getFavorites() { return JSON.parse(localStorage.getItem("favorites") || "[]"); }
+    function isFavorite(title) { return getFavorites().some(f => f.Title === title); }
+
+    function setHeartAppearance(button, on) {
+      if (!button) return;
+      if (on) {
+        button.classList.remove("heart-off");
+        button.classList.add("heart-on");
+        button.textContent = "❤️ Favorited";
+      } else {
+        button.classList.remove("heart-on");
+        button.classList.add("heart-off");
+        button.textContent = "❤️ Favorite";
+      }
+    }
+
+    function toggleFavorite(idx, book, btnRef = null, alsoRerender = true) {
+      let favs = getFavorites();
+      const already = isFavorite(book.Title);
+      if (already) {
+        favs = favs.filter(f => f.Title !== book.Title);
+      } else {
+        favs.push({ index: idx, Title: book.Title, Author: book.Author, Cover: book["Cover Link"], Language: book.Language, "Date Added": book["Date Added"] });
+      }
+      localStorage.setItem("favorites", JSON.stringify(favs));
+
+      // Update this button appearance
+      if (btnRef) setHeartAppearance(btnRef, !already);
+
+      // Update modal favorite button (if open)
+      const modalFavBtn = document.querySelector(".modal-content .favorite-btn");
+      if (modalFavBtn && document.getElementById("bookModal").classList.contains("show")) {
+        modalFavBtn.textContent = isFavorite(book.Title) ? "💔 Remove Favorite" : "💖 Add to Favorites";
+        if (isFavorite(book.Title)) { modalFavBtn.classList.add("heart-on"); modalFavBtn.classList.remove("heart-off"); }
+        else { modalFavBtn.classList.add("heart-off"); modalFavBtn.classList.remove("heart-on"); }
+      }
+
+      // If favorites page visible, rerender immediately
+      if (!document.getElementById("favoritesPage").classList.contains("hidden") && alsoRerender) {
+        renderFavorites();
+      }
+    }
+
+    // ===== Render Books (with NEW badge + inline favorite) =====
     function showBooks(category) {
       const bookList = document.getElementById("bookList");
       bookList.innerHTML = "";
+      const filtered = books.filter(b => category === "All" || (b.Category || "").trim() === category);
 
-      const filtered = books.filter(b => category === "All" || b.Category?.trim() === category);
-
-      filtered.forEach((b, idx) => {
+      filtered.forEach((b) => {
+        const idx = books.indexOf(b);
         const card = document.createElement("div");
-        card.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
+        card.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800";
+
+        const author = b.Author || "";
+        const lang = b.Language || "";
+
         card.innerHTML = `
-          <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2">
-          <h3 class="font-bold">${b.Title}</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
-          <p class="text-sm text-blue-500">${b.Language}</p>
+          <div class="badge-wrap">
+            <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2 cursor-pointer" alt="${b.Title}">
+            ${isNewByDate(b["Date Added"]) ? `<span class="badge-new">NEW</span>` : ``}
+          </div>
+          <h3 class="font-bold cursor-pointer">${b.Title}</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-300">${author}</p>
+          <p class="text-sm text-blue-500">${lang}</p>
+          <div class="mt-3 flex justify-center">
+            <button class="heart-btn ${isFavorite(b.Title) ? "heart-on" : "heart-off"}">❤️ ${isFavorite(b.Title) ? "Favorited" : "Favorite"}</button>
+          </div>
         `;
-        card.onclick = () => openModal(idx);
+
+        // Click cover/title opens modal
+        card.querySelector("img").onclick = () => openModal(idx);
+        card.querySelector("h3").onclick = () => openModal(idx);
+
+        // Heart toggle
+        const heartBtn = card.querySelector(".heart-btn");
+        heartBtn.onclick = (e) => {
+          e.stopPropagation();
+          toggleFavorite(idx, b, heartBtn, true);
+        };
+
         bookList.appendChild(card);
       });
 
@@ -494,36 +471,58 @@
       }
     }
 
-    // Modal
+    // ===== Modal =====
     const modal = document.getElementById("bookModal");
     const closeBtn = document.getElementById("closeModal");
     closeBtn.onclick = () => modal.classList.remove("show");
     window.onclick = e => { if (e.target === modal) modal.classList.remove("show"); };
 
     function openModal(idx) {
+      currentIndex = idx;
       const b = books[idx];
       document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
       document.getElementById("modalTitle").textContent = b.Title;
-      document.getElementById("modalAuthor").textContent = b.Author;
-      document.getElementById("modalLang").textContent = b.Language;
-      document.getElementById("modalDesc").textContent = b.Description;
-      document.getElementById("modalRead").href = b["PDF Link"];
-      document.getElementById("modalDownload").href = b["PDF Link"];
+      document.getElementById("modalAuthor").textContent = b.Author || "";
+      document.getElementById("modalLang").textContent = b.Language || "";
+      document.getElementById("modalDesc").textContent = b.Description || "";
+      document.getElementById("modalRead").href = b["PDF Link"] || "#";
+      document.getElementById("modalDownload").href = b["PDF Link"] || "#";
+
+      // Favorite toggle button (create or update)
+      const modalContent = document.querySelector(".modal-content");
+      let favBtn = modalContent.querySelector("button.favorite-btn");
+      if (!favBtn) {
+        favBtn = document.createElement("button");
+        favBtn.className = "favorite-btn mt-3 px-3 py-1 rounded font-semibold hover:brightness-110";
+        modalContent.appendChild(favBtn);
+      }
+      if (isFavorite(b.Title)) {
+        favBtn.textContent = "💔 Remove Favorite";
+        favBtn.classList.add("heart-on"); favBtn.classList.remove("heart-off");
+      } else {
+        favBtn.textContent = "💖 Add to Favorites";
+        favBtn.classList.add("heart-off"); favBtn.classList.remove("heart-on");
+      }
+      favBtn.onclick = () => toggleFavorite(idx, b, favBtn, true);
+
       modal.classList.add("show");
+
+      // Save continue reading
+      localStorage.setItem("lastReadBook", JSON.stringify({ index: idx, Title: b.Title }));
+      updateContinueBanner();
     }
 
-    // Language toggle
+    // ===== Language Toggle =====
     document.getElementById("enBtn").onclick = () => {
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
     };
-
     document.getElementById("khBtn").onclick = () => {
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
     };
 
-    // Theme toggle
+    // ===== Theme Toggle =====
     const themeToggle = document.getElementById("themeToggle");
     const logoImage = document.getElementById("logoImage");
     themeToggle.onclick = () => {
@@ -533,14 +532,13 @@
       logoImage.src = isDark ? "LOGO_VMC_white.png" : "LOGO VMC.png";
       localStorage.setItem("theme", isDark ? "dark" : "light");
     };
-
     if (localStorage.getItem("theme") === "dark") {
       document.body.classList.add("dark");
       themeToggle.textContent = "☀️";
       logoImage.src = "LOGO_VMC_white.png";
     }
 
-    // Featured scroll arrows
+    // ===== Featured scroll controls =====
     document.getElementById("scrollLeft").onclick = () => {
       document.getElementById("featuredList").scrollBy({ left: -250, behavior: "smooth" });
     };
@@ -548,7 +546,7 @@
       document.getElementById("featuredList").scrollBy({ left: 250, behavior: "smooth" });
     };
 
-    // Auto-scroll featured
+    // ===== Auto-scroll Featured =====
     let autoScrollActive = true;
     const fList = document.getElementById("featuredList");
     function autoScroll() {
@@ -559,20 +557,84 @@
       }
     }
     setInterval(autoScroll, 40);
-    ["mouseenter", "touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
-    ["mouseleave", "touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
+    ["mouseenter","touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
+    ["mouseleave","touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
 
-    // Search filter
+    // ===== Search filter (title or author) =====
     document.getElementById("searchInput").addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
       document.querySelectorAll("#bookList > div").forEach(card => {
-        const title = card.querySelector("h3").textContent.toLowerCase();
-        const author = card.querySelector("p").textContent.toLowerCase();
-        card.style.display = title.includes(term) || author.includes(term) ? "block" : "none";
+        const title = (card.querySelector("h3")?.textContent || "").toLowerCase();
+        // The first <p> is author
+        const author = (card.querySelector("p")?.textContent || "").toLowerCase();
+        card.style.display = (title.includes(term) || author.includes(term)) ? "block" : "none";
       });
     });
 
-    window.onload = loadBooks;
+    // ===== Favorites Page show/hide =====
+    document.getElementById("favoritesLink").onclick = (ev) => {
+      ev.preventDefault();
+      document.getElementById("favoritesPage").classList.remove("hidden");
+      document.getElementById("bookList").classList.add("hidden");
+      document.getElementById("featuredSection").classList.add("hidden");
+      document.getElementById("categorySection").classList.add("hidden");
+      renderFavorites();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    document.getElementById("backToHome").onclick = () => {
+      document.getElementById("favoritesPage").classList.add("hidden");
+      document.getElementById("bookList").classList.remove("hidden");
+      document.getElementById("featuredSection").classList.remove("hidden");
+      document.getElementById("categorySection").classList.remove("hidden");
+    };
+
+    function renderFavorites() {
+      const favList = document.getElementById("favoritesList");
+      const favs = getFavorites();
+      const noFavMsg = document.getElementById("noFavMsg");
+      favList.innerHTML = "";
+
+      if (favs.length === 0) {
+        noFavMsg.style.display = "block";
+        return;
+      }
+      noFavMsg.style.display = "none";
+
+      favs.forEach(f => {
+        const card = document.createElement("div");
+        card.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800";
+        card.innerHTML = `
+          <div class="badge-wrap">
+            <img src="${getHdCover(f.Cover)}" class="book-cover mb-2 cursor-pointer" alt="${f.Title}">
+            ${isNewByDate(f["Date Added"]) ? `<span class="badge-new">NEW</span>` : ``}
+          </div>
+          <h3 class="font-bold cursor-pointer">${f.Title}</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-300">${f.Author || ""}</p>
+          <p class="text-sm text-blue-500">${f.Language || ""}</p>
+          <div class="mt-3 flex justify-center gap-2">
+            <button class="px-3 py-1 rounded bg-blue-600 text-white open-btn">Open</button>
+            <button class="heart-btn heart-on fav-toggle-btn">❤️ Favorited</button>
+          </div>
+        `;
+        // Open
+        card.querySelector(".open-btn").onclick = (e) => { e.stopPropagation(); openModal(f.index); };
+        // Heart toggle (removes from favorites and refreshes)
+        const favToggle = card.querySelector(".fav-toggle-btn");
+        favToggle.onclick = (e) => {
+          e.stopPropagation();
+          toggleFavorite(f.index, { Title: f.Title, Author: f.Author, Language: f.Language, "Cover Link": f.Cover }, favToggle, true);
+        };
+        // Clicking cover/title opens modal
+        card.querySelector("img").onclick = () => openModal(f.index);
+        card.querySelector("h3").onclick = () => openModal(f.index);
+        favList.appendChild(card);
+      });
+    }
+
+    // ===== Init =====
+    window.onload = () => {
+      loadBooks();
+    };
   </script>
 </body>
 </html>
