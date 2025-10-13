@@ -1,0 +1,22 @@
+{
+  "name": "VMCTK Digital Library",
+  "short_name": "VMCTK Library",
+  "description": "Volunteer for My Community — A Digital Library for Youths to access free books in English and Khmer.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#1e40af",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "LOGO VMC.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "LOGO_VMC_white.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
