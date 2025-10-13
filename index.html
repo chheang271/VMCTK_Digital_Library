@@ -3,87 +3,144 @@
 <title>VMCTK Library – Volunteer for My Community</title>
 <link rel="manifest" href="manifest.json"/><meta name="theme-color" content="#1e40af"/>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="LOGO_512.png"><script src="https://cdn.tailwindcss.com"></script>
-<style>:root{--vmc-blue:#1e40af;--vmc-light-blue:#3b82f6;--vmc-yellow:#facc15;--vmc-bg-light:#f3f4f6;--vmc-bg-dark:#111827;--vmc-text-light:#1f2937;--vmc-text-dark:#f9fafb}
+<link rel="apple-touch-icon" href="LOGO_512.png">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{--vmc-blue:#1e40af;--vmc-light-blue:#3b82f6;--vmc-yellow:#facc15;--vmc-bg-light:#f3f4f6;--vmc-bg-dark:#111827;--vmc-text-light:#1f2937;--vmc-text-dark:#f9fafb}
 body{font-family:'Inter',sans-serif;background:var(--vmc-bg-light);color:var(--vmc-text-light);transition:background .6s,color .6s}
 body.dark{background:var(--vmc-bg-dark);color:var(--vmc-text-dark)}
 #loadingScreen{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:100;background:linear-gradient(135deg,var(--vmc-light-blue),var(--vmc-blue));color:#fff;transition:opacity .8s}
 #loadingScreen.fade-out{opacity:0;visibility:hidden}
-.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top:4px solid var(--vmc-yellow);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1rem}@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top:4px solid var(--vmc-yellow);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 header{background:linear-gradient(to right,var(--vmc-light-blue),var(--vmc-blue));color:#fff}
 body.dark header{background:linear-gradient(to right,#1e293b,var(--vmc-bg-dark));color:var(--vmc-yellow)}
 #themeToggle{font-size:1.4rem;color:var(--vmc-yellow)}
+
+body.dark h3,body.dark .font-bold{color:#f9fafb!important;text-shadow:0 0 8px rgba(255,255,255,.25)}
+body.dark p.text-gray-500{color:#d1d5db!important}
+body.dark p.text-blue-500{color:#60a5fa!important}
+body.dark .book-card{background:#1f2937;border:1px solid rgba(255,255,255,.1)}
+
+/* Continue Reading banner text fix */
+#continueReading{color:#000!important;}
+#continueReading button{color:#fff!important}
+
+/* Dropdown */
 #categoryDropdown{border:2px solid var(--vmc-blue);background:#fff;color:var(--vmc-text-light);font-weight:500}
 body.dark #categoryDropdown{background:var(--vmc-bg-dark);color:var(--vmc-text-dark);border-color:var(--vmc-yellow)}
+
 .heart-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .6rem;border-radius:.5rem;font-weight:600;transition:.2s}
 .heart-on{background:#ef4444;color:#fff}.heart-off{background:#e5e7eb;color:#111}
 body.dark .heart-off{background:#374151;color:#f9fafb}
-.badge-wrap{position:relative}.badge-new{position:absolute;top:.4rem;left:.4rem;background:var(--vmc-yellow);color:#111;font-weight:800;font-size:.65rem;padding:.2rem .45rem;border-radius:.25rem}
-body.dark h3,body.dark .font-bold{color:#f9fafb!important;text-shadow:0 0 8px rgba(255,255,255,.25)}
-body.dark p.text-gray-500{color:#d1d5db!important}body.dark p.text-blue-500{color:#60a5fa!important}
-body.dark .book-card{background:#1f2937;border:1px solid rgba(255,255,255,.1)}
+
+.badge-wrap{position:relative}
+.badge-new{position:absolute;top:.4rem;left:.4rem;background:var(--vmc-yellow);color:#111;font-weight:800;font-size:.65rem;padding:.2rem .45rem;border-radius:.25rem}
+
 #featuredList{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:.5rem}
 .featured-card{flex:0 0 85%;max-width:300px;scroll-snap-align:center;border:2px solid var(--vmc-yellow);background:rgba(250,204,21,.1);border-radius:1rem;padding:.75rem}
 .book-cover{width:100%;border-radius:.75rem}
+
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);justify-content:center;align-items:center;z-index:50}
-.modal.show{display:flex;animation:fadeIn .4s ease forwards}@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal.show{display:flex;animation:fadeIn .4s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
 .modal-content{background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-radius:1rem;padding:1.5rem;max-width:26rem;width:90%;border:2px solid var(--vmc-blue)}
 body.dark .modal-content{background:rgba(55,65,81,.85)}
+
 footer{background:linear-gradient(to right,var(--vmc-blue),var(--vmc-light-blue));color:#fff}
 body.dark footer{background:var(--vmc-bg-dark);color:var(--vmc-yellow)}
+
 #installBanner,#updateBanner{transition:all .5s ease;transform:translateY(100%);opacity:0}
-#installBanner.show,#updateBanner.show{transform:translateY(0);opacity:1}</style></head>
+#installBanner.show,#updateBanner.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+
 <body>
 <!-- Loading -->
 <div id="loadingScreen"><div class="spinner"></div><p>📚 Loading VMCTK Digital Library...</p><p id="quoteText" class="mt-3 text-sm italic opacity-90"></p></div>
+
 <!-- Header -->
-<header class="shadow p-4 flex flex-col items-center relative"><button id="themeToggle" class="absolute top-4 right-4">🌙</button>
-<img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2"><h1 class="text-2xl font-bold text-center">VMCTK Library – Volunteer for My Community</h1>
-<p class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
-<div class="mt-2"><button id="enBtn" class="px-3 py-1 bg-blue-700 text-white rounded">English</button><button id="khBtn" class="px-3 py-1 ml-2 bg-yellow-400 text-black rounded">ខ្មែរ</button></div>
-<a href="#favoritesPage" id="favoritesLink" class="mt-3 text-sm text-yellow-200 dark:text-yellow-400 hover:underline">💖 View Favorite Books</a>
-<button id="installAppBtn" class="mt-2 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">📲 Install App</button></header>
+<header class="shadow p-4 flex flex-col items-center relative">
+  <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
+  <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2">
+  <h1 class="text-2xl font-bold text-center">VMCTK Library – Volunteer for My Community</h1>
+  <p class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
+  <div class="mt-2">
+    <button id="enBtn" class="px-3 py-1 bg-blue-700 text-white rounded">English</button>
+    <button id="khBtn" class="px-3 py-1 ml-2 bg-yellow-400 text-black rounded">ខ្មែរ</button>
+  </div>
+  <a href="#favoritesPage" id="favoritesLink" class="mt-3 text-sm text-yellow-200 dark:text-yellow-400 hover:underline">💖 View Favorite Books</a>
+  <button id="installAppBtn" class="mt-2 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">📲 Install App</button>
+</header>
+
 <!-- Install Banner -->
-<div id="installBanner" class="hidden bg-blue-600 text-white text-center py-3 px-4 font-medium shadow-md">✨ You can install <strong>VMCTK Library</strong> for faster access!<button id="installNowBtn" class="ml-3 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">📲 Install Now</button></div>
+<div id="installBanner" class="hidden bg-blue-600 text-white text-center py-3 px-4 font-medium shadow-md">
+✨ You can install <strong>VMCTK Library</strong> for faster access!
+<button id="installNowBtn" class="ml-3 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">📲 Install Now</button>
+</div>
+
 <!-- Continue Reading -->
-<section id="continueReading" class="hidden bg-yellow-100 dark:bg-yellow-900 p-3 text-center shadow"><p>📖 Continue reading: <span id="continueBook" class="font-semibold"></span>
-<button id="continueBtn" class="ml-2 bg-blue-600 text-white px-3 py-1 rounded">Open</button>
-<button id="clearContinue" class="ml-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white px-3 py-1 rounded">Clear</button></p></section>
+<section id="continueReading" class="hidden bg-yellow-100 p-3 text-center shadow">
+  <p>📖 Continue reading: <span id="continueBook" class="font-semibold"></span>
+  <button id="continueBtn" class="ml-2 bg-blue-600 text-white px-3 py-1 rounded">Open</button>
+  <button id="clearContinue" class="ml-2 bg-gray-200 text-black px-3 py-1 rounded">Clear</button></p>
+</section>
+
 <!-- Search & Category -->
 <section class="p-4 flex justify-center"><input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow"></section>
 <section id="categorySection" class="p-4 flex justify-center"><select id="categoryDropdown" class="p-2 border rounded shadow"><option value="All">All Categories</option></select></section>
+
 <!-- Featured -->
-<section id="featuredSection" class="p-4"><div class="flex justify-between items-center mb-3"><h2 class="text-xl font-bold text-yellow-500">⭐ Featured Books</h2>
+<section id="featuredSection" class="p-4"><div class="flex justify-between items-center mb-3">
+<h2 class="text-xl font-bold text-yellow-500">⭐ Featured Books</h2>
 <div><button id="scrollLeft" class="text-yellow-400 text-2xl">◀</button><button id="scrollRight" class="text-yellow-400 text-2xl ml-2">▶</button></div></div><div id="featuredList"></div></section>
+
 <!-- Book List -->
 <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
+
 <!-- Favorites -->
 <section id="favoritesPage" class="hidden px-6 py-10 text-center"><h2 class="text-2xl font-bold text-blue-600 dark:text-yellow-400 mb-6">💖 Your Favorite Books</h2>
 <div id="favoritesList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div><p id="noFavMsg" class="text-gray-500 dark:text-gray-400 mt-4">You haven’t added any favorites yet.</p>
 <button id="backToHome" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded">⬅ Back to Library</button></section>
+
 <!-- Modal -->
-<div id="bookModal" class="modal"><div class="modal-content relative"><button id="closeModal" class="absolute top-2 right-3 bg-red-500 text-white rounded px-2">✕</button>
-<img id="modalCover" src="" class="mx-auto rounded-lg shadow"><h2 id="modalTitle" class="font-bold text-lg mt-2"></h2>
-<p id="modalAuthor" class="text-gray-600 mb-1"></p><p id="modalLang" class="text-yellow-500 mb-3"></p><p id="modalDesc" class="text-gray-700 mb-4"></p>
-<div class="flex justify-between"><a id="modalRead" href="#" target="_blank" class="text-green-600 font-semibold">Read Online</a><a id="modalDownload" href="#" download class="text-blue-600 font-semibold">Download</a></div></div></div>
+<div id="bookModal" class="modal"><div class="modal-content relative">
+  <button id="closeModal" class="absolute top-2 right-3 bg-red-500 text-white rounded px-2">✕</button>
+  <img id="modalCover" src="" class="mx-auto rounded-lg shadow">
+  <h2 id="modalTitle" class="font-bold text-lg mt-2"></h2>
+  <p id="modalAuthor" class="text-gray-600 mb-1"></p><p id="modalLang" class="text-yellow-500 mb-3"></p>
+  <p id="modalDesc" class="text-gray-700 mb-4"></p>
+  <div class="flex justify-between"><a id="modalRead" href="#" target="_blank" class="text-green-600 font-semibold">Read Online</a><a id="modalDownload" href="#" download class="text-blue-600 font-semibold">Download</a></div>
+</div></div>
+
 <!-- About -->
-<section id="aboutVMCTK" class="px-6 py-10 text-center"><img src="LOGO VMC.png" class="w-20 mx-auto mb-4 dark:hidden"><img src="LOGO_VMC_white.png" class="w-20 mx-auto mb-4 hidden dark:block">
-<div id="aboutEN"><h2 class="text-2xl font-bold text-blue-600 mb-3">About VMCTK</h2><p><strong>VMCTK Digital Library</strong> is a volunteer project helping youths access free books in English & Khmer.</p></div>
-<div id="aboutKH" class="hidden"><h2 class="text-2xl font-bold text-blue-600 mb-3">អំពី VMCTK</h2><p><strong>បណ្ណាល័យឌីជីថល VMCTK</strong> ជាគម្រោងស្ម័គ្រចិត្តដើម្បីជួយយុវជនអានសៀវភៅឥតគិតថ្លៃ។</p></div></section>
+<section id="aboutVMCTK" class="px-6 py-10 text-center">
+  <img src="LOGO VMC.png" class="w-20 mx-auto mb-4 dark:hidden">
+  <img src="LOGO_VMC_white.png" class="w-20 mx-auto mb-4 hidden dark:block">
+  <div id="aboutEN"><h2 class="text-2xl font-bold text-blue-600 mb-3">About VMCTK</h2>
+  <p><strong>VMCTK Digital Library</strong> is a volunteer project helping youths access free books in English & Khmer.</p></div>
+  <div id="aboutKH" class="hidden"><h2 class="text-2xl font-bold text-blue-600 mb-3">អំពី VMCTK</h2>
+  <p><strong>បណ្ណាល័យឌីជីថល VMCTK</strong> ជាគម្រោងស្ម័គ្រចិត្តដើម្បីជួយយុវជនអានសៀវភៅឥតគិតថ្លៃ។</p></div>
+</section>
+
 <!-- Contact -->
-<section id="contactSection" class="px-6 py-10 text-center"><div id="contactEN"><h2 class="text-2xl font-bold text-blue-600 mb-3">📬 Contact Us</h2><p>Have a question, suggestion, or want to volunteer? We’d love to hear from you!</p></div>
+<section id="contactSection" class="px-6 py-10 text-center">
+<div id="contactEN"><h2 class="text-2xl font-bold text-blue-600 mb-3">📬 Contact Us</h2><p>Have a question, suggestion, or want to volunteer? We’d love to hear from you!</p></div>
 <div id="contactKH" class="hidden"><h2 class="text-2xl font-bold text-blue-600 mb-3">📬 ទំនាក់ទំនងមកយើង</h2><p>មានសំណួរ ឬចង់ចូលរួមជួយស្ម័គ្រចិត្តមែនទេ? យើងរីករាយស្តាប់ពីអ្នក។</p></div>
 <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe4MTbFG2ZmE-9JYGccFdh3yWlW-x7Fbck1DXAIafONQk_vUA/viewform?embedded=true" width="100%" height="600" frameborder="0" class="rounded-lg shadow-lg max-w-3xl mx-auto"></iframe></section>
+
 <!-- Footer -->
 <footer class="text-center p-4"><div id="footerEN"><p>📘 Facebook: <a href="https://www.facebook.com/profile.php?id=61576745039709">Volunteer for My Community</a></p>
 <p>💬 Telegram: <a href="https://t.me/+exCdScgzKltlN2Zl">Join VMCTK</a></p><p>☎️ Contact: +855 96 998 6500</p></div>
 <div id="footerKH" class="hidden"><p>📘 ហ្វេសប៊ុក៖ <a href="https://www.facebook.com/profile.php?id=61576745039709">ស្ម័គ្រចិត្តសម្រាប់សហគមន៍</a></p>
 <p>💬 តេលេក្រាម៖ <a href="https://t.me/+exCdScgzKltlN2Zl">ចូលរួម VMCTK</a></p><p>☎️ ទំនាក់ទំនង៖ +855 96 998 6500</p></div></footer>
-<!-- Update Banner -->
+
+<!-- Refresh-to-Update Banner -->
 <div id="updateBanner" class="hidden fixed bottom-0 left-0 w-full bg-blue-600 text-white text-center py-3 px-4 font-medium shadow-lg flex justify-center items-center z-50">🔄 A new version of <strong class="mx-1">VMCTK Library</strong> is available.<button id="refreshAppBtn" class="ml-3 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">Refresh Now</button></div>
+
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<!-- ⬇️ Full JavaScript (compressed, all features intact) -->
-<script>
-const CSV_URL="https://raw.githubusercontent.com/chheang271/VMCTK_Digital_Library/refs/heads/main/books.csv",NEW_DAYS_WINDOW=30;let books=[],currentIndex=0;const q=["📖 A reader lives a thousand lives before he dies.","🌱 Knowledge shared is knowledge multiplied.","🚀 The future belongs to those who learn today.","💡 Small steps every day create big change.","🤝 Sharing a book is sharing a world.","📚 អ្នកអានសៀវភៅគឺជាអ្នកដឹកនាំនាពេលអនាគត។","🌞 ការអានសៀវភៅជាគន្លងទៅរកពន្លឺនៃចំណេះដឹង។","🌈 Education is the most powerful weapon to change the world.","❤️ Learn not for school, but for life.","🎓 Reading is dreaming with open eyes."];function getHdCover(e){if(!e)return"";const t=e.match(/[-\w]{25,}/);return t?`https://drive.google.com/thumbnail?id=${t[0]}&sz=w2000`:e}function isNewByDate(e){if(!e)return!1;const t=new Date(e);return!isNaN(t)&&((Date.now()-t.getTime())/864e5<=NEW_DAYS_WINDOW)}function showRandomQuote(){let e=q[Math.floor(Math.random()*q.length)];document.getElementById("quoteText").textContent=e,setInterval(()=>{let t;do{t=q[Math.floor(Math.random()*q.length)]}while(t===e);e=t;document.getElementById("quoteText").textContent=t},5e3)}function getFavorites(){return JSON.parse(localStorage.getItem("favorites")||"[]")}function isFavorite(e){return getFavorites().some(t=>t.Title===e)}function toggleFavorite(e,t,a=null,n=!0){let o=getFavorites(),r=isFavorite(t.Title);o=r?o.filter(s=>s.Title!==t.Title):[...o,{index:e,Title:t.Title,Author:t.Author,Cover:t["Cover Link"],Language:t.Language,"Date Added":t["Date Added"]}],localStorage.setItem("favorites",JSON.stringify(o)),a&&setHeartAppearance(a,!r);const i=document.querySelector(".modal-content .favorite-btn");i&&document.getElementById("bookModal").classList.contains("show")&&(r?(i.classList.add("heart-off"),i.classList.remove("heart-on"),i.textContent="💖 Add to Favorites"):(i.classList.add("heart-on"),i.classList.remove("heart-off"),i.textContent="💔 Remove Favorite")),!document.getElementById("favoritesPage").classList.contains("hidden")&&n&&renderFavorites()}function setHeartAppearance(e,t){e&&(t?(e.classList.add("heart-on"),e.classList.remove("heart-off"),e.textContent="❤️ Favorited"):(e.classList.add("heart-off"),e.classList.remove("heart-on"),e.textContent="❤️ Favorite"))}async function loadBooks(){const e=await fetch(CSV_URL),t=await e.text(),a=Papa.parse(t,{header:!0});books=a.data.filter(r=>r&&r.Title);const n=[...new Set(books.map(r=>(r.Category||"").trim()).filter(Boolean))];document.getElementById("categoryDropdown").innerHTML=`<option value="All">All Categories</option>`+n.map(r=>`<option value="${r}">${r}</option>`).join(""),document.getElementById("categoryDropdown").onchange=e=>showBooks(e.target.value),renderFeatured(),showBooks("All"),updateContinueBanner(),document.getElementById("loadingScreen").classList.add("fade-out")}function renderFeatured(){const e=document.getElementById("featuredList");e.innerHTML="",books.forEach((t,a)=>{if(t.Featured&&String(t.Featured).toLowerCase()==="yes"&&e.childElementCount<5){const n=document.createElement("div");n.className="featured-card cursor-pointer",n.innerHTML=`<div class="badge-wrap"><img src="${getHdCover(t["Cover Link"])}" class="book-cover mb-2" alt="${t.Title}">${isNewByDate(t["Date Added"])?`<span class='badge-new'>NEW</span>`:""}</div><h3 class="font-semibold">${t.Title}</h3>`,n.onclick=()=>openModal(a),e.appendChild(n)}})}function showBooks(e){const t=document.getElementById("bookList");t.innerHTML="";const a=books.filter(n=>e==="All"||(n.Category||"").trim()===e);a.forEach(n=>{const o=books.indexOf(n),r=document.createElement("div");r.className="book-card rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800",r.innerHTML=`<div class="badge-wrap"><img src="${getHdCover(n["Cover Link"])}" class="book-cover mb-2 cursor-pointer" alt="${n.Title}">${isNewByDate(n["Date Added"])?`<span class='badge-new'>NEW</span>`:""}</div><h3 class="font-bold cursor-pointer">${n.Title}</h3><p class="text-sm text-gray-500 dark:text-gray-300">${n.Author||""}</p><p class="text-sm text-blue-500">${n.Language||""}</p><div class="mt-3 flex justify-center"><button class="heart-btn ${isFavorite(n.Title)?"heart-on":"heart-off"}">${isFavorite(n.Title)?"❤️ Favorited":"❤️ Favorite"}</button></div>`,r.querySelector("img").onclick=()=>openModal(o),r.querySelector("h3").onclick=()=>openModal(o),r.querySelector(".heart-btn").onclick=s=>{s.stopPropagation(),toggleFavorite(o,n,s.currentTarget)},t.appendChild(r)}),a.length|| (t.innerHTML=`<p class='text-center text-gray-500 dark:text-gray-300 col-span-full'>No books found.</p>`)}function openModal(e){currentIndex=e;const t=books[e];document.getElementById("modalCover").src=getHdCover(t["Cover Link"]),document.getElementById("modalTitle").textContent=t.Title,document.getElementById("modalAuthor").textContent=t.Author||"",document.getElementById("modalLang").textContent=t.Language||"",document.getElementById("modalDesc").textContent=t.Description||"",document.getElementById("modalRead").href=t["PDF Link"]||"#",document.getElementById("modalDownload").href=t["PDF Link"]||"#";let a=document.querySelector(".modal-content button.favorite-btn");a||(a=document.createElement("button"),a.className="favorite-btn mt-3 heart-btn",document.querySelector(".modal-content").appendChild(a));const n=isFavorite(t.Title);n?(a.classList.add("heart-on"),a.textContent="💔 Remove Favorite"):(a.classList.add("heart-off"),a.textContent="💖 Add to Favorites"),a.onclick=()=>toggleFavorite(e,t,a,!0),document.getElementById("bookModal").classList.add("show"),localStorage.setItem("lastReadBook",JSON.stringify({index:e,Title:t.Title})),updateContinueBanner()}function updateContinueBanner(){const e=JSON.parse(localStorage.getItem("lastReadBook")||"null"),t=document.getElementById("continueReading"),a=document.getElementById("continueBook"),n=document.getElementById("continueBtn");e&&books[e.index]?(t.classList.remove("hidden"),a.textContent=e.Title,n.onclick=()=>openModal(e.index)):t.classList.add("hidden")}document.getElementById("clearContinue").onclick=()=>{localStorage.removeItem("lastReadBook"),updateContinueBanner()};document.getElementById("enBtn").onclick=()=>{["aboutEN","contactEN","footerEN"].forEach(e=>document.getElementById(e).classList.remove("hidden")),["aboutKH","contactKH","footerKH"].forEach(e=>document.getElementById(e).classList.add("hidden"))},document.getElementById("khBtn").onclick=()=>{["aboutKH","contactKH","footerKH"].forEach(e=>document.getElementById(e).classList.remove("hidden")),["aboutEN","contactEN","footerEN"].forEach(e=>document.getElementById(e).classList.add("hidden"))};const themeToggle=document.getElementById("themeToggle"),logo=document.getElementById("logoImage");themeToggle.onclick=()=>{document.body.classList.toggle("dark");const e=document.body.classList.contains("dark");themeToggle.textContent=e?"☀️":"🌙",logo.src=e?"LOGO_VMC_white.png":"LOGO VMC.png",localStorage.setItem("theme",e?"dark":"light")},localStorage.getItem("theme")==="dark"&&(document.body.classList.add("dark"),themeToggle.textContent="☀️",logo.src="LOGO_VMC_white.png");const fList=document.getElementById("featuredList");let autoScrollActive=!0;function autoScroll(){autoScrollActive&&(fList.scrollBy({left:1,behavior:"smooth"}),fList.scrollLeft+fList.clientWidth>=fList.scrollWidth-1&&fList.scrollTo({left:0,behavior:"smooth"}))}setInterval(autoScroll,40),["mouseenter","touchstart"].forEach(e=>fList.addEventListener(e,()=>autoScrollActive=!1)),["mouseleave","touchend"].forEach(e=>fList.addEventListener(e,()=>autoScrollActive=!0)),document.getElementById("scrollLeft").onclick=()=>fList.scrollBy({left:-250,behavior:"smooth"}),document.getElementById("scrollRight").onclick=()=>fList.scrollBy({left:250,behavior:"smooth"}),document.getElementById("searchInput").addEventListener("input",e=>{const t=e.target.value.toLowerCase();document.querySelectorAll("#bookList>div").forEach(a=>{const n=(a.querySelector("h3")?.textContent||"").toLowerCase(),o=(a.querySelector("p")?.textContent||"").toLowerCase();a.style.display=n.includes(t)||o.includes(t)?"block":"none"})}),document.getElementById("favoritesLink").onclick=e=>{e.preventDefault(),document.getElementById("favoritesPage").classList.remove("hidden"),["bookList","featuredSection","categorySection"].forEach(t=>document.getElementById(t).classList.add("hidden")),renderFavorites(),window.scrollTo({top:0,behavior:"smooth"})},document.getElementById("backToHome").onclick=()=>{document.getElementById("favoritesPage").classList.add("hidden"),["bookList","featuredSection","categorySection"].forEach(e=>document.getElementById(e).classList.remove("hidden"))};function renderFavorites(){const e=document.getElementById("favoritesList"),t=getFavorites(),a=document.getElementById("noFavMsg");e.innerHTML="",t.length?(a.style.display="none",t.forEach(n=>{const o=document.createElement("div");o.className="book-card rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800",o.innerHTML=`<div class="badge-wrap"><img src="${getHdCover(n.Cover)}" class="book-cover mb-2 cursor-pointer" alt="${n.Title}">${isNewByDate(n["Date Added"])?`<span class='badge-new'>NEW</span>`:""}</div><h3 class="font-bold cursor-pointer">${n.Title}</h3><p class="text-sm text-gray-500 dark:text-gray-300">${n.Author||""}</p><p class="text-sm text-blue-500">${n.Language||""}</p><div class="mt-3 flex justify-center gap-2"><button class="px-3 py-1 rounded bg-blue-600 text-white open-btn">Open</button><button class="heart-btn heart-on fav-toggle-btn">❤️ Favorited</button></div>`,o.querySelector(".open-btn").onclick=()=>openModal(n.index),o.querySelector(".fav-toggle-btn").onclick=r=>toggleFavorite(n.index,{Title:n.Title,Author:n.Author,Language:n.Language,"Cover Link":n.Cover,"Date Added":n["Date Added"]},r.currentTarget),o.querySelector("img").onclick=()=>openModal(n.index),o.querySelector("h3").onclick=()=>openModal(n.index),e.appendChild(o)})):(a.style.display="block")}showRandomQuote(),window.onload=()=>{loadBooks()},"serviceWorker"in navigator&&window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").then(e=>console.log("✅ SW:",e.scope)).catch(e=>console.log("❌ SW fail:",e))});let deferredPrompt;const installBtn=document.getElementById("installAppBtn"),banner=document.getElementById("installBanner"),nowBtn=document.getElementById("installNowBtn");installBtn.style.display="none",window.addEventListener("beforeinstallprompt",e=>{e.preventDefault(),deferredPrompt=e,installBtn.style.display="inline-block",banner.classList.add("show"),setTimeout(()=>banner.classList.remove("show"),1e4)}),installBtn.addEventListener("click",async()=>{deferredPrompt&&(installBtn.style.display="none",deferredPrompt.prompt(),await deferredPrompt.userChoice,deferredPrompt=null)}),nowBtn.addEventListener("click",async()=>{banner.classList.remove("show"),deferredPrompt&&(deferredPrompt.prompt(),await deferredPrompt.userChoice,deferredPrompt=null)}),window.addEventListener("appinstalled",()=>{console.log("🎉 Installed VMCTK!"),installBtn.style.display="none",banner.classList.remove("show")});
-navigator.serviceWorker.addEventListener("message",e=>{if(e.data&&e.data.type==="UPDATE_AVAILABLE"){const t=document.getElementById("updateBanner"),a=document.getElementById("refreshAppBtn");if(localStorage.getItem("justRefreshed")==="true")return void localStorage.removeItem("justRefreshed");t.classList.remove("hidden"),setTimeout(()=>t.classList.add("show"),100),a.onclick=()=>{navigator.serviceWorker.controller&&(localStorage.setItem("justRefreshed","true"),navigator.serviceWorker.controller.postMessage({type:"SKIP_WAITING"}),window.location.reload())},setTimeout(()=>{t.classList.remove("show"),setTimeout(()=>t.classList.add("hidden"),500)},3e4)}});</script>
+<!-- Keep your same JavaScript from the working version here -->
+<script src="main.js"></script>
 </body></html>
