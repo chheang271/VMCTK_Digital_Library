@@ -1,22 +1,68 @@
 {
   "name": "VMCTK Digital Library",
   "short_name": "VMCTK Library",
-  "description": "Volunteer for My Community — A Digital Library for Youths to access free books in English and Khmer.",
+  "description": "Volunteer for My Community — A Digital Library that helps youths access free books in English and Khmer, even offline.",
+  "lang": "en",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#111827",
-  "theme_color": "#1e40af",
   "orientation": "portrait",
+  "theme_color": "#1e40af",
+  "background_color": "#111827",
+  "categories": ["education", "books", "library", "youth", "community"],
+  "dir": "ltr",
+  "prefer_related_applications": false,
+
   "icons": [
     {
-      "src": "LOGO VMC.png",
+      "src": "LOGO_192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "LOGO_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "LOGO_VMC_white.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "screenshot-home.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "label": "Home screen of VMCTK Digital Library"
+    },
+    {
+      "src": "screenshot-books.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "label": "Book list and featured section"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "View Favorites",
+      "short_name": "Favorites",
+      "description": "Go directly to your favorite books.",
+      "url": "./index.html#favoritesPage",
+      "icons": [{ "src": "LOGO_192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Continue Reading",
+      "short_name": "Continue",
+      "description": "Resume reading your last opened book.",
+      "url": "./index.html#continueReading",
+      "icons": [{ "src": "LOGO_192.png", "sizes": "192x192" }]
     }
   ]
 }
