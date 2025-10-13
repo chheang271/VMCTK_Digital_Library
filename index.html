@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VMCTK Digital Library</title>
+
+  <!-- ✅ PWA Manifest and Theme -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e40af">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
@@ -57,6 +62,14 @@
     #enBtn:hover { background-color: var(--vmc-light-blue); }
     #khBtn:hover { background-color: #fbbf24; }
 
+    /* Category Dropdown */
+    #categoryDropdown {
+      border: 2px solid var(--vmc-blue); background-color: white; color: var(--vmc-text-light);
+      font-weight: 500; transition: all 0.3s;
+    }
+    body.dark #categoryDropdown { background-color: var(--vmc-bg-dark); color: var(--vmc-text-dark); border-color: var(--vmc-yellow); }
+    #categoryDropdown:hover { transform: scale(1.03); border-color: var(--vmc-light-blue); }
+
     /* Featured Carousel */
     #featuredSection { background: linear-gradient(to right, #e0f2fe, #fef9c3); }
     body.dark #featuredSection { background: linear-gradient(to right, #1e293b, #1f2937); }
@@ -85,14 +98,6 @@
       width: 90%; text-align: center; border: 2px solid var(--vmc-blue); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
     body.dark .modal-content { background: rgba(55,65,81,0.85); }
-
-    /* Category Dropdown */
-    #categoryDropdown {
-      border: 2px solid var(--vmc-blue); background-color: white; color: var(--vmc-text-light);
-      font-weight: 500; transition: all 0.3s;
-    }
-    body.dark #categoryDropdown { background-color: var(--vmc-bg-dark); color: var(--vmc-text-dark); border-color: var(--vmc-yellow); }
-    #categoryDropdown:hover { transform: scale(1.03); border-color: var(--vmc-light-blue); }
 
     /* Heart (favorite) button inline */
     .heart-btn {
@@ -140,7 +145,7 @@
     <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
     <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2" alt="VMCTK Logo">
     <h1 class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
-    <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
+    <p class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
     <div class="mt-2">
       <button id="enBtn" class="px-3 py-1">English</button>
       <button id="khBtn" class="px-3 py-1 ml-2">ខ្មែរ</button>
@@ -226,9 +231,9 @@
     <div id="aboutKH" class="hidden">
       <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">អំពី VMCTK</h2>
       <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
-        <strong>បណ្ណាល័យឌីជីថល VMCTK</strong> គឺជាគម្រោងស្ម័គ្រចិត្តរបស់យុវជននៃវិទ្យាល័យព្រៃទប់
+        <strong>បណ្ណាល័យឌីជីថល VMCTK</strong> គឺជាគម្រោងស្ម័គ្រចិត្ត
         <em>Volunteer for My Community</em> ដើម្បីជួយ
-        <span class="text-blue-ភូ dark:text-blue-300 font-medium">យុវជនអានសៀវភៅឥតគិតថ្លៃ</span>។
+        <span class="text-blue-500 dark:text-blue-300 font-medium">យុវជនអានសៀវភៅឥតគិតថ្លៃ</span>។
       </p>
     </div>
   </section>
@@ -263,11 +268,20 @@
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
-    // ===== Core config =====
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
-    const NEW_DAYS_WINDOW = 30; // days
+    // ===========================
+    // VMCTK DIGITAL LIBRARY SCRIPT
+    // ===========================
+
+    // Load from local CSV (same folder): books.csv
+    // Your columns: Title, Author, Language, Description, Date Added, Featured, PDF Link, Cover Original, Cover Link, Category
+    const CSV_URL = "books.csv"; // 👈 local file
+    const NEW_DAYS_WINDOW = 30; // Show "NEW" badge for books added within 30 days
+    let books = [];
+    let currentIndex = 0;
+
     const loadingScreen = document.getElementById("loadingScreen");
     const quoteText = document.getElementById("quoteText");
+
     const quotes = [
       "📖 A reader lives a thousand lives before he dies.",
       "🌱 Knowledge shared is knowledge multiplied.",
@@ -280,39 +294,35 @@
       "❤️ Learn not for school, but for life.",
       "🎓 Reading is dreaming with open eyes."
     ];
+
     function showRandomQuote() {
       let current = quotes[Math.floor(Math.random() * quotes.length)];
       quoteText.textContent = current;
-      setTimeout(() => {
-        quoteText.style.opacity = "0";
-        setTimeout(() => {
-          let nextQ;
-          do { nextQ = quotes[Math.floor(Math.random() * quotes.length)]; } while (nextQ === current);
-          quoteText.textContent = nextQ; quoteText.style.opacity = "1";
-        }, 1000);
-      }, 4000);
+      setInterval(() => {
+        let nextQ;
+        do { nextQ = quotes[Math.floor(Math.random() * quotes.length)]; } while (nextQ === current);
+        current = nextQ;
+        quoteText.textContent = nextQ;
+      }, 5000);
     }
-    showRandomQuote();
 
-    let books = [];
-    let currentIndex = 0;
-
-    // ===== Utilities =====
     function getHdCover(url) {
       if (!url) return "";
       const match = url.match(/[-\w]{25,}/);
       return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
     }
+
     function isNewByDate(dateStr) {
       if (!dateStr) return false;
       const added = new Date(dateStr);
       if (isNaN(added)) return false;
-      const now = new Date();
-      const diffDays = (now - added) / (1000 * 60 * 60 * 24);
-      return diffDays <= NEW_DAYS_WINDOW;
+      const diff = (new Date() - added) / (1000 * 60 * 60 * 24);
+      return diff <= NEW_DAYS_WINDOW;
     }
 
-    // ===== Continue Reading banner =====
+    // ===========================
+    // CONTINUE READING
+    // ===========================
     function updateContinueBanner() {
       const data = JSON.parse(localStorage.getItem("lastReadBook") || "null");
       const banner = document.getElementById("continueReading");
@@ -331,147 +341,108 @@
       updateContinueBanner();
     };
 
-    // ===== Load Books =====
+    // ===========================
+    // FAVORITES
+    // ===========================
+    function getFavorites() { return JSON.parse(localStorage.getItem("favorites") || "[]"); }
+    function isFavorite(title) { return getFavorites().some(f => f.Title === title); }
+
+    function toggleFavorite(idx, book, btnRef = null, rerender = true) {
+      let favs = getFavorites();
+      const exists = isFavorite(book.Title);
+      if (exists) favs = favs.filter(f => f.Title !== book.Title);
+      else favs.push({ index: idx, Title: book.Title, Author: book.Author, Cover: book["Cover Link"], Language: book.Language, "Date Added": book["Date Added"] });
+      localStorage.setItem("favorites", JSON.stringify(favs));
+
+      if (btnRef) setHeartAppearance(btnRef, !exists);
+      // Update modal favorite button (if open)
+      const modalFavBtn = document.querySelector(".modal-content .favorite-btn");
+      if (modalFavBtn && document.getElementById("bookModal").classList.contains("show")) {
+        if (!exists) { modalFavBtn.classList.add("heart-on"); modalFavBtn.classList.remove("heart-off"); modalFavBtn.textContent = "💔 Remove Favorite"; }
+        else { modalFavBtn.classList.add("heart-off"); modalFavBtn.classList.remove("heart-on"); modalFavBtn.textContent = "💖 Add to Favorites"; }
+      }
+      if (!document.getElementById("favoritesPage").classList.contains("hidden") && rerender) renderFavorites();
+    }
+
+    function setHeartAppearance(button, on) {
+      if (!button) return;
+      if (on) { button.classList.add("heart-on"); button.classList.remove("heart-off"); button.textContent = "❤️ Favorited"; }
+      else { button.classList.add("heart-off"); button.classList.remove("heart-on"); button.textContent = "❤️ Favorite"; }
+    }
+
+    // ===========================
+    // LOAD BOOKS (LOCAL CSV)
+    // ===========================
     async function loadBooks() {
       const resp = await fetch(CSV_URL);
       const text = await resp.text();
       const parsed = Papa.parse(text, { header: true });
+      // We rely on your exact columns; ignore "Cover Original"
       books = parsed.data.filter(b => b.Title);
 
-      const bookList = document.getElementById("bookList");
-      const featuredList = document.getElementById("featuredList");
       const categoryDropdown = document.getElementById("categoryDropdown");
-
-      bookList.innerHTML = "";
-      featuredList.innerHTML = "";
-
-      // Collect unique categories
       const categories = [...new Set(books.map(b => (b.Category || "").trim()).filter(Boolean))];
-      categoryDropdown.innerHTML = `<option value="All">All Categories</option>` + categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
+      categoryDropdown.innerHTML = `<option value="All">All Categories</option>` + categories.map(c => `<option value="${c}">${c}</option>`).join("");
+      categoryDropdown.onchange = e => showBooks(e.target.value);
 
-      // Category change
-      categoryDropdown.addEventListener("change", e => { showBooks(e.target.value); });
+      renderFeatured();
+      showBooks("All");
+      updateContinueBanner();
+      loadingScreen.classList.add("fade-out");
+    }
 
-      // Featured cards (top 5 marked yes)
+    function renderFeatured() {
+      const featuredList = document.getElementById("featuredList");
+      featuredList.innerHTML = "";
       books.forEach((b, idx) => {
         if (b.Featured && String(b.Featured).toLowerCase() === "yes" && featuredList.childElementCount < 5) {
           const f = document.createElement("div");
           f.className = "featured-card cursor-pointer";
-          const cover = `
+          f.innerHTML = `
             <div class="badge-wrap">
               <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2" alt="${b.Title}">
-              ${isNewByDate(b["Date Added"]) ? `<span class="badge-new">NEW</span>` : ``}
+              ${isNewByDate(b["Date Added"]) ? `<span class='badge-new'>NEW</span>` : ""}
             </div>
-          `;
-          f.innerHTML = `
-            ${cover}
-            <h3 class="font-semibold">${b.Title}</h3>
-          `;
+            <h3 class="font-semibold">${b.Title}</h3>`;
           f.onclick = () => openModal(idx);
           featuredList.appendChild(f);
         }
       });
-
-      // Initial display
-      showBooks("All");
-
-      // Show continue banner (after books are ready)
-      updateContinueBanner();
-
-      loadingScreen.classList.add("fade-out");
     }
 
-    // ===== Favorites helpers =====
-    function getFavorites() { return JSON.parse(localStorage.getItem("favorites") || "[]"); }
-    function isFavorite(title) { return getFavorites().some(f => f.Title === title); }
-
-    function setHeartAppearance(button, on) {
-      if (!button) return;
-      if (on) {
-        button.classList.remove("heart-off");
-        button.classList.add("heart-on");
-        button.textContent = "❤️ Favorited";
-      } else {
-        button.classList.remove("heart-on");
-        button.classList.add("heart-off");
-        button.textContent = "❤️ Favorite";
-      }
-    }
-
-    function toggleFavorite(idx, book, btnRef = null, alsoRerender = true) {
-      let favs = getFavorites();
-      const already = isFavorite(book.Title);
-      if (already) {
-        favs = favs.filter(f => f.Title !== book.Title);
-      } else {
-        favs.push({ index: idx, Title: book.Title, Author: book.Author, Cover: book["Cover Link"], Language: book.Language, "Date Added": book["Date Added"] });
-      }
-      localStorage.setItem("favorites", JSON.stringify(favs));
-
-      // Update this button appearance
-      if (btnRef) setHeartAppearance(btnRef, !already);
-
-      // Update modal favorite button (if open)
-      const modalFavBtn = document.querySelector(".modal-content .favorite-btn");
-      if (modalFavBtn && document.getElementById("bookModal").classList.contains("show")) {
-        modalFavBtn.textContent = isFavorite(book.Title) ? "💔 Remove Favorite" : "💖 Add to Favorites";
-        if (isFavorite(book.Title)) { modalFavBtn.classList.add("heart-on"); modalFavBtn.classList.remove("heart-off"); }
-        else { modalFavBtn.classList.add("heart-off"); modalFavBtn.classList.remove("heart-on"); }
-      }
-
-      // If favorites page visible, rerender immediately
-      if (!document.getElementById("favoritesPage").classList.contains("hidden") && alsoRerender) {
-        renderFavorites();
-      }
-    }
-
-    // ===== Render Books (with NEW badge + inline favorite) =====
     function showBooks(category) {
-      const bookList = document.getElementById("bookList");
-      bookList.innerHTML = "";
+      const list = document.getElementById("bookList");
+      list.innerHTML = "";
       const filtered = books.filter(b => category === "All" || (b.Category || "").trim() === category);
-
-      filtered.forEach((b) => {
+      filtered.forEach(b => {
         const idx = books.indexOf(b);
         const card = document.createElement("div");
         card.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800";
-
-        const author = b.Author || "";
-        const lang = b.Language || "";
-
         card.innerHTML = `
           <div class="badge-wrap">
             <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2 cursor-pointer" alt="${b.Title}">
-            ${isNewByDate(b["Date Added"]) ? `<span class="badge-new">NEW</span>` : ``}
+            ${isNewByDate(b["Date Added"]) ? `<span class='badge-new'>NEW</span>` : ""}
           </div>
           <h3 class="font-bold cursor-pointer">${b.Title}</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-300">${author}</p>
-          <p class="text-sm text-blue-500">${lang}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author || ""}</p>
+          <p class="text-sm text-blue-500">${b.Language || ""}</p>
           <div class="mt-3 flex justify-center">
             <button class="heart-btn ${isFavorite(b.Title) ? "heart-on" : "heart-off"}">❤️ ${isFavorite(b.Title) ? "Favorited" : "Favorite"}</button>
-          </div>
-        `;
-
-        // Click cover/title opens modal
+          </div>`;
         card.querySelector("img").onclick = () => openModal(idx);
         card.querySelector("h3").onclick = () => openModal(idx);
-
-        // Heart toggle
-        const heartBtn = card.querySelector(".heart-btn");
-        heartBtn.onclick = (e) => {
+        card.querySelector(".heart-btn").onclick = e => {
           e.stopPropagation();
-          toggleFavorite(idx, b, heartBtn, true);
+          toggleFavorite(idx, b, e.target);
         };
-
-        bookList.appendChild(card);
+        list.appendChild(card);
       });
-
-      if (filtered.length === 0) {
-        bookList.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found in this category.</p>`;
-      }
+      if (!filtered.length) list.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found.</p>`;
     }
 
-    // ===== Modal =====
+    // ===========================
+    // MODAL
+    // ===========================
     const modal = document.getElementById("bookModal");
     const closeBtn = document.getElementById("closeModal");
     closeBtn.onclick = () => modal.classList.remove("show");
@@ -512,7 +483,9 @@
       updateContinueBanner();
     }
 
-    // ===== Language Toggle =====
+    // ===========================
+    // LANGUAGE & THEME TOGGLE
+    // ===========================
     document.getElementById("enBtn").onclick = () => {
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
@@ -522,7 +495,6 @@
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
     };
 
-    // ===== Theme Toggle =====
     const themeToggle = document.getElementById("themeToggle");
     const logoImage = document.getElementById("logoImage");
     themeToggle.onclick = () => {
@@ -538,54 +510,48 @@
       logoImage.src = "LOGO_VMC_white.png";
     }
 
-    // ===== Featured scroll controls =====
-    document.getElementById("scrollLeft").onclick = () => {
-      document.getElementById("featuredList").scrollBy({ left: -250, behavior: "smooth" });
-    };
-    document.getElementById("scrollRight").onclick = () => {
-      document.getElementById("featuredList").scrollBy({ left: 250, behavior: "smooth" });
-    };
-
-    // ===== Auto-scroll Featured =====
-    let autoScrollActive = true;
+    // ===========================
+    // FEATURED AUTO-SCROLL
+    // ===========================
     const fList = document.getElementById("featuredList");
+    let autoScrollActive = true;
     function autoScroll() {
       if (!autoScrollActive) return;
       fList.scrollBy({ left: 1, behavior: "smooth" });
-      if (fList.scrollLeft + fList.clientWidth >= fList.scrollWidth - 1) {
+      if (fList.scrollLeft + fList.clientWidth >= fList.scrollWidth - 1)
         fList.scrollTo({ left: 0, behavior: "smooth" });
-      }
     }
     setInterval(autoScroll, 40);
     ["mouseenter","touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
     ["mouseleave","touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
+    document.getElementById("scrollLeft").onclick = () => fList.scrollBy({ left: -250, behavior: "smooth" });
+    document.getElementById("scrollRight").onclick = () => fList.scrollBy({ left: 250, behavior: "smooth" });
 
-    // ===== Search filter (title or author) =====
+    // ===========================
+    // SEARCH
+    // ===========================
     document.getElementById("searchInput").addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
       document.querySelectorAll("#bookList > div").forEach(card => {
         const title = (card.querySelector("h3")?.textContent || "").toLowerCase();
-        // The first <p> is author
         const author = (card.querySelector("p")?.textContent || "").toLowerCase();
-        card.style.display = (title.includes(term) || author.includes(term)) ? "block" : "none";
+        card.style.display = title.includes(term) || author.includes(term) ? "block" : "none";
       });
     });
 
-    // ===== Favorites Page show/hide =====
-    document.getElementById("favoritesLink").onclick = (ev) => {
-      ev.preventDefault();
+    // ===========================
+    // FAVORITES PAGE
+    // ===========================
+    document.getElementById("favoritesLink").onclick = e => {
+      e.preventDefault();
       document.getElementById("favoritesPage").classList.remove("hidden");
-      document.getElementById("bookList").classList.add("hidden");
-      document.getElementById("featuredSection").classList.add("hidden");
-      document.getElementById("categorySection").classList.add("hidden");
+      ["bookList","featuredSection","categorySection"].forEach(id => document.getElementById(id).classList.add("hidden"));
       renderFavorites();
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
     document.getElementById("backToHome").onclick = () => {
       document.getElementById("favoritesPage").classList.add("hidden");
-      document.getElementById("bookList").classList.remove("hidden");
-      document.getElementById("featuredSection").classList.remove("hidden");
-      document.getElementById("categorySection").classList.remove("hidden");
+      ["bookList","featuredSection","categorySection"].forEach(id => document.getElementById(id).classList.remove("hidden"));
     };
 
     function renderFavorites() {
@@ -594,10 +560,7 @@
       const noFavMsg = document.getElementById("noFavMsg");
       favList.innerHTML = "";
 
-      if (favs.length === 0) {
-        noFavMsg.style.display = "block";
-        return;
-      }
+      if (!favs.length) { noFavMsg.style.display = "block"; return; }
       noFavMsg.style.display = "none";
 
       favs.forEach(f => {
@@ -606,7 +569,7 @@
         card.innerHTML = `
           <div class="badge-wrap">
             <img src="${getHdCover(f.Cover)}" class="book-cover mb-2 cursor-pointer" alt="${f.Title}">
-            ${isNewByDate(f["Date Added"]) ? `<span class="badge-new">NEW</span>` : ``}
+            ${isNewByDate(f["Date Added"]) ? `<span class='badge-new'>NEW</span>` : ""}
           </div>
           <h3 class="font-bold cursor-pointer">${f.Title}</h3>
           <p class="text-sm text-gray-500 dark:text-gray-300">${f.Author || ""}</p>
@@ -614,27 +577,31 @@
           <div class="mt-3 flex justify-center gap-2">
             <button class="px-3 py-1 rounded bg-blue-600 text-white open-btn">Open</button>
             <button class="heart-btn heart-on fav-toggle-btn">❤️ Favorited</button>
-          </div>
-        `;
-        // Open
-        card.querySelector(".open-btn").onclick = (e) => { e.stopPropagation(); openModal(f.index); };
-        // Heart toggle (removes from favorites and refreshes)
-        const favToggle = card.querySelector(".fav-toggle-btn");
-        favToggle.onclick = (e) => {
-          e.stopPropagation();
-          toggleFavorite(f.index, { Title: f.Title, Author: f.Author, Language: f.Language, "Cover Link": f.Cover }, favToggle, true);
-        };
-        // Clicking cover/title opens modal
+          </div>`;
+        card.querySelector(".open-btn").onclick = () => openModal(f.index);
+        card.querySelector(".fav-toggle-btn").onclick = e => toggleFavorite(f.index, { Title: f.Title, Author: f.Author, Language: f.Language, "Cover Link": f.Cover, "Date Added": f["Date Added"] }, e.target);
         card.querySelector("img").onclick = () => openModal(f.index);
         card.querySelector("h3").onclick = () => openModal(f.index);
         favList.appendChild(card);
       });
     }
 
-    // ===== Init =====
-    window.onload = () => {
-      loadBooks();
-    };
+    // ===========================
+    // INITIALIZE
+    // ===========================
+    showRandomQuote();
+    window.onload = () => { loadBooks(); };
+
+    // ===========================
+    // ✅ PWA SERVICE WORKER
+    // ===========================
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+          .catch(err => console.log('❌ Service Worker failed:', err));
+      });
+    }
   </script>
 </body>
 </html>
