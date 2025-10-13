@@ -14,53 +14,160 @@
   <link rel="apple-touch-icon" href="LOGO_512.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     :root {
-      --vmc-blue:#1e40af;--vmc-light-blue:#3b82f6;--vmc-yellow:#facc15;
-      --vmc-bg-light:#f3f4f6;--vmc-bg-dark:#111827;
-      --vmc-text-light:#1f2937;--vmc-text-dark:#f9fafb;
+      --vmc-blue: #1e40af;
+      --vmc-light-blue: #3b82f6;
+      --vmc-yellow: #facc15;
+      --vmc-bg-light: #f3f4f6;
+      --vmc-bg-dark: #111827;
+      --vmc-text-light: #1f2937;
+      --vmc-text-dark: #f9fafb;
     }
-    body{font-family:'Inter',sans-serif;background:var(--vmc-bg-light);color:var(--vmc-text-light);transition:background .6s,color .6s}
-    body.dark{background:var(--vmc-bg-dark);color:var(--vmc-text-dark)}
-    /* loading */
-    #loadingScreen{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:100;
-      background:linear-gradient(135deg,var(--vmc-light-blue),var(--vmc-blue));color:#fff;transition:opacity .8s}
-    #loadingScreen.fade-out{opacity:0;visibility:hidden}
-    .spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top:4px solid var(--vmc-yellow);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1rem}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    header{background:linear-gradient(to right,var(--vmc-light-blue),var(--vmc-blue));color:#fff}
-    body.dark header{background:linear-gradient(to right,#1e293b,var(--vmc-bg-dark));color:var(--vmc-yellow)}
-    #themeToggle{font-size:1.4rem;color:var(--vmc-yellow)}
-    /* dropdown */
-    #categoryDropdown{border:2px solid var(--vmc-blue);background:#fff;color:var(--vmc-text-light);font-weight:500}
-    body.dark #categoryDropdown{background:var(--vmc-bg-dark);color:var(--vmc-text-dark);border-color:var(--vmc-yellow)}
-    /* heart */
-    .heart-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .6rem;border-radius:.5rem;font-weight:600;transition:.2s}
-    .heart-on{background:#ef4444;color:#fff}.heart-off{background:#e5e7eb;color:#111}
-    body.dark .heart-off{background:#374151;color:#f9fafb}
-    /* badge */
-    .badge-wrap{position:relative}.badge-new{position:absolute;top:.4rem;left:.4rem;background:var(--vmc-yellow);color:#111;
-      font-weight:800;font-size:.65rem;padding:.2rem .45rem;border-radius:.25rem}
-    /* featured */
-    #featuredList{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:.5rem}
-    .featured-card{flex:0 0 85%;max-width:300px;scroll-snap-align:center;border:2px solid var(--vmc-yellow);
-      background:rgba(250,204,21,.1);border-radius:1rem;padding:.75rem}
-    .book-cover{width:100%;border-radius:.75rem}
-    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);justify-content:center;align-items:center;z-index:50}
-    .modal.show{display:flex;animation:fadeIn .4s ease forwards}
-    @keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-    .modal-content{background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-radius:1rem;padding:1.5rem;max-width:26rem;width:90%;
-      border:2px solid var(--vmc-blue)}
-    body.dark .modal-content{background:rgba(55,65,81,.85)}
-    footer{background:linear-gradient(to right,var(--vmc-blue),var(--vmc-light-blue));color:#fff}
-    body.dark footer{background:var(--vmc-bg-dark);color:var(--vmc-yellow)}
-    #installBanner{border-bottom-left-radius:.5rem;border-bottom-right-radius:.5rem;transition:opacity .5s}
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--vmc-bg-light);
+      color: var(--vmc-text-light);
+      transition: background-color 0.6s ease, color 0.6s ease;
+    }
+    body.dark {
+      background-color: var(--vmc-bg-dark);
+      color: var(--vmc-text-dark);
+    }
+
+    /* Loading Screen */
+    #loadingScreen {
+      position: fixed; inset: 0;
+      background: linear-gradient(135deg, var(--vmc-light-blue), var(--vmc-blue));
+      color: white;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      font-size: 1.1rem;
+      z-index: 100;
+      transition: opacity 0.8s ease-out;
+    }
+    #loadingScreen.fade-out { opacity: 0; visibility: hidden; }
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid var(--vmc-yellow);
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Header */
+    header {
+      background: linear-gradient(to right, var(--vmc-light-blue), var(--vmc-blue));
+      color: white;
+    }
+    body.dark header {
+      background: linear-gradient(to right, #1e293b, var(--vmc-bg-dark));
+      color: var(--vmc-yellow);
+    }
+    #themeToggle { font-size: 1.4rem; color: var(--vmc-yellow); }
+
+    /* Dropdown */
+    #categoryDropdown {
+      border: 2px solid var(--vmc-blue);
+      background: #fff;
+      color: var(--vmc-text-light);
+      font-weight: 500;
+    }
+    body.dark #categoryDropdown {
+      background: var(--vmc-bg-dark);
+      color: var(--vmc-text-dark);
+      border-color: var(--vmc-yellow);
+    }
+
+    /* Favorite Button */
+    .heart-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .35rem .6rem; border-radius: .5rem;
+      font-weight: 600; transition: .2s;
+    }
+    .heart-on { background: #ef4444; color: #fff; }
+    .heart-off { background: #e5e7eb; color: #111; }
+    body.dark .heart-off { background: #374151; color: #f9fafb; }
+
+    /* Book Cards */
+    .badge-wrap { position: relative; }
+    .badge-new {
+      position: absolute; top: .4rem; left: .4rem;
+      background: var(--vmc-yellow); color: #111;
+      font-weight: 800; font-size: .65rem;
+      padding: .2rem .45rem; border-radius: .25rem;
+    }
+
+    /* Dark Mode Title Glow */
+    body.dark h3, body.dark .font-bold {
+      color: #f9fafb !important;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+    }
+    body.dark p.text-gray-500 {
+      color: #d1d5db !important;
+    }
+    body.dark p.text-blue-500 {
+      color: #60a5fa !important;
+    }
+
+    /* Featured */
+    #featuredList {
+      display: flex; gap: 1rem; overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth; padding: .5rem;
+    }
+    .featured-card {
+      flex: 0 0 85%; max-width: 300px; scroll-snap-align: center;
+      border: 2px solid var(--vmc-yellow);
+      background-color: rgba(250, 204, 21, 0.1);
+      border-radius: 1rem; padding: 0.75rem;
+    }
+
+    .book-cover { width: 100%; border-radius: .75rem; }
+
+    /* Modal */
+    .modal { display: none; position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px);
+      justify-content: center; align-items: center; z-index: 50;
+    }
+    .modal.show { display: flex; animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .modal-content {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      max-width: 26rem; width: 90%;
+      border: 2px solid var(--vmc-blue);
+    }
+    body.dark .modal-content { background: rgba(55, 65, 81, 0.85); }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(to right, var(--vmc-blue), var(--vmc-light-blue));
+      color: white;
+    }
+    body.dark footer {
+      background: var(--vmc-bg-dark);
+      color: var(--vmc-yellow);
+    }
+    #installBanner {
+      border-bottom-left-radius: .5rem;
+      border-bottom-right-radius: .5rem;
+      transition: opacity .5s ease;
+    }
   </style>
 </head>
+
 <body>
   <!-- Loading -->
-  <div id="loadingScreen"><div class="spinner"></div>
-    <p>📚 Loading VMCTK Digital Library...</p><p id="quoteText" class="mt-3 text-sm italic opacity-90"></p>
+  <div id="loadingScreen">
+    <div class="spinner"></div>
+    <p>📚 Loading VMCTK Digital Library...</p>
+    <p id="quoteText" class="mt-3 text-sm italic opacity-90"></p>
   </div>
 
   <!-- Header -->
@@ -69,10 +176,12 @@
     <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2">
     <h1 class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
     <p class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
+
     <div class="mt-2">
       <button id="enBtn" class="px-3 py-1 bg-blue-700 text-white rounded">English</button>
       <button id="khBtn" class="px-3 py-1 ml-2 bg-yellow-400 text-black rounded">ខ្មែរ</button>
     </div>
+
     <a href="#favoritesPage" id="favoritesLink" class="mt-3 text-sm text-yellow-200 dark:text-yellow-400 hover:underline">💖 View Favorite Books</a>
     <button id="installAppBtn" class="mt-2 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">📲 Install App</button>
   </header>
@@ -149,436 +258,313 @@
     <div id="footerKH" class="hidden"><p>📘 ហ្វេសប៊ុក៖ <a href="https://www.facebook.com/profile.php?id=61576745039709">ស្ម័គ្រចិត្តសម្រាប់សហគមន៍</a></p>
       <p>💬 តេលេក្រាម៖ <a href="https://t.me/+exCdScgzKltlN2Zl">ចូលរួម VMCTK</a></p><p>☎️ ទំនាក់ទំនង៖ +855 96 998 6500</p></div>
   </footer>
-  <!-- JavaScript -->
+
+  <!-- JS -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- ⬇️ Keep your full JS Part B code here -->
+  <!-- (Paste the entire JS block I gave you previously for functionality) -->
+</body>
+</html>
   <script>
-    // ===========================
-    // VMCTK DIGITAL LIBRARY SCRIPT
-    // ===========================
+  // ===========================
+  // VMCTK DIGITAL LIBRARY SCRIPT
+  // ===========================
 
-    // Load from local CSV (same folder): books.csv
-    // Your columns: Title, Author, Language, Description, Date Added, Featured, PDF Link, Cover Original, Cover Link, Category
-    const CSV_URL = "books.csv"; // local file
-    const NEW_DAYS_WINDOW = 30;  // "NEW" badge period in days
+  const CSV_URL = "books.csv";           // Local CSV file
+  const NEW_DAYS_WINDOW = 30;            // Days to show "NEW" badge
+  let books = [];
+  let currentIndex = 0;
 
-    let books = [];
-    let currentIndex = 0;
+  const loadingScreen = document.getElementById("loadingScreen");
+  const quoteText = document.getElementById("quoteText");
+  const categoryDropdown = document.getElementById("categoryDropdown");
+  const featuredList = document.getElementById("featuredList");
+  const bookList = document.getElementById("bookList");
 
-    // DOM refs
-    const loadingScreen = document.getElementById("loadingScreen");
-    const quoteText = document.getElementById("quoteText");
-    const categoryDropdown = document.getElementById("categoryDropdown");
-    const featuredList = document.getElementById("featuredList");
-    const bookList = document.getElementById("bookList");
+  // --- Loading Quotes ---
+  const quotes = [
+    "📖 A reader lives a thousand lives before he dies.",
+    "🌱 Knowledge shared is knowledge multiplied.",
+    "🚀 The future belongs to those who learn today.",
+    "💡 Small steps every day create big change.",
+    "🤝 Sharing a book is sharing a world.",
+    "📚 អ្នកអានសៀវភៅគឺជាអ្នកដឹកនាំនាពេលអនាគត។",
+    "🌞 ការអានសៀវភៅជាគន្លងទៅរកពន្លឺនៃចំណេះដឹង។",
+    "🌈 Education is the most powerful weapon to change the world.",
+    "❤️ Learn not for school, but for life.",
+    "🎓 Reading is dreaming with open eyes."
+  ];
+  function showRandomQuote() {
+    let current = quotes[Math.floor(Math.random() * quotes.length)];
+    quoteText.textContent = current;
+    setInterval(() => {
+      let nextQ;
+      do { nextQ = quotes[Math.floor(Math.random() * quotes.length)]; } while (nextQ === current);
+      current = nextQ;
+      quoteText.textContent = nextQ;
+    }, 5000);
+  }
 
-    // Quotes on loading screen
-    const quotes = [
-      "📖 A reader lives a thousand lives before he dies.",
-      "🌱 Knowledge shared is knowledge multiplied.",
-      "🚀 The future belongs to those who learn today.",
-      "💡 Small steps every day create big change.",
-      "🤝 Sharing a book is sharing a world.",
-      "📚 អ្នកអានសៀវភៅគឺជាអ្នកដឹកនាំនាពេលអនាគត។",
-      "🌞 ការអានសៀវភៅជាគន្លងទៅរកពន្លឺនៃចំណេះដឹង។",
-      "🌈 Education is the most powerful weapon to change the world.",
-      "❤️ Learn not for school, but for life.",
-      "🎓 Reading is dreaming with open eyes."
-    ];
+  // --- Helpers ---
+  function getHdCover(url) {
+    if (!url) return "";
+    const match = url.match(/[-\w]{25,}/);
+    return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
+  }
+  function isNewByDate(dateStr) {
+    if (!dateStr) return false;
+    const added = new Date(dateStr);
+    if (isNaN(added)) return false;
+    return (Date.now() - added.getTime()) / (1000 * 60 * 60 * 24) <= NEW_DAYS_WINDOW;
+  }
 
-    function showRandomQuote() {
-      let current = quotes[Math.floor(Math.random() * quotes.length)];
-      quoteText.textContent = current;
-      setInterval(() => {
-        let nextQ;
-        do { nextQ = quotes[Math.floor(Math.random() * quotes.length)]; } while (nextQ === current);
-        current = nextQ;
-        quoteText.textContent = nextQ;
-      }, 5000);
+  // ===========================
+  // CONTINUE READING
+  // ===========================
+  function updateContinueBanner() {
+    const data = JSON.parse(localStorage.getItem("lastReadBook") || "null");
+    const banner = document.getElementById("continueReading");
+    const title = document.getElementById("continueBook");
+    const btn = document.getElementById("continueBtn");
+    if (data && books[data.index]) {
+      banner.classList.remove("hidden");
+      title.textContent = data.Title;
+      btn.onclick = () => openModal(data.index);
+    } else banner.classList.add("hidden");
+  }
+  document.getElementById("clearContinue").onclick = () => {
+    localStorage.removeItem("lastReadBook");
+    updateContinueBanner();
+  };
+
+  // ===========================
+  // FAVORITES
+  // ===========================
+  function getFavorites() { return JSON.parse(localStorage.getItem("favorites") || "[]"); }
+  function isFavorite(title) { return getFavorites().some(f => f.Title === title); }
+  function setHeartAppearance(btn,on){if(!btn)return;if(on){btn.classList.add("heart-on");btn.classList.remove("heart-off");btn.textContent="❤️ Favorited";}else{btn.classList.add("heart-off");btn.classList.remove("heart-on");btn.textContent="❤️ Favorite";}}
+  function toggleFavorite(idx,b,btnRef=null,rerender=true){
+    let favs=getFavorites();const exists=isFavorite(b.Title);
+    favs=exists?favs.filter(f=>f.Title!==b.Title):[...favs,{index:idx,Title:b.Title,Author:b.Author,Cover:b["Cover Link"],Language:b.Language,"Date Added":b["Date Added"]}];
+    localStorage.setItem("favorites",JSON.stringify(favs));
+    if(btnRef)setHeartAppearance(btnRef,!exists);
+    const modalBtn=document.querySelector(".modal-content .favorite-btn");
+    if(modalBtn&&document.getElementById("bookModal").classList.contains("show")){
+      if(!exists){modalBtn.classList.add("heart-on");modalBtn.classList.remove("heart-off");modalBtn.textContent="💔 Remove Favorite";}
+      else{modalBtn.classList.add("heart-off");modalBtn.classList.remove("heart-on");modalBtn.textContent="💖 Add to Favorites";}
     }
+    if(!document.getElementById("favoritesPage").classList.contains("hidden")&&rerender)renderFavorites();
+  }
 
-    // Google Drive thumbnails helper (falls back if not a Drive URL)
-    function getHdCover(url) {
-      if (!url) return "";
-      const match = url.match(/[-\w]{25,}/);
-      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
-    }
+  // ===========================
+  // LOAD BOOKS
+  // ===========================
+  async function loadBooks(){
+    const resp=await fetch(CSV_URL);const text=await resp.text();
+    const parsed=Papa.parse(text,{header:true});
+    books=parsed.data.filter(b=>b&&b.Title);
 
-    // "NEW" badge helper
-    function isNewByDate(dateStr) {
-      if (!dateStr) return false;
-      const added = new Date(dateStr);
-      if (isNaN(added)) return false;
-      const diff = (Date.now() - added.getTime()) / (1000 * 60 * 60 * 24);
-      return diff <= NEW_DAYS_WINDOW;
-    }
+    const categories=[...new Set(books.map(b=>(b.Category||"").trim()).filter(Boolean))];
+    categoryDropdown.innerHTML=`<option value="All">All Categories</option>`+categories.map(c=>`<option value="${c}">${c}</option>`).join("");
+    categoryDropdown.onchange=e=>showBooks(e.target.value);
 
-    // ===========================
-    // CONTINUE READING
-    // ===========================
-    function updateContinueBanner() {
-      const data = JSON.parse(localStorage.getItem("lastReadBook") || "null");
-      const banner = document.getElementById("continueReading");
-      const title = document.getElementById("continueBook");
-      const btn = document.getElementById("continueBtn");
-      if (data && books[data.index]) {
-        banner.classList.remove("hidden");
-        title.textContent = data.Title;
-        btn.onclick = () => openModal(data.index);
-      } else {
-        banner.classList.add("hidden");
-      }
-    }
-    document.getElementById("clearContinue").onclick = () => {
-      localStorage.removeItem("lastReadBook");
-      updateContinueBanner();
-    };
+    renderFeatured();showBooks("All");updateContinueBanner();
+    loadingScreen.classList.add("fade-out");
+  }
 
-    // ===========================
-    // FAVORITES
-    // ===========================
-    function getFavorites() { return JSON.parse(localStorage.getItem("favorites") || "[]"); }
-    function isFavorite(title) { return getFavorites().some(f => f.Title === title); }
-
-    function setHeartAppearance(button, on) {
-      if (!button) return;
-      if (on) {
-        button.classList.add("heart-on"); button.classList.remove("heart-off");
-        button.textContent = "❤️ Favorited";
-      } else {
-        button.classList.add("heart-off"); button.classList.remove("heart-on");
-        button.textContent = "❤️ Favorite";
-      }
-    }
-
-    function toggleFavorite(idx, book, btnRef = null, rerender = true) {
-      let favs = getFavorites();
-      const exists = isFavorite(book.Title);
-      if (exists) {
-        favs = favs.filter(f => f.Title !== book.Title);
-      } else {
-        favs.push({
-          index: idx,
-          Title: book.Title,
-          Author: book.Author,
-          Cover: book["Cover Link"],
-          Language: book.Language,
-          "Date Added": book["Date Added"]
-        });
-      }
-      localStorage.setItem("favorites", JSON.stringify(favs));
-
-      // Update clicked button
-      if (btnRef) setHeartAppearance(btnRef, !exists);
-
-      // Update modal button if open
-      const modalFavBtn = document.querySelector(".modal-content .favorite-btn");
-      if (modalFavBtn && document.getElementById("bookModal").classList.contains("show")) {
-        if (!exists) {
-          modalFavBtn.classList.add("heart-on"); modalFavBtn.classList.remove("heart-off");
-          modalFavBtn.textContent = "💔 Remove Favorite";
-        } else {
-          modalFavBtn.classList.add("heart-off"); modalFavBtn.classList.remove("heart-on");
-          modalFavBtn.textContent = "💖 Add to Favorites";
-        }
-      }
-
-      // Rerender favorites page if visible
-      if (!document.getElementById("favoritesPage").classList.contains("hidden") && rerender) renderFavorites();
-    }
-
-    // ===========================
-    // LOAD BOOKS (LOCAL CSV)
-    // ===========================
-    async function loadBooks() {
-      // Fetch CSV
-      const resp = await fetch(CSV_URL);
-      const text = await resp.text();
-      const parsed = Papa.parse(text, { header: true });
-      // We rely on your exact columns; ignore "Cover Original"
-      books = parsed.data.filter(b => b && b.Title);
-
-      // Categories dropdown
-      const categories = [...new Set(books.map(b => (b.Category || "").trim()).filter(Boolean))];
-      categoryDropdown.innerHTML = `<option value="All">All Categories</option>` + categories.map(c => `<option value="${c}">${c}</option>`).join("");
-      categoryDropdown.onchange = e => showBooks(e.target.value);
-
-      // Render featured + all books
-      renderFeatured();
-      showBooks("All");
-
-      // Continue Reading
-      updateContinueBanner();
-
-      // Hide loader
-      loadingScreen.classList.add("fade-out");
-    }
-
-    function renderFeatured() {
-      featuredList.innerHTML = "";
-      books.forEach((b, idx) => {
-        if (b.Featured && String(b.Featured).toLowerCase() === "yes" && featuredList.childElementCount < 5) {
-          const f = document.createElement("div");
-          f.className = "featured-card cursor-pointer";
-          f.innerHTML = `
-            <div class="badge-wrap">
-              <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2" alt="${b.Title}">
-              ${isNewByDate(b["Date Added"]) ? `<span class='badge-new'>NEW</span>` : ""}
-            </div>
-            <h3 class="font-semibold">${b.Title}</h3>`;
-          f.onclick = () => openModal(idx);
-          featuredList.appendChild(f);
-        }
-      });
-    }
-
-    function showBooks(category) {
-      bookList.innerHTML = "";
-      const filtered = books.filter(b => category === "All" || (b.Category || "").trim() === category);
-      filtered.forEach(b => {
-        const idx = books.indexOf(b);
-        const card = document.createElement("div");
-        card.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800";
-        card.innerHTML = `
+  function renderFeatured(){
+    featuredList.innerHTML="";
+    books.forEach((b,idx)=>{
+      if(b.Featured&&String(b.Featured).toLowerCase()==="yes"&&featuredList.childElementCount<5){
+        const f=document.createElement("div");
+        f.className="featured-card cursor-pointer";
+        f.innerHTML=`
           <div class="badge-wrap">
-            <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2 cursor-pointer" alt="${b.Title}">
-            ${isNewByDate(b["Date Added"]) ? `<span class='badge-new'>NEW</span>` : ""}
+            <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2" alt="${b.Title}">
+            ${isNewByDate(b["Date Added"])?`<span class='badge-new'>NEW</span>`:""}
           </div>
-          <h3 class="font-bold cursor-pointer">${b.Title}</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author || ""}</p>
-          <p class="text-sm text-blue-500">${b.Language || ""}</p>
-          <div class="mt-3 flex justify-center">
-            <button class="heart-btn ${isFavorite(b.Title) ? "heart-on" : "heart-off"}">
-              ${isFavorite(b.Title) ? "❤️ Favorited" : "❤️ Favorite"}
-            </button>
-          </div>`;
-        // Click to open modal
-        card.querySelector("img").onclick = () => openModal(idx);
-        card.querySelector("h3").onclick = () => openModal(idx);
-        // Favorite toggle
-        card.querySelector(".heart-btn").onclick = e => {
-          e.stopPropagation();
-          toggleFavorite(idx, b, e.currentTarget);
-        };
-        bookList.appendChild(card);
-      });
-
-      if (!filtered.length) {
-        bookList.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found.</p>`;
+          <h3 class="font-semibold">${b.Title}</h3>`;
+        f.onclick=()=>openModal(idx);
+        featuredList.appendChild(f);
       }
-    }
-
-    // ===========================
-    // MODAL
-    // ===========================
-    const modal = document.getElementById("bookModal");
-    const closeBtn = document.getElementById("closeModal");
-    closeBtn.onclick = () => modal.classList.remove("show");
-    window.onclick = e => { if (e.target === modal) modal.classList.remove("show"); };
-
-    function openModal(idx) {
-      currentIndex = idx;
-      const b = books[idx];
-      document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
-      document.getElementById("modalTitle").textContent = b.Title;
-      document.getElementById("modalAuthor").textContent = b.Author || "";
-      document.getElementById("modalLang").textContent = b.Language || "";
-      document.getElementById("modalDesc").textContent = b.Description || "";
-      document.getElementById("modalRead").href = b["PDF Link"] || "#";
-      document.getElementById("modalDownload").href = b["PDF Link"] || "#";
-
-      // Favorite toggle button (create or update)
-      const modalContent = document.querySelector(".modal-content");
-      let favBtn = modalContent.querySelector("button.favorite-btn");
-      if (!favBtn) {
-        favBtn = document.createElement("button");
-        favBtn.className = "favorite-btn mt-3 heart-btn";
-        modalContent.appendChild(favBtn);
-      }
-      const fav = isFavorite(b.Title);
-      if (fav) {
-        favBtn.classList.add("heart-on"); favBtn.classList.remove("heart-off");
-        favBtn.textContent = "💔 Remove Favorite";
-      } else {
-        favBtn.classList.add("heart-off"); favBtn.classList.remove("heart-on");
-        favBtn.textContent = "💖 Add to Favorites";
-      }
-      favBtn.onclick = () => toggleFavorite(idx, b, favBtn, true);
-
-      modal.classList.add("show");
-
-      // Save continue reading
-      localStorage.setItem("lastReadBook", JSON.stringify({ index: idx, Title: b.Title }));
-      updateContinueBanner();
-    }
-
-    // ===========================
-    // LANGUAGE & THEME TOGGLE
-    // ===========================
-    document.getElementById("enBtn").onclick = () => {
-      ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
-      ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
-    };
-    document.getElementById("khBtn").onclick = () => {
-      ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
-      ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
-    };
-
-    const themeToggle = document.getElementById("themeToggle");
-    const logoImage = document.getElementById("logoImage");
-    themeToggle.onclick = () => {
-      document.body.classList.toggle("dark");
-      const isDark = document.body.classList.contains("dark");
-      themeToggle.textContent = isDark ? "☀️" : "🌙";
-      logoImage.src = isDark ? "LOGO_VMC_white.png" : "LOGO VMC.png";
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    };
-    // Restore theme
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark");
-      themeToggle.textContent = "☀️";
-      logoImage.src = "LOGO_VMC_white.png";
-    }
-
-    // ===========================
-    // FEATURED AUTO-SCROLL + ARROWS
-    // ===========================
-    const fList = document.getElementById("featuredList");
-    let autoScrollActive = true;
-    function autoScroll() {
-      if (!autoScrollActive) return;
-      fList.scrollBy({ left: 1, behavior: "smooth" });
-      if (fList.scrollLeft + fList.clientWidth >= fList.scrollWidth - 1)
-        fList.scrollTo({ left: 0, behavior: "smooth" });
-    }
-    setInterval(autoScroll, 40);
-    ["mouseenter","touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
-    ["mouseleave","touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
-    document.getElementById("scrollLeft").onclick = () => fList.scrollBy({ left: -250, behavior: "smooth" });
-    document.getElementById("scrollRight").onclick = () => fList.scrollBy({ left: 250, behavior: "smooth" });
-
-    // ===========================
-    // SEARCH
-    // ===========================
-    document.getElementById("searchInput").addEventListener("input", e => {
-      const term = e.target.value.toLowerCase();
-      document.querySelectorAll("#bookList > div").forEach(card => {
-        const title = (card.querySelector("h3")?.textContent || "").toLowerCase();
-        const author = (card.querySelector("p")?.textContent || "").toLowerCase();
-        card.style.display = (title.includes(term) || author.includes(term)) ? "block" : "none";
-      });
     });
+  }
 
-    // ===========================
-    // FAVORITES PAGE
-    // ===========================
-    document.getElementById("favoritesLink").onclick = e => {
-      e.preventDefault();
-      document.getElementById("favoritesPage").classList.remove("hidden");
-      ["bookList","featuredSection","categorySection"].forEach(id => document.getElementById(id).classList.add("hidden"));
-      renderFavorites();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-    document.getElementById("backToHome").onclick = () => {
-      document.getElementById("favoritesPage").classList.add("hidden");
-      ["bookList","featuredSection","categorySection"].forEach(id => document.getElementById(id).classList.remove("hidden"));
-    };
-
-    function renderFavorites() {
-      const favList = document.getElementById("favoritesList");
-      const favs = getFavorites();
-      const noFavMsg = document.getElementById("noFavMsg");
-      favList.innerHTML = "";
-
-      if (!favs.length) { noFavMsg.style.display = "block"; return; }
-      noFavMsg.style.display = "none";
-
-      favs.forEach(f => {
-        const card = document.createElement("div");
-        card.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800";
-        card.innerHTML = `
-          <div class="badge-wrap">
-            <img src="${getHdCover(f.Cover)}" class="book-cover mb-2 cursor-pointer" alt="${f.Title}">
-            ${isNewByDate(f["Date Added"]) ? `<span class='badge-new'>NEW</span>` : ""}
-          </div>
-          <h3 class="font-bold cursor-pointer">${f.Title}</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-300">${f.Author || ""}</p>
-          <p class="text-sm text-blue-500">${f.Language || ""}</p>
-          <div class="mt-3 flex justify-center gap-2">
-            <button class="px-3 py-1 rounded bg-blue-600 text-white open-btn">Open</button>
-            <button class="heart-btn heart-on fav-toggle-btn">❤️ Favorited</button>
-          </div>`;
-        card.querySelector(".open-btn").onclick = () => openModal(f.index);
-        card.querySelector(".fav-toggle-btn").onclick = e => {
-          // Pass a book-like object so toggleFavorite can remove it
-          toggleFavorite(f.index, { Title: f.Title, Author: f.Author, Language: f.Language, "Cover Link": f.Cover, "Date Added": f["Date Added"] }, e.currentTarget);
-        };
-        card.querySelector("img").onclick = () => openModal(f.index);
-        card.querySelector("h3").onclick = () => openModal(f.index);
-        favList.appendChild(card);
-      });
-    }
-
-    // ===========================
-    // INITIALIZE
-    // ===========================
-    showRandomQuote();
-    window.onload = () => { loadBooks(); };
-
-    // ===========================
-    // ✅ PWA SERVICE WORKER
-    // ===========================
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(reg => console.log('✅ Service Worker registered:', reg.scope))
-          .catch(err => console.log('❌ Service Worker failed:', err));
-      });
-    }
-
-    // ===========================
-    // 📲 PWA INSTALL BUTTON + BANNER
-    // ===========================
-    let deferredPrompt;
-    const installBtn = document.getElementById("installAppBtn");
-    const installBanner = document.getElementById('installBanner');
-    const installNowBtn = document.getElementById('installNowBtn');
-
-    // Hide button until event triggers
-    installBtn.style.display = "none";
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-
-      // Show both button & banner
-      installBtn.style.display = "inline-block";
-      installBanner.classList.remove('hidden');
-
-      // Hide banner automatically after 10 seconds
-      setTimeout(() => installBanner.classList.add('hidden'), 10000);
+  function showBooks(cat){
+    bookList.innerHTML="";
+    const filtered=books.filter(b=>cat==="All"||(b.Category||"").trim()===cat);
+    filtered.forEach(b=>{
+      const idx=books.indexOf(b);
+      const card=document.createElement("div");
+      card.className="rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800";
+      card.innerHTML=`
+        <div class="badge-wrap">
+          <img src="${getHdCover(b["Cover Link"])}" class="book-cover mb-2 cursor-pointer" alt="${b.Title}">
+          ${isNewByDate(b["Date Added"])?`<span class='badge-new'>NEW</span>`:""}
+        </div>
+        <h3 class="font-bold cursor-pointer">${b.Title}</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author||""}</p>
+        <p class="text-sm text-blue-500">${b.Language||""}</p>
+        <div class="mt-3 flex justify-center">
+          <button class="heart-btn ${isFavorite(b.Title)?"heart-on":"heart-off"}">
+            ${isFavorite(b.Title)?"❤️ Favorited":"❤️ Favorite"}
+          </button>
+        </div>`;
+      card.querySelector("img").onclick=()=>openModal(idx);
+      card.querySelector("h3").onclick=()=>openModal(idx);
+      card.querySelector(".heart-btn").onclick=e=>{e.stopPropagation();toggleFavorite(idx,b,e.currentTarget);};
+      bookList.appendChild(card);
     });
+    if(!filtered.length)bookList.innerHTML=`<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found.</p>`;
+  }
 
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      installBtn.style.display = "none";
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    });
+  // ===========================
+  // MODAL
+  // ===========================
+  const modal=document.getElementById("bookModal");
+  document.getElementById("closeModal").onclick=()=>modal.classList.remove("show");
+  window.onclick=e=>{if(e.target===modal)modal.classList.remove("show");};
+  function openModal(idx){
+    currentIndex=idx;const b=books[idx];
+    document.getElementById("modalCover").src=getHdCover(b["Cover Link"]);
+    document.getElementById("modalTitle").textContent=b.Title;
+    document.getElementById("modalAuthor").textContent=b.Author||"";
+    document.getElementById("modalLang").textContent=b.Language||"";
+    document.getElementById("modalDesc").textContent=b.Description||"";
+    document.getElementById("modalRead").href=b["PDF Link"]||"#";
+    document.getElementById("modalDownload").href=b["PDF Link"]||"#";
 
-    installNowBtn.addEventListener('click', async () => {
-      installBanner.classList.add('hidden');
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    });
+    let favBtn=document.querySelector(".modal-content button.favorite-btn");
+    if(!favBtn){favBtn=document.createElement("button");favBtn.className="favorite-btn mt-3 heart-btn";document.querySelector(".modal-content").appendChild(favBtn);}
+    const fav=isFavorite(b.Title);
+    if(fav){favBtn.classList.add("heart-on");favBtn.textContent="💔 Remove Favorite";}
+    else{favBtn.classList.add("heart-off");favBtn.textContent="💖 Add to Favorites";}
+    favBtn.onclick=()=>toggleFavorite(idx,b,favBtn,true);
+    modal.classList.add("show");
+    localStorage.setItem("lastReadBook",JSON.stringify({index:idx,Title:b.Title}));
+    updateContinueBanner();
+  }
 
-    window.addEventListener('appinstalled', () => {
-      console.log('🎉 VMCTK Library installed successfully!');
-      installBtn.style.display = "none";
-      installBanner.classList.add('hidden');
+  // ===========================
+  // LANGUAGE & THEME
+  // ===========================
+  document.getElementById("enBtn").onclick=()=>{["aboutEN","contactEN","footerEN"].forEach(i=>document.getElementById(i).classList.remove("hidden"));["aboutKH","contactKH","footerKH"].forEach(i=>document.getElementById(i).classList.add("hidden"));};
+  document.getElementById("khBtn").onclick=()=>{["aboutKH","contactKH","footerKH"].forEach(i=>document.getElementById(i).classList.remove("hidden"));["aboutEN","contactEN","footerEN"].forEach(i=>document.getElementById(i).classList.add("hidden"));};
+
+  const themeToggle=document.getElementById("themeToggle");
+  const logoImage=document.getElementById("logoImage");
+  themeToggle.onclick=()=>{
+    document.body.classList.toggle("dark");
+    const dark=document.body.classList.contains("dark");
+    themeToggle.textContent=dark?"☀️":"🌙";
+    logoImage.src=dark?"LOGO_VMC_white.png":"LOGO VMC.png";
+    localStorage.setItem("theme",dark?"dark":"light");
+  };
+  if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark");themeToggle.textContent="☀️";logoImage.src="LOGO_VMC_white.png";}
+
+  // ===========================
+  // FEATURED AUTO-SCROLL
+  // ===========================
+  const fList=document.getElementById("featuredList");
+  let autoScrollActive=true;
+  function autoScroll(){if(!autoScrollActive)return;fList.scrollBy({left:1,behavior:"smooth"});if(fList.scrollLeft+fList.clientWidth>=fList.scrollWidth-1)fList.scrollTo({left:0,behavior:"smooth"});}
+  setInterval(autoScroll,40);
+  ["mouseenter","touchstart"].forEach(ev=>fList.addEventListener(ev,()=>autoScrollActive=false));
+  ["mouseleave","touchend"].forEach(ev=>fList.addEventListener(ev,()=>autoScrollActive=true));
+  document.getElementById("scrollLeft").onclick=()=>fList.scrollBy({left:-250,behavior:"smooth"});
+  document.getElementById("scrollRight").onclick=()=>fList.scrollBy({left:250,behavior:"smooth"});
+
+  // ===========================
+  // SEARCH
+  // ===========================
+  document.getElementById("searchInput").addEventListener("input",e=>{
+    const term=e.target.value.toLowerCase();
+    document.querySelectorAll("#bookList>div").forEach(c=>{
+      const t=(c.querySelector("h3")?.textContent||"").toLowerCase();
+      const a=(c.querySelector("p")?.textContent||"").toLowerCase();
+      c.style.display=t.includes(term)||a.includes(term)?"block":"none";
     });
+  });
+
+  // ===========================
+  // FAVORITES PAGE
+  // ===========================
+  document.getElementById("favoritesLink").onclick=e=>{
+    e.preventDefault();
+    document.getElementById("favoritesPage").classList.remove("hidden");
+    ["bookList","featuredSection","categorySection"].forEach(id=>document.getElementById(id).classList.add("hidden"));
+    renderFavorites();window.scrollTo({top:0,behavior:"smooth"});
+  };
+  document.getElementById("backToHome").onclick=()=>{
+    document.getElementById("favoritesPage").classList.add("hidden");
+    ["bookList","featuredSection","categorySection"].forEach(id=>document.getElementById(id).classList.remove("hidden"));
+  };
+  function renderFavorites(){
+    const list=document.getElementById("favoritesList");
+    const favs=getFavorites();const msg=document.getElementById("noFavMsg");
+    list.innerHTML="";if(!favs.length){msg.style.display="block";return;}
+    msg.style.display="none";
+    favs.forEach(f=>{
+      const card=document.createElement("div");
+      card.className="rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800";
+      card.innerHTML=`
+        <div class="badge-wrap">
+          <img src="${getHdCover(f.Cover)}" class="book-cover mb-2 cursor-pointer" alt="${f.Title}">
+          ${isNewByDate(f["Date Added"])?`<span class='badge-new'>NEW</span>`:""}
+        </div>
+        <h3 class="font-bold cursor-pointer">${f.Title}</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-300">${f.Author||""}</p>
+        <p class="text-sm text-blue-500">${f.Language||""}</p>
+        <div class="mt-3 flex justify-center gap-2">
+          <button class="px-3 py-1 rounded bg-blue-600 text-white open-btn">Open</button>
+          <button class="heart-btn heart-on fav-toggle-btn">❤️ Favorited</button>
+        </div>`;
+      card.querySelector(".open-btn").onclick=()=>openModal(f.index);
+      card.querySelector(".fav-toggle-btn").onclick=e=>toggleFavorite(f.index,{Title:f.Title,Author:f.Author,Language:f.Language,"Cover Link":f.Cover,"Date Added":f["Date Added"]},e.currentTarget);
+      card.querySelector("img").onclick=()=>openModal(f.index);
+      card.querySelector("h3").onclick=()=>openModal(f.index);
+      list.appendChild(card);
+    });
+  }
+
+  // ===========================
+  // INIT & PWA
+  // ===========================
+  showRandomQuote();
+  window.onload=()=>{loadBooks();};
+
+  if("serviceWorker"in navigator){
+    window.addEventListener("load",()=>{
+      navigator.serviceWorker.register("sw.js")
+        .then(r=>console.log("✅ Service Worker:",r.scope))
+        .catch(e=>console.log("❌ SW failed:",e));
+    });
+  }
+
+  // --- PWA Install Button + Banner ---
+  let deferredPrompt;
+  const installBtn=document.getElementById("installAppBtn");
+  const banner=document.getElementById("installBanner");
+  const nowBtn=document.getElementById("installNowBtn");
+  installBtn.style.display="none";
+  window.addEventListener("beforeinstallprompt",e=>{
+    e.preventDefault();deferredPrompt=e;
+    installBtn.style.display="inline-block";banner.classList.remove("hidden");
+    setTimeout(()=>banner.classList.add("hidden"),10000);
+  });
+  installBtn.addEventListener("click",async()=>{
+    if(!deferredPrompt)return;installBtn.style.display="none";
+    deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;
+  });
+  nowBtn.addEventListener("click",async()=>{
+    banner.classList.add("hidden");
+    if(!deferredPrompt)return;
+    deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;
+  });
+  window.addEventListener("appinstalled",()=>{
+    console.log("🎉 Installed VMCTK!");
+    installBtn.style.display="none";banner.classList.add("hidden");
+  });
   </script>
 </body>
 </html>
