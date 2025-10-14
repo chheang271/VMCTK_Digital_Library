@@ -1,82 +1,70 @@
-const CACHE_NAME = "vmctk-library-v5";
+const CACHE_NAME = "vmctk-library-v7";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./LOGO_192.png",
-  "./LOGO_512.png",
+  "./LOGO VMC.png",
+  "./LOGO_VMC_white.png",
   "./splash_1024x2048.png"
 ];
 
-// ✅ Install phase — pre-cache essential assets
+// ✅ Install event
 self.addEventListener("install", (event) => {
-  console.log("[ServiceWorker] Installing and caching static assets...");
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
+    caches.open(CACHE_NAME)
+      .then((cache) =>
+        Promise.all(
+          ASSETS_TO_CACHE.map((url) =>
+            fetch(url).then((response) => {
+              if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+              return cache.put(url, response);
+            })
+          )
+        )
+      )
+      .then(() => self.skipWaiting())
+      .catch((err) => console.warn("[ServiceWorker] Cache install skipped:", err))
   );
-  self.skipWaiting();
 });
 
-// ✅ Activate phase — clean old caches
+// ✅ Activate event
 self.addEventListener("activate", (event) => {
-  console.log("[ServiceWorker] Activating new service worker...");
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.map((key) => {
-        if (key !== CACHE_NAME) {
-          console.log("[ServiceWorker] Removing old cache:", key);
-          return caches.delete(key);
-        }
-      }))
+      Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) return caches.delete(key);
+        })
+      )
     )
   );
-  return self.clients.claim();
+  self.clients.claim();
 });
 
-// ✅ Fetch phase — serve cached content when offline
+// ✅ Fetch event (with graceful fallback)
 self.addEventListener("fetch", (event) => {
-  const req = event.request;
-  // Don’t cache requests to external domains (like Google Sheets CSV)
-  if (!req.url.startsWith(self.location.origin)) return;
+  const { request } = event;
+  if (request.url.includes("googleusercontent") || request.url.includes("raw.githubusercontent"))
+    return; // skip caching external files
 
   event.respondWith(
-    caches.match(req).then((cacheRes) => {
+    caches.match(request).then((cached) => {
       return (
-        cacheRes ||
-        fetch(req)
-          .then((fetchRes) => {
-            return caches.open(CACHE_NAME).then((cache) => {
-              cache.put(req, fetchRes.clone());
-              return fetchRes;
-            });
+        cached ||
+        fetch(request)
+          .then((res) => {
+            if (!res || res.status !== 200 || res.type !== "basic") return res;
+            const resToCache = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, resToCache));
+            return res;
           })
-          .catch(() => cacheRes)
+          .catch(() => cached)
       );
     })
   );
 });
 
-// ✅ Listen for skip waiting command (from index.html)
+// ✅ Handle skip waiting (refresh update)
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    console.log("[ServiceWorker] Skipping waiting...");
-    self.skipWaiting();
-  }
-});
-
-// ✅ Notify clients when a new version is available
-self.addEventListener("install", () => {
-  self.registration.addEventListener("updatefound", () => {
-    const newWorker = self.registration.installing;
-    newWorker.addEventListener("statechange", () => {
-      if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-        console.log("[ServiceWorker] New version available.");
-        self.clients.matchAll({ type: "window" }).then((clients) => {
-          clients.forEach((client) =>
-            client.postMessage({ type: "UPDATE_AVAILABLE" })
-          );
-        });
-      }
-    });
-  });
+  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
 });
