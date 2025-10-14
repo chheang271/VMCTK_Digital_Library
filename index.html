@@ -75,27 +75,34 @@ body.dark header{background:linear-gradient(to right,#1e293b,var(--bg-dark));col
  🔄 A new version of <strong class="mx-1">VMCTK Library</strong> is available.
  <button id="refreshAppBtn" class="ml-3 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">Refresh Now</button>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script>
 const CSV_URL="https://raw.githubusercontent.com/chheang271/VMCTK_Digital_Library/refs/heads/main/books.csv";
 let books=[];
+
+// ✅ Utility
 function getHdCover(u){if(!u)return"";const m=u.match(/[-\\w]{25,}/);return m?`https://drive.google.com/thumbnail?id=${m[0]}&sz=w2000`:u;}
 function isNew(d){if(!d)return!1;const t=new Date(d);return!isNaN(t)&&((Date.now()-t)/864e5<=30);}
+
+// ✅ Load CSV + Render
 async function loadBooks(){
  try{
-  const res=await fetch(CSV_URL);const text=await res.text();const parsed=Papa.parse(text,{header:true});
+  const res=await fetch(CSV_URL);
+  const text=await res.text();
+  const parsed=Papa.parse(text,{header:true});
   books=parsed.data.filter(b=>b.Title);
   renderCategories();renderBooks();renderFeatured();
   document.getElementById("loadingScreen").classList.add("hidden");
- }catch(e){console.error("Failed:",e);}
+ }catch(e){console.error("Book load failed:",e);}
 }
+
 function renderCategories(){
  const d=document.getElementById("categoryDropdown");
  const cats=[...new Set(books.map(b=>(b.Category||"").trim()).filter(Boolean))];
  d.innerHTML="<option>All</option>"+cats.map(c=>`<option>${c}</option>`).join("");
  d.onchange=e=>renderBooks(e.target.value);
 }
+
 function renderBooks(cat="All"){
  const c=document.getElementById("bookList");c.innerHTML="";
  books.filter(b=>cat==="All"||b.Category===cat).forEach((b,i)=>{
@@ -106,10 +113,11 @@ function renderBooks(cat="All"){
   <h3 class='font-bold'>${b.Title}</h3>
   <p class='text-sm text-gray-500'>${b.Author||""}</p>
   <p class='text-sm text-blue-500'>${b.Language||""}</p>`;
-  d.onclick=()=>openModal(i);
+  d.addEventListener("click",()=>window.openModal(i)); // ✅ Fixed global scope call
   c.appendChild(d);
  });
 }
+
 function renderFeatured(){
  const f=document.getElementById("featuredList");f.innerHTML="";
  books.forEach((b,i)=>{
@@ -119,15 +127,25 @@ function renderFeatured(){
    c.className="cursor-pointer relative bg-white dark:bg-gray-800 p-2 rounded shadow";
    c.innerHTML=`${badge}<img src='${getHdCover(b["Cover Link"])}' class='book-cover mb-2'>
    <h3 class='font-semibold text-center text-sm'>${b.Title}</h3>`;
-   c.onclick=()=>openModal(i);f.appendChild(c);
+   c.addEventListener("click",()=>window.openModal(i)); // ✅ Fixed
+   f.appendChild(c);
   }
  });
 }
-function openModal(i){
+
+// ✅ Make modal globally accessible (fixes iPhone/desktop clicks)
+window.openModal=function(i){
  const b=books[i];if(!b)return;
- const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
  const modal=document.createElement("div");
  modal.className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50";
+
+ const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+ const pdfLink=b["PDF Link"];
+ const readBtn=`<a href="${pdfLink}" target="_blank" class='bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded'>Read Online</a>`;
+ const downloadBtn=isIOS
+  ? `<a href="${pdfLink}" target="_blank" class='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded'>Open PDF</a>`
+  : `<a href="${pdfLink}" download class='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded'>Download</a>`;
+
  modal.innerHTML=`
   <div class='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-80 max-w-sm relative'>
    <button class='absolute top-2 right-3 text-red-500 text-xl font-bold' id='closeModalBtn'>✕</button>
@@ -136,20 +154,16 @@ function openModal(i){
    <p class='text-sm text-gray-500 mb-1'>${b.Author||""}</p>
    <p class='text-sm text-blue-500 mb-3'>${b.Language||""}</p>
    <p class='text-sm text-gray-600 dark:text-gray-400 mb-4'>${b.Description||""}</p>
-   <div class='flex justify-between'>
-     <button onclick="window.open('${b["PDF Link"]}','_blank')" class='bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded'>Read Online</button>
-     ${
-       isIOS
-         ? `<button onclick="window.open('${b["PDF Link"]}','_blank')" class='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded'>Download</button>`
-         : `<a href='${b["PDF Link"]}' download class='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded'>Download</a>`
-     }
-   </div>
+   <div class='flex justify-between'>${readBtn}${downloadBtn}</div>
   </div>`;
  document.body.appendChild(modal);
  document.getElementById("closeModalBtn").onclick=()=>modal.remove();
+
+ // ✅ Save continue reading
  localStorage.setItem("continue",JSON.stringify(b));
  showContinue();
-}
+};
+
 function showContinue(){
  const b=JSON.parse(localStorage.getItem("continue")||"null");
  const bar=document.getElementById("continueReading");
@@ -159,16 +173,27 @@ function showContinue(){
  document.getElementById("continueBtn").onclick=()=>window.open(b["PDF Link"],"_blank");
  document.getElementById("clearContinue").onclick=()=>{localStorage.removeItem("continue");bar.classList.add("hidden");};
 }
+
+// ✅ Search
 document.getElementById("searchInput").addEventListener("input",e=>{
  const term=e.target.value.toLowerCase();
  document.querySelectorAll("#bookList h3").forEach(h=>{
-  const p=h.closest("div");p.style.display=h.textContent.toLowerCase().includes(term)?"block":"none";
+  const p=h.closest("div");
+  p.style.display=h.textContent.toLowerCase().includes(term)?"block":"none";
  });
 });
+
+// ✅ Dark theme toggle
 const t=document.getElementById("themeToggle"),l=document.getElementById("logoImage");
-t.onclick=()=>{document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");t.textContent=d?"☀️":"🌙";l.src=d?"LOGO_VMC_white.png":"LOGO VMC.png";localStorage.setItem("theme",d?"dark":"light");};
+t.onclick=()=>{document.body.classList.toggle("dark");
+ const d=document.body.classList.contains("dark");
+ t.textContent=d?"☀️":"🌙";
+ l.src=d?"LOGO_VMC_white.png":"LOGO VMC.png";
+ localStorage.setItem("theme",d?"dark":"light");
+};
 if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark");t.textContent="☀️";l.src="LOGO_VMC_white.png";}
-window.onload=loadBooks;
+
+// ✅ PWA
 if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");
 navigator.serviceWorker.addEventListener("message",e=>{
  if(e.data&&e.data.type==="UPDATE_AVAILABLE"){
@@ -177,6 +202,8 @@ navigator.serviceWorker.addEventListener("message",e=>{
   r.onclick=()=>{navigator.serviceWorker.controller.postMessage({type:"SKIP_WAITING"});window.location.reload();};
  }
 });
+
+window.onload=loadBooks;
 </script>
 </body>
 </html>
