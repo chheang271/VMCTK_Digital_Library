@@ -1,209 +1,420 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>VMCTK Library – Volunteer for My Community</title>
-<link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#1e40af" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="mobile-web-app-capable" content="yes" />
-<link rel="apple-touch-icon" href="LOGO_512.png" />
-<link rel="apple-touch-startup-image" href="splash_1024x2048.png" />
+<title>VMCTK Digital Library</title>
 <script src="https://cdn.tailwindcss.com"></script>
+
 <style>
-:root{--blue:#1e40af;--light-blue:#3b82f6;--yellow:#facc15;--bg-light:#f3f4f6;--bg-dark:#111827;--text-light:#1f2937;--text-dark:#f9fafb}
-body{font-family:'Inter',sans-serif;background:var(--bg-light);color:var(--text-light);transition:.5s}
-body.dark{background:var(--bg-dark);color:var(--text-dark)}
-header{background:linear-gradient(to right,var(--light-blue),var(--blue));color:#fff}
-body.dark header{background:linear-gradient(to right,#1e293b,var(--bg-dark));color:var(--yellow)}
-#themeToggle{font-size:1.4rem;color:var(--yellow)}
-#continueReading{color:#000!important}
-.book-cover{width:100%;height:260px;object-fit:cover;border-radius:.5rem}
-@media(max-width:640px){.book-cover{height:220px}}
-.badge-new{position:absolute;top:.4rem;left:.4rem;background:var(--yellow);color:#111;font-weight:800;font-size:.65rem;padding:.2rem .45rem;border-radius:.25rem}
-#updateBanner{transition:all .5s ease;transform:translateY(100%);opacity:0}
-#updateBanner.show{transform:translateY(0);opacity:1}
+    /* --- (keep all your previous CSS) --- */
+    :root {
+      --bg-light: #f3f4f6;
+      --bg-dark: #1f2937;
+      --text-light: #1f2937;
+      --text-dark: #f9fafb;
+      --accent: #3b82f6;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.6s ease, color 0.6s ease;
+    }
+    body.dark { background-color: var(--bg-dark); color: var(--text-dark); }
+
+    /* ===== LOADING SCREEN ===== */
+    #loadingScreen {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white; display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      font-size: 1.2rem; z-index: 100;
+      transition: opacity 0.8s ease-out, background 0.6s ease;
+    }
+    body.dark #loadingScreen {
+      background: linear-gradient(135deg, #111827, #1f2937);
+    }
+    #loadingScreen.fade-out { opacity: 0; visibility: hidden; }
+
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid white;
+      border-radius: 50%; width: 40px; height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem; transition: border-color 0.6s ease;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    body.dark .spinner {
+      border: 4px solid rgba(255,255,255,0.15);
+      border-top: 4px solid #9ca3af;
+    }
+    #quoteText { transition: opacity 1s ease-in-out, color 0.6s ease; }
+    body.dark #quoteText { color: #e5e7eb; }
+
+    /* ===== BOOK CARDS ===== */
+    .book-card {
+      background-color: white; border-radius: 1rem;
+      padding: 1rem; text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .book-card:hover { transform: scale(1.03); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+    body.dark .book-card { background-color: #374151; color: #f9fafb; }
+
+    .book-cover { width: 100%; height: auto; border-radius: 0.75rem; object-fit: contain; }
+
+    /* ===== FEATURED CAROUSEL ===== */
+    #featuredList { display: flex; gap: 1.5rem; overflow-x: auto; scroll-smooth: true; padding-bottom: 0.5rem; }
+    #featuredList::-webkit-scrollbar { height: 8px; }
+    #featuredList::-webkit-scrollbar-thumb { background: #facc15; border-radius: 10px; }
+
+.featured-card {
+      border: 2px solid #facc15;
+      min-width: 250px; flex: 0 0 auto; border: 2px solid #facc15;
+background-color: rgba(250, 204, 21, 0.1);
+      animation: pulseGlow 2s infinite;
+      border-radius: 1rem; animation: pulseGlow 2s infinite;
+      cursor: pointer; transition: transform 0.3s;
+}
+    .featured-card:hover { transform: scale(1.05); }
+@keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(250,204,21,0.4); }
+      0%,100% { box-shadow: 0 0 10px rgba(250,204,21,0.4); }
+50% { box-shadow: 0 0 25px rgba(250,204,21,0.8); }
+}
+
+    /* ===== MODAL ===== */
+    .modal { display: none; position: fixed; z-index: 50; inset: 0;
+      background-color: rgba(0,0,0,0.6);
+      justify-content: center; align-items: center; }
+    .modal.show { display: flex; animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from{opacity:0; transform:scale(0.95);} to{opacity:1; transform:scale(1);} }
+
+    .modal-content {
+      background: white; border-radius: 1rem; max-width: 28rem;
+      padding: 1.5rem; text-align: center; position: relative;
+    }
+    body.dark .modal-content { background: #374151; color: #f9fafb; }
+
+    .close-btn { position: absolute; top: 0.5rem; right: 0.75rem; background: #ef4444; color: white; border: none; border-radius: 0.5rem; padding: 0.3rem 0.6rem; cursor: pointer; }
+
+    #tooltipHint { transition: opacity 0.6s ease-in-out; }
+
+    /* ===== ABOUT SECTION ===== */
+    #aboutVMCTK a:hover img.w-5 { transform: scale(1.1); transition: transform 0.3s; }
 </style>
 </head>
+
 <body>
-<div id="loadingScreen" class="fixed inset-0 flex flex-col justify-center items-center z-50 bg-gradient-to-br from-blue-500 to-blue-800 text-white">
- <div class="w-10 h-10 border-4 border-white border-t-yellow-400 rounded-full animate-spin mb-3"></div>
- <p>📚 Loading VMCTK Digital Library...</p>
+  <!-- Loading Screen (same as before) -->
+  <!-- 📚 Loading Screen -->
+<div id="loadingScreen">
+<div class="spinner"></div>
+<p>📚 Loading VMCTK Digital Library...</p>
+<p id="quoteText" class="mt-3 text-center text-sm italic opacity-90"></p>
 </div>
 
-<header class="shadow p-4 flex flex-col items-center relative">
- <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
- <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2">
- <h1 class="text-2xl font-bold text-center">VMCTK Library – Volunteer for My Community</h1>
- <p class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
- <div class="mt-2">
-   <button id="enBtn" class="px-3 py-1 bg-blue-700 text-white rounded">English</button>
-   <button id="khBtn" class="px-3 py-1 ml-2 bg-yellow-400 text-black rounded">ខ្មែរ</button>
- </div>
- <a href="#favoritesPage" id="favoritesLink" class="mt-3 text-sm text-yellow-200 dark:text-yellow-400 hover:underline">💖 View Favorite Books</a>
- <button id="installAppBtn" class="mt-2 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">📲 Install App</button>
+  <!-- Header (same as before) -->
+  <!-- 🌟 Header -->
+<header class="bg-white dark:bg-gray-800 shadow p-4 flex flex-col items-center relative transition-colors duration-300">
+    <button id="themeToggle" title="Toggle dark mode">🌙</button>
+    <button id="themeToggle" title="Toggle dark mode" class="absolute top-4 right-4">🌙</button>
+<img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2 transition duration-300 ease-in-out opacity-100">
+<h1 class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
+<p id="subtitle" class="text-gray-500 dark:text-gray-300 text-center">Volunteer for My Community</p>
+@@ -39,29 +123,137 @@ <h1 class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
+</div>
 </header>
 
-<section id="continueReading" class="hidden bg-yellow-100 p-3 text-center shadow">
- <p>📖 Continue reading: <span id="continueBook" class="font-semibold"></span>
- <button id="continueBtn" class="ml-2 bg-blue-600 text-white px-3 py-1 rounded">Open</button>
- <button id="clearContinue" class="ml-2 bg-gray-200 text-black px-3 py-1 rounded">Clear</button></p>
-</section>
-
+  <!-- 🔍 Search -->
 <section class="p-4 flex justify-center">
- <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
-</section>
-<section class="p-4 flex justify-center">
- <select id="categoryDropdown" class="p-2 border rounded shadow"><option value="All">All Categories</option></select>
+<input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
 </section>
 
-<section id="featuredSection" class="p-4">
- <h2 class="text-xl font-bold text-yellow-500 mb-3">⭐ Featured Books</h2>
- <div id="featuredList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+  <!-- ⭐ Featured Section -->
+  <!-- ⭐ Featured Carousel -->
+<section id="featuredSection" class="p-4 hidden">
+    <h2 class="text-2xl font-bold text-yellow-500 mb-3 text-center">⭐ Featured Books</h2>
+    <div id="featuredList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-2xl font-bold text-yellow-500">⭐ Featured Books</h2>
+      <div>
+        <button id="scrollLeft" class="text-yellow-400 text-2xl hover:text-yellow-300">◀</button>
+        <button id="scrollRight" class="text-yellow-400 text-2xl hover:text-yellow-300 ml-2">▶</button>
+      </div>
+    </div>
+    <div id="featuredList"></div>
 </section>
 
-<section id="bookList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4"></section>
+  <!-- All Books -->
+  <!-- 📘 All Books -->
+<section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
 
-<footer class="text-center p-4">
- <p>📘 Facebook: <a href="https://www.facebook.com/profile.php?id=61576745039709" target="_blank">Volunteer for My Community</a></p>
- <p>💬 Telegram: <a href="https://t.me/+exCdScgzKltlN2Zl" target="_blank">Join VMCTK</a></p>
- <p>☎️ Contact: +855 96 998 6500</p>
-</footer>
+  <!-- Modal + Footer (same as before) -->
+  <!-- 📖 Modal -->
+  <div id="bookModal" class="modal">
+    <div class="modal-content">
+      <button id="closeModal" class="close-btn">✕</button>
+      <img id="modalCover" src="" alt="Book Cover">
+      <h2 id="modalTitle" class="font-bold text-lg mb-1"></h2>
+      <p id="modalAuthor" class="text-gray-600 mb-1"></p>
+      <p id="modalLang" class="text-blue-500 mb-3"></p>
+      <p id="modalDesc" class="text-gray-700 mb-4"></p>
+      <div class="flex justify-between">
+        <a id="modalRead" href="#" target="_blank" class="text-green-600 font-semibold">Read Online</a>
+        <a id="modalDownload" href="#" download class="text-blue-600 font-semibold">Download</a>
+      </div>
+      <div class="flex justify-between mt-4">
+        <button id="prevBook" class="px-4 py-1 bg-blue-500 text-white rounded">⏮ Prev</button>
+        <button id="nextBook" class="px-4 py-1 bg-blue-500 text-white rounded">Next ⏭</button>
+      </div>
+      <p id="tooltipHint" class="text-sm text-gray-400 mt-3 opacity-0 text-center">💡 Tip: Use ← → keys to browse books</p>
+    </div>
+  </div>
 
-<div id="updateBanner" class="hidden fixed bottom-0 left-0 w-full bg-blue-600 text-white text-center py-3 px-4 font-medium shadow-lg flex justify-center items-center z-50">
- 🔄 A new version of <strong class="mx-1">VMCTK Library</strong> is available.
- <button id="refreshAppBtn" class="ml-3 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">Refresh Now</button>
-</div>
+  <!-- ❤️ About Section (Bilingual) -->
+  <section id="aboutVMCTK" class="mt-12 px-6 py-10 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-900 text-center transition-all duration-700">
+    <img src="LOGO VMC.png" class="w-20 mx-auto mb-4 dark:hidden">
+    <img src="LOGO_VMC_white.png" class="w-20 mx-auto mb-4 hidden dark:block">
+
+    <div id="aboutEN">
+      <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">About VMCTK</h2>
+      <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+        <strong>VMCTK Digital Library</strong> is a volunteer project by
+        <em>Volunteer for My Community</em>, dedicated to helping
+        <span class="text-blue-500 dark:text-blue-300 font-medium">youths access free books</span>
+        in both <span class="font-semibold">English</span> and
+        <span class="font-semibold">Khmer</span>.
+      </p>
+      <p class="mt-4 italic text-gray-600 dark:text-gray-400">
+        “Empowering youths through free knowledge and community spirit.” 🌱
+      </p>
+    </div>
+
+    <div id="aboutKH" class="hidden">
+      <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">អំពី VMCTK</h2>
+      <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+        <strong>បណ្ណាល័យឌីជីថល VMCTK</strong> គឺជាគម្រោងស្ម័គ្រចិត្តដោយ
+        <em>Volunteer for My Community</em> ដែលមានបំណងជួយឲ្យ
+        <span class="text-blue-500 dark:text-blue-300 font-medium">យុវជនអាចចូលដំណើរការសៀវភៅឥតគិតថ្លៃ</span>
+        ទាំង <span class="font-semibold">ភាសាអង់គ្លេស</span> និង
+        <span class="font-semibold">ភាសាខ្មែរ</span>។
+      </p>
+      <p class="mt-4 italic text-gray-600 dark:text-gray-400">
+        “ផ្តល់អំណាចដល់យុវជនតាមរយៈចំណេះដឹង និងស្មារតីសហគមន៍។” 🌱
+      </p>
+    </div>
+
+    <div class="mt-6 flex justify-center flex-wrap gap-4">
+      <a href="https://www.facebook.com/profile.php?id=61576745039709" target="_blank"
+         class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition flex items-center gap-2">
+         <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" class="w-5 h-5"> Facebook
+      </a>
+      <a href="https://t.me/+exCdScgzKltlN2Zl" target="_blank"
+         class="px-4 py-2 bg-sky-500 text-white rounded-lg shadow hover:bg-sky-600 transition flex items-center gap-2">
+         <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" class="w-5 h-5"> Telegram
+      </a>
+      <a href="tel:+855969986500"
+         class="px-4 py-2 border border-green-600 text-green-700 dark:text-green-400 rounded-lg hover:bg-green-600 hover:text-white transition flex items-center gap-2">
+         <img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" class="w-5 h-5"> +855 96 998 6500
+      </a>
+    </div>
+  </section>
+
+  <!-- 🌐 Footer -->
+  <footer class="bg-gray-800 text-white text-center p-4 mt-8 transition-colors duration-300">
+    <p id="footerText">© 2025 VMCTK Digital Library — All books are free for learning</p>
+  </footer>
+
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
 <script>
-const CSV_URL="https://raw.githubusercontent.com/chheang271/VMCTK_Digital_Library/refs/heads/main/books.csv";
-let books=[];
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
+const loadingScreen = document.getElementById("loadingScreen");
 
-// ✅ Utility
-function getHdCover(u){if(!u)return"";const m=u.match(/[-\\w]{25,}/);return m?`https://drive.google.com/thumbnail?id=${m[0]}&sz=w2000`:u;}
-function isNew(d){if(!d)return!1;const t=new Date(d);return!isNaN(t)&&((Date.now()-t)/864e5<=30);}
+    // 🌟 Quotes (same code as before)
+    const quotes = [/* your quotes list here */];
+    function showRandomQuote() { /* same function as before */ }
+    // 🌟 Quotes
+    const quotes = [
+      "📖 A reader lives a thousand lives before he dies.",
+      "🌱 Knowledge shared is knowledge multiplied.",
+      "🚀 The future belongs to those who learn today.",
+      "💡 Small steps every day create big change.",
+      "🤝 Sharing a book is sharing a world.",
+      "📚 អ្នកអានសៀវភៅគឺជាអ្នកដឹកនាំនាពេលអនាគត។",
+      "🌞 ការអានសៀវភៅជាគន្លងទៅរកពន្លឺនៃចំណេះដឹង។",
+      "🌈 Education is the most powerful weapon to change the world.",
+      "❤️ Learn not for school, but for life.",
+      "🎓 Reading is dreaming with open eyes."
+    ];
 
-// ✅ Load CSV + Render
-async function loadBooks(){
- try{
-  const res=await fetch(CSV_URL);
-  const text=await res.text();
-  const parsed=Papa.parse(text,{header:true});
-  books=parsed.data.filter(b=>b.Title);
-  renderCategories();renderBooks();renderFeatured();
-  document.getElementById("loadingScreen").classList.add("hidden");
- }catch(e){console.error("Book load failed:",e);}
+    function showRandomQuote() {
+      const quoteEl = document.getElementById("quoteText");
+      if (!quoteEl) return;
+      let currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteEl.textContent = currentQuote;
+      setTimeout(() => {
+        quoteEl.style.opacity = "0";
+        setTimeout(() => {
+          let newQuote;
+          do { newQuote = quotes[Math.floor(Math.random() * quotes.length)]; }
+          while (newQuote === currentQuote);
+          quoteEl.textContent = newQuote;
+          quoteEl.style.opacity = "1";
+        }, 1000);
+      }, 4000);
+    }
+showRandomQuote();
+
+let books = [];
+@@ -85,44 +277,133 @@ <h2 class="text-2xl font-bold text-yellow-500 mb-3 text-center">⭐ Featured Boo
+container.innerHTML = "";
+featuredList.innerHTML = "";
+
+      const featuredBooks = books.filter(b => b.Featured && b.Featured.toLowerCase() === "yes").slice(0, 3);
+
+      const featuredBooks = books.filter(b => b.Featured && b.Featured.toLowerCase() === "yes").slice(0, 6);
+if (featuredBooks.length > 0) {
+featuredSection.classList.remove("hidden");
+        featuredBooks.forEach((book, index) => {
+        featuredBooks.forEach(book => {
+const card = document.createElement("div");
+          card.className = "featured-card rounded-lg shadow transition p-4 text-center";
+          card.className = "featured-card p-4 text-center";
+card.innerHTML = `
+            <img src="${getHdCover(book["Cover Link"])}" class="book-cover" />
+            <img src="${getHdCover(book["Cover Link"])}" class="book-cover mb-2" />
+           <h3 class="text-lg font-bold text-yellow-500">${book.Title}</h3>
+            <p class="text-gray-600 dark:text-gray-300">${book.Author}</p>
+            <p class="text-sm text-blue-500">${book.Language}</p>
+          `;
+            <p class="text-gray-600 dark:text-gray-300">${book.Author}</p>`;
+card.addEventListener("click", () => openModal(books.indexOf(book)));
+featuredList.appendChild(card);
+});
 }
 
-function renderCategories(){
- const d=document.getElementById("categoryDropdown");
- const cats=[...new Set(books.map(b=>(b.Category||"").trim()).filter(Boolean))];
- d.innerHTML="<option>All</option>"+cats.map(c=>`<option>${c}</option>`).join("");
- d.onchange=e=>renderBooks(e.target.value);
-}
-
-function renderBooks(cat="All"){
- const c=document.getElementById("bookList");c.innerHTML="";
- books.filter(b=>cat==="All"||b.Category===cat).forEach((b,i)=>{
-  const d=document.createElement("div");
-  d.className="book-card rounded-lg shadow p-4 bg-white dark:bg-gray-800 cursor-pointer relative";
-  const badge=isNew(b["Date Added"])?`<span class='badge-new'>NEW</span>`:"";
-  d.innerHTML=`${badge}<img src='${getHdCover(b["Cover Link"])}' class='book-cover mb-2'>
-  <h3 class='font-bold'>${b.Title}</h3>
-  <p class='text-sm text-gray-500'>${b.Author||""}</p>
-  <p class='text-sm text-blue-500'>${b.Language||""}</p>`;
-  d.addEventListener("click",()=>window.openModal(i)); // ✅ Fixed global scope call
-  c.appendChild(d);
- });
-}
-
-function renderFeatured(){
- const f=document.getElementById("featuredList");f.innerHTML="";
- books.forEach((b,i)=>{
-  if(b.Featured&&b.Featured.toLowerCase()==="yes"&&f.childElementCount<5){
-   const badge=isNew(b["Date Added"])?`<span class='badge-new'>NEW</span>`:"";
-   const c=document.createElement("div");
-   c.className="cursor-pointer relative bg-white dark:bg-gray-800 p-2 rounded shadow";
-   c.innerHTML=`${badge}<img src='${getHdCover(b["Cover Link"])}' class='book-cover mb-2'>
-   <h3 class='font-semibold text-center text-sm'>${b.Title}</h3>`;
-   c.addEventListener("click",()=>window.openModal(i)); // ✅ Fixed
-   f.appendChild(c);
-  }
- });
-}
-
-// ✅ Make modal globally accessible (fixes iPhone/desktop clicks)
-window.openModal=function(i){
- const b=books[i];if(!b)return;
- const modal=document.createElement("div");
- modal.className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50";
-
- const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
- const pdfLink=b["PDF Link"];
- const readBtn=`<a href="${pdfLink}" target="_blank" class='bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded'>Read Online</a>`;
- const downloadBtn=isIOS
-  ? `<a href="${pdfLink}" target="_blank" class='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded'>Open PDF</a>`
-  : `<a href="${pdfLink}" download class='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded'>Download</a>`;
-
- modal.innerHTML=`
-  <div class='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-80 max-w-sm relative'>
-   <button class='absolute top-2 right-3 text-red-500 text-xl font-bold' id='closeModalBtn'>✕</button>
-   <img src='${getHdCover(b["Cover Link"])}' class='rounded-lg mb-3 mx-auto book-cover'>
-   <h2 class='text-lg font-bold mb-1'>${b.Title}</h2>
-   <p class='text-sm text-gray-500 mb-1'>${b.Author||""}</p>
-   <p class='text-sm text-blue-500 mb-3'>${b.Language||""}</p>
-   <p class='text-sm text-gray-600 dark:text-gray-400 mb-4'>${b.Description||""}</p>
-   <div class='flex justify-between'>${readBtn}${downloadBtn}</div>
-  </div>`;
- document.body.appendChild(modal);
- document.getElementById("closeModalBtn").onclick=()=>modal.remove();
-
- // ✅ Save continue reading
- localStorage.setItem("continue",JSON.stringify(b));
- showContinue();
-};
-
-function showContinue(){
- const b=JSON.parse(localStorage.getItem("continue")||"null");
- const bar=document.getElementById("continueReading");
- if(!b)return;
- bar.classList.remove("hidden");
- document.getElementById("continueBook").textContent=b.Title;
- document.getElementById("continueBtn").onclick=()=>window.open(b["PDF Link"],"_blank");
- document.getElementById("clearContinue").onclick=()=>{localStorage.removeItem("continue");bar.classList.add("hidden");};
-}
-
-// ✅ Search
-document.getElementById("searchInput").addEventListener("input",e=>{
- const term=e.target.value.toLowerCase();
- document.querySelectorAll("#bookList h3").forEach(h=>{
-  const p=h.closest("div");
-  p.style.display=h.textContent.toLowerCase().includes(term)?"block":"none";
- });
+      // Normal books
+books.forEach((book, index) => {
+const card = document.createElement("div");
+        card.className = "book-card rounded-lg shadow hover:shadow-lg transition p-4";
+        card.className = "book-card";
+card.innerHTML = `
+         <img src="${getHdCover(book["Cover Link"])}" class="book-cover" />
+          <h2 class="book-title text-lg text-center cursor-pointer">${book.Title}</h2>
+          <p class="book-author text-center">${book.Author}</p>
+          <p class="book-lang text-sm text-blue-500 text-center">${book.Language}</p>
+          <p class="book-desc mt-2 text-center">${book.Description}</p>
+        `;
+        card.querySelector(".book-cover").addEventListener("click", () => openModal(index));
+        card.querySelector(".book-title").addEventListener("click", () => openModal(index));
+          <h2 class="font-bold text-lg mt-2">${book.Title}</h2>
+          <p class="text-sm text-gray-500">${book.Author}</p>`;
+        card.addEventListener("click", () => openModal(index));
+container.appendChild(card);
 });
 
-// ✅ Dark theme toggle
-const t=document.getElementById("themeToggle"),l=document.getElementById("logoImage");
-t.onclick=()=>{document.body.classList.toggle("dark");
- const d=document.body.classList.contains("dark");
- t.textContent=d?"☀️":"🌙";
- l.src=d?"LOGO_VMC_white.png":"LOGO VMC.png";
- localStorage.setItem("theme",d?"dark":"light");
-};
-if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark");t.textContent="☀️";l.src="LOGO_VMC_white.png";}
+loadingScreen.classList.add("fade-out");
+}
 
-// ✅ PWA
-if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");
-navigator.serviceWorker.addEventListener("message",e=>{
- if(e.data&&e.data.type==="UPDATE_AVAILABLE"){
-  const b=document.getElementById("updateBanner"),r=document.getElementById("refreshAppBtn");
-  b.classList.remove("hidden");setTimeout(()=>b.classList.add("show"),100);
-  r.onclick=()=>{navigator.serviceWorker.controller.postMessage({type:"SKIP_WAITING"});window.location.reload();};
- }
-});
+    // (Keep all your modal, tooltip, search, theme, and keyboard code the same)
+    // modal
+    const modal = document.getElementById("bookModal");
+    const closeModalBtn = document.getElementById("closeModal");
+    function openModal(index) {
+      currentIndex = index;
+      const b = books[index];
+      document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
+      document.getElementById("modalTitle").textContent = b.Title;
+      document.getElementById("modalAuthor").textContent = b.Author;
+      document.getElementById("modalLang").textContent = b.Language;
+      document.getElementById("modalDesc").textContent = b.Description;
+      document.getElementById("modalRead").href = b["PDF Link"];
+      document.getElementById("modalDownload").href = b["PDF Link"];
+      modal.classList.add("show");
 
-window.onload=loadBooks;
+      const tip = document.getElementById("tooltipHint");
+      if (!sessionStorage.getItem("tipShown")) {
+        tip.style.opacity = "1";
+        setTimeout(() => (tip.style.opacity = "0"), 3000);
+        sessionStorage.setItem("tipShown", "true");
+      }
+    }
+    closeModalBtn.onclick = () => modal.classList.remove("show");
+    window.onclick = e => { if (e.target === modal) modal.classList.remove("show"); };
+
+    document.addEventListener("keydown", e => {
+      if (!modal.classList.contains("show")) return;
+      if (e.key === "ArrowRight") openModal((currentIndex + 1) % books.length);
+      if (e.key === "ArrowLeft") openModal((currentIndex - 1 + books.length) % books.length);
+      if (e.key === "Escape") modal.classList.remove("show");
+    });
+
+    // search
+    document.getElementById("searchInput").addEventListener("input", e => {
+      const term = e.target.value.toLowerCase();
+      document.querySelectorAll("#bookList > div").forEach(book => {
+        const title = book.querySelector("h2").textContent.toLowerCase();
+        const author = book.querySelector("p").textContent.toLowerCase();
+        book.style.display = title.includes(term) || author.includes(term) ? "block" : "none";
+      });
+    });
+
+    // featured scroll + auto-scroll
+    const featuredList = document.getElementById("featuredList");
+    document.getElementById("scrollLeft").onclick = () => featuredList.scrollBy({ left: -300, behavior: "smooth" });
+    document.getElementById("scrollRight").onclick = () => featuredList.scrollBy({ left: 300, behavior: "smooth" });
+    let autoScrollActive = true;
+    function autoScroll() {
+      if (!autoScrollActive) return;
+      featuredList.scrollBy({ left: 1, behavior: "smooth" });
+      if (featuredList.scrollLeft + featuredList.clientWidth >= featuredList.scrollWidth - 1)
+        featuredList.scrollTo({ left: 0, behavior: "smooth" });
+    }
+    setInterval(autoScroll, 40);
+    ["mouseenter","touchstart"].forEach(ev => featuredList.addEventListener(ev, () => autoScrollActive=false));
+    ["mouseleave","touchend"].forEach(ev => featuredList.addEventListener(ev, () => autoScrollActive=true));
+
+    // language toggle for about + text
+    const enBtn = document.getElementById("enBtn");
+    const khBtn = document.getElementById("khBtn");
+    const subtitle = document.getElementById("subtitle");
+    const footerText = document.getElementById("footerText");
+
+    enBtn.onclick = () => {
+      subtitle.textContent = "Volunteer for My Community";
+      footerText.textContent = "© 2025 VMCTK Digital Library — All books are free for learning";
+      document.getElementById("aboutEN").classList.remove("hidden");
+      document.getElementById("aboutKH").classList.add("hidden");
+      enBtn.classList.add("bg-blue-500","text-white");
+      khBtn.classList.remove("bg-blue-500","text-white");
+      khBtn.classList.add("bg-gray-300");
+    };
+    khBtn.onclick = () => {
+      subtitle.textContent = "អានសៀវភៅដោយឥតគិតថ្លៃសម្រាប់យុវជន";
+      footerText.textContent = "© ២០២៥ បណ្ណាល័យឌីជីថល VMCTK — សៀវភៅទាំងអស់គឺឥតគិតថ្លៃសម្រាប់ការសិក្សា";
+      document.getElementById("aboutKH").classList.remove("hidden");
+      document.getElementById("aboutEN").classList.add("hidden");
+      khBtn.classList.add("bg-blue-500","text-white");
+      enBtn.classList.remove("bg-blue-500","text-white");
+      enBtn.classList.add("bg-gray-300");
+    };
+
+    // theme toggle
+    const themeToggle = document.getElementById("themeToggle");
+    const logoImage = document.getElementById("logoImage");
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
+      themeToggle.textContent = "☀️";
+      logoImage.src = "LOGO_VMC_white.png";
+    }
+    themeToggle.onclick = () => {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      themeToggle.textContent = isDark ? "☀️" : "🌙";
+      logoImage.src = isDark ? "LOGO_VMC_white.png" : "LOGO VMC.png";
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    };
+
+loadBooks();
 </script>
 </body>
-</html>
