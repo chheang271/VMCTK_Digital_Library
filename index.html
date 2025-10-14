@@ -17,7 +17,8 @@ body{font-family:'Inter',sans-serif;background:var(--vmc-bg-light);color:var(--v
 body.dark{background:var(--vmc-bg-dark);color:var(--vmc-text-dark)}
 #loadingScreen{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:100;background:linear-gradient(135deg,var(--vmc-light-blue),var(--vmc-blue));color:#fff;transition:opacity .8s}
 #loadingScreen.fade-out{opacity:0;visibility:hidden}
-.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top:4px solid var(--vmc-yellow);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1rem}@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top:4px solid var(--vmc-yellow);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
 header{background:linear-gradient(to right,var(--vmc-light-blue),var(--vmc-blue));color:#fff}
 body.dark header{background:linear-gradient(to right,#1e293b,var(--vmc-bg-dark));color:var(--vmc-yellow)}
 #themeToggle{font-size:1.4rem;color:var(--vmc-yellow)}
@@ -25,24 +26,20 @@ body.dark h3,body.dark .font-bold{color:#f9fafb!important;text-shadow:0 0 8px rg
 body.dark p.text-gray-500{color:#d1d5db!important}
 body.dark p.text-blue-500{color:#60a5fa!important}
 body.dark .book-card{background:#1f2937;border:1px solid rgba(255,255,255,.1)}
+.badge-new{position:absolute;top:.4rem;left:.4rem;background:var(--vmc-yellow);color:#111;font-weight:800;font-size:.65rem;padding:.2rem .45rem;border-radius:.25rem}
 #continueReading{color:#000!important}
 #continueReading button{color:#fff!important}
-#categoryDropdown{border:2px solid var(--vmc-blue);background:#fff;color:var(--vmc-text-light);font-weight:500}
-body.dark #categoryDropdown{background:var(--vmc-bg-dark);color:var(--vmc-text-dark);border-color:var(--vmc-yellow)}
-.badge-new{position:absolute;top:.4rem;left:.4rem;background:var(--vmc-yellow);color:#111;font-weight:800;font-size:.65rem;padding:.2rem .45rem;border-radius:.25rem}
 #updateBanner{transition:all .5s ease;transform:translateY(100%);opacity:0}
 #updateBanner.show{transform:translateY(0);opacity:1}
 </style>
 </head>
 <body>
-<!-- Loading -->
 <div id="loadingScreen">
   <div class="spinner"></div>
   <p>📚 Loading VMCTK Digital Library...</p>
   <p id="quoteText" class="mt-3 text-sm italic opacity-90"></p>
 </div>
 
-<!-- Header -->
 <header class="shadow p-4 flex flex-col items-center relative">
   <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
   <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2">
@@ -56,14 +53,12 @@ body.dark #categoryDropdown{background:var(--vmc-bg-dark);color:var(--vmc-text-d
   <button id="installAppBtn" class="mt-2 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">📲 Install App</button>
 </header>
 
-<!-- Continue Reading -->
 <section id="continueReading" class="hidden bg-yellow-100 p-3 text-center shadow">
   <p>📖 Continue reading: <span id="continueBook" class="font-semibold"></span>
   <button id="continueBtn" class="ml-2 bg-blue-600 text-white px-3 py-1 rounded">Open</button>
   <button id="clearContinue" class="ml-2 bg-gray-200 text-black px-3 py-1 rounded">Clear</button></p>
 </section>
 
-<!-- Search & Category -->
 <section class="p-4 flex justify-center">
   <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow">
 </section>
@@ -71,7 +66,6 @@ body.dark #categoryDropdown{background:var(--vmc-bg-dark);color:var(--vmc-text-d
   <select id="categoryDropdown" class="p-2 border rounded shadow"><option value="All">All Categories</option></select>
 </section>
 
-<!-- Featured -->
 <section id="featuredSection" class="p-4">
   <div class="flex justify-between items-center mb-3">
     <h2 class="text-xl font-bold text-yellow-500">⭐ Featured Books</h2>
@@ -80,10 +74,8 @@ body.dark #categoryDropdown{background:var(--vmc-bg-dark);color:var(--vmc-text-d
   <div id="featuredList"></div>
 </section>
 
-<!-- Book List -->
 <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
 
-<!-- Favorites -->
 <section id="favoritesPage" class="hidden px-6 py-10 text-center">
   <h2 class="text-2xl font-bold text-blue-600 dark:text-yellow-400 mb-6">💖 Your Favorite Books</h2>
   <div id="favoritesList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
@@ -91,14 +83,12 @@ body.dark #categoryDropdown{background:var(--vmc-bg-dark);color:var(--vmc-text-d
   <button id="backToHome" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded">⬅ Back to Library</button>
 </section>
 
-<!-- Footer -->
 <footer class="text-center p-4">
   <p>📘 Facebook: <a href="https://www.facebook.com/profile.php?id=61576745039709" target="_blank">Volunteer for My Community</a></p>
   <p>💬 Telegram: <a href="https://t.me/+exCdScgzKltlN2Zl" target="_blank">Join VMCTK</a></p>
   <p>☎️ Contact: +855 96 998 6500</p>
 </footer>
 
-<!-- Update Banner -->
 <div id="updateBanner" class="hidden fixed bottom-0 left-0 w-full bg-blue-600 text-white text-center py-3 px-4 font-medium shadow-lg flex justify-center items-center z-50">
   🔄 A new version of <strong class="mx-1">VMCTK Library</strong> is available.
   <button id="refreshAppBtn" class="ml-3 bg-yellow-400 text-black font-semibold px-3 py-1 rounded hover:bg-yellow-300">Refresh Now</button>
@@ -107,22 +97,70 @@ body.dark #categoryDropdown{background:var(--vmc-bg-dark);color:var(--vmc-text-d
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script>
 const CSV_URL="https://raw.githubusercontent.com/chheang271/VMCTK_Digital_Library/refs/heads/main/books.csv";
-const quotes=["📖 A reader lives a thousand lives before he dies.","🌱 Knowledge shared is knowledge multiplied.","🚀 The future belongs to those who learn today.","💡 Small steps every day create big change.","🤝 Sharing a book is sharing a world.","📚 អ្នកអានសៀវភៅគឺជាអ្នកដឹកនាំនាពេលអនាគត។","🌞 ការអានសៀវភៅជាគន្លងទៅរកពន្លឺនៃចំណេះដឹង។","🌈 Education is the most powerful weapon to change the world.","❤️ Learn not for school, but for life.","🎓 Reading is dreaming with open eyes."];
-let books=[],favorites=JSON.parse(localStorage.getItem("favorites")||"[]"),continueReading=JSON.parse(localStorage.getItem("continue")||"null");
+let books=[];
 function getHdCover(u){if(!u)return"";const m=u.match(/[-\\w]{25,}/);return m?`https://drive.google.com/thumbnail?id=${m[0]}&sz=w2000`:u;}
-function showQuote(){const q=document.getElementById("quoteText");let c=quotes[Math.floor(Math.random()*quotes.length)];q.textContent=c;setInterval(()=>{let n;do{n=quotes[Math.floor(Math.random()*quotes.length)]}while(n===c);c=n;q.textContent=n;},5000);}
+async function loadBooks(){
+ const res=await fetch(CSV_URL);const text=await res.text();const parsed=Papa.parse(text,{header:true});
+ books=parsed.data.filter(b=>b.Title);renderCategories();renderBooks();renderFeatured();
+ document.getElementById("loadingScreen").classList.add("fade-out");
+}
+function renderCategories(){const d=document.getElementById("categoryDropdown");
+ const cats=[...new Set(books.map(b=>(b.Category||"").trim()).filter(Boolean))];
+ d.innerHTML="<option>All</option>"+cats.map(c=>`<option>${c}</option>`).join("");
+ d.onchange=e=>renderBooks(e.target.value);}
+function renderBooks(cat="All"){
+ const c=document.getElementById("bookList");c.innerHTML="";
+ books.filter(b=>cat==="All"||b.Category===cat).forEach((b,i)=>{
+  const d=document.createElement("div");
+  d.className="book-card rounded-lg shadow p-4 bg-white dark:bg-gray-800 cursor-pointer relative";
+  const badge=isNew(b["Date Added"])?`<span class='badge-new'>NEW</span>`:"";
+  d.innerHTML=`${badge}<img src='${getHdCover(b["Cover Link"])}' class='book-cover mb-2'>
+  <h3 class='font-bold'>${b.Title}</h3>
+  <p class='text-sm text-gray-500'>${b.Author||""}</p>
+  <p class='text-sm text-blue-500'>${b.Language||""}</p>`;
+  d.onclick=()=>openModal(i);
+  c.appendChild(d);
+ });
+}
 function isNew(d){if(!d)return!1;const t=new Date(d);return!isNaN(t)&&((Date.now()-t)/864e5<=30);}
-async function loadBooks(){try{const r=await fetch(CSV_URL),t=await r.text(),p=Papa.parse(t,{header:!0});books=p.data.filter(b=>b.Title);renderCategories();renderBooks();renderFeatured();document.getElementById("loadingScreen").classList.add("fade-out");showContinue();}catch(e){console.error("Load failed:",e);}}
-function renderCategories(){const d=document.getElementById("categoryDropdown");const cats=[...new Set(books.map(b=>(b.Category||"").trim()).filter(Boolean))];d.innerHTML="<option>All</option>"+cats.map(c=>`<option>${c}</option>`).join("");d.onchange=e=>renderBooks(e.target.value);}
-function renderBooks(cat="All"){const c=document.getElementById("bookList");c.innerHTML="";books.filter(b=>cat==="All"||b.Category===cat).forEach((b,i)=>{const d=document.createElement("div");d.className="book-card rounded-lg shadow p-4 bg-white dark:bg-gray-800 cursor-pointer relative";d.innerHTML=`<img src='${getHdCover(b["Cover Link"])}' class='book-cover mb-2'><${isNew(b["Date Added"])?`span class='badge-new'>NEW</span>`:""}><h3 class='font-bold'>${b.Title}</h3><p class='text-sm text-gray-500'>${b.Author||""}</p><p class='text-sm text-blue-500'>${b.Language||""}</p>`;d.onclick=()=>openModal(i);c.appendChild(d);});}
-function renderFeatured(){const f=document.getElementById("featuredList");f.innerHTML="";books.forEach((b,i)=>{if(b.Featured&&b.Featured.toLowerCase()==="yes"&&f.childElementCount<5){const c=document.createElement("div");c.className="featured-card cursor-pointer relative";c.innerHTML=`<img src='${getHdCover(b["Cover Link"])}' class='book-cover mb-2'>${isNew(b["Date Added"])?`<span class='badge-new'>NEW</span>`:""}<h3 class='font-semibold'>${b.Title}</h3>`;c.onclick=()=>openModal(i);f.appendChild(c);}});}
-function openModal(i){const b=books[i];if(!b)return;const m=document.createElement("div");m.className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50";m.innerHTML=`<div class='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-80 max-w-sm relative'><button class='absolute top-2 right-3 text-red-500 text-xl font-bold' id='closeModalBtn'>✕</button><img src='${getHdCover(b["Cover Link"])}' class='rounded-lg mb-3 mx-auto' alt='Book Cover'><h2 class='text-lg font-bold mb-1'>${b.Title}</h2><p class='text-sm text-gray-500 dark:text-gray-300 mb-1'>${b.Author||""}</p><p class='text-sm text-blue-500 mb-3'>${b.Language||""}</p><p class='text-sm text-gray-600 dark:text-gray-400 mb-4'>${b.Description||""}</p><div class='flex justify-between'><a href='${b["PDF Link"]}' target='_blank' class='bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded'>Read Online</a><a href='${b["PDF Link"]}' download class='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded'>Download</a></div></div>`;document.body.appendChild(m);document.getElementById("closeModalBtn").onclick=()=>m.remove();localStorage.setItem("continue",JSON.stringify(b));showContinue();}
-function showContinue(){const b=JSON.parse(localStorage.getItem("continue")||"null");if(!b)return;const bar=document.getElementById("continueReading");bar.classList.remove("hidden");document.getElementById("continueBook").textContent=b.Title;document.getElementById("continueBtn").onclick=()=>window.open(b["PDF Link"],"_blank");document.getElementById("clearContinue").onclick=()=>{localStorage.removeItem("continue");bar.classList.add("hidden");}}
-document.getElementById("searchInput").addEventListener("input",e=>{const term=e.target.value.toLowerCase();document.querySelectorAll("#bookList h3").forEach(h=>{const p=h.closest("div");p.style.display=h.textContent.toLowerCase().includes(term)?"block":"none";});});
-const t=document.getElementById("themeToggle"),l=document.getElementById("logoImage");t.onclick=()=>{document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");t.textContent=d?"☀️":"🌙";l.src=d?"LOGO_VMC_white.png":"LOGO VMC.png";localStorage.setItem("theme",d?"dark":"light");};if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark");t.textContent="☀️";l.src="LOGO_VMC_white.png";}
-showQuote();window.onload=loadBooks;
-if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");
-navigator.serviceWorker.addEventListener("message",e=>{if(e.data&&e.data.type==="UPDATE_AVAILABLE"){const b=document.getElementById("updateBanner"),r=document.getElementById("refreshAppBtn");b.classList.remove("hidden");setTimeout(()=>b.classList.add("show"),100);r.onclick=()=>{navigator.serviceWorker.controller.postMessage({type:"SKIP_WAITING"});window.location.reload();};}});
+function renderFeatured(){
+ const f=document.getElementById("featuredList");f.innerHTML="";
+ books.forEach((b,i)=>{if(b.Featured&&b.Featured.toLowerCase()==="yes"&&f.childElementCount<5){
+  const badge=isNew(b["Date Added"])?`<span class='badge-new'>NEW</span>`:"";
+  const c=document.createElement("div");
+  c.className="featured-card cursor-pointer relative";
+  c.innerHTML=`${badge}<img src='${getHdCover(b["Cover Link"])}' class='book-cover mb-2'>
+  <h3 class='font-semibold'>${b.Title}</h3>`;
+  c.onclick=()=>openModal(i);f.appendChild(c);
+ }});
+}
+function openModal(i){
+ const b=books[i];if(!b)return;
+ const modal=document.createElement("div");
+ modal.className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50";
+ modal.innerHTML=`
+ <div class='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-80 max-w-sm relative'>
+  <button class='absolute top-2 right-3 text-red-500 text-xl font-bold' id='closeModalBtn'>✕</button>
+  <img src='${getHdCover(b["Cover Link"])}' class='rounded-lg mb-3 mx-auto' alt='Book Cover'>
+  <h2 class='text-lg font-bold mb-1'>${b.Title}</h2>
+  <p class='text-sm text-gray-500 mb-1'>${b.Author||""}</p>
+  <p class='text-sm text-blue-500 mb-3'>${b.Language||""}</p>
+  <p class='text-sm text-gray-600 dark:text-gray-400 mb-4'>${b.Description||""}</p>
+  <div class='flex justify-between'>
+    <a href='${b["PDF Link"]}' target='_blank' class='bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded'>Read Online</a>
+    <a href='${b["PDF Link"]}' download class='bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded'>Download</a>
+  </div>
+ </div>`;
+ document.body.appendChild(modal);
+ document.getElementById("closeModalBtn").onclick=()=>modal.remove();
+}
+document.getElementById("searchInput").addEventListener("input",e=>{
+ const term=e.target.value.toLowerCase();
+ document.querySelectorAll("#bookList h3").forEach(h=>{
+  const p=h.closest("div");p.style.display=h.textContent.toLowerCase().includes(term)?"block":"none";
+ });
+});
+window.onload=loadBooks;
 </script>
 </body>
 </html>
