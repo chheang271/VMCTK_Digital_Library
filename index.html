@@ -28,86 +28,55 @@
       color: var(--vmc-text-dark);
     }
 
-    /* ---------- Global helpers for dark mode ---------- */
-    body.dark h3 { color: #f9fafb !important; }   /* default for headings */
-    body.dark p  { color: #d1d5db !important; }   /* default for paragraphs */
-    body.dark a  { color: #93c5fd; }              /* links */
+    /* ---------- Global helpers (base) ---------- */
+    body.dark h3 { color: #f9fafb !important; }   /* base default for headings in dark */
+    body.dark p  { color: #d1d5db !important; }   /* base default for paragraphs in dark */
+    body.dark a  { color: #93c5fd; }
     body.dark .text-blue-500 { color: #60a5fa !important; }
 
-    /* 🌙 Strong fix: book titles & info inside lists and featured */
-    body.dark #bookList h3,
-    body.dark #featuredList h3 {
-      color: #f9fafb !important;                 /* bright white title */
-      text-shadow: 0 1px 3px rgba(0,0,0,0.6);    /* subtle glow for busy covers */
-    }
-    body.dark #bookList p,
-    body.dark #featuredList p,
-    body.dark #bookList span,
-    body.dark #featuredList span {
-      color: #e5e7eb !important;                 /* readable text on dark */
-    }
-    body.dark #bookList a,
-    body.dark #featuredList a {
-      color: #93c5fd !important;                 /* readable links */
-    }
-    body.dark #bookList .text-blue-500,
-    body.dark #featuredList .text-blue-500 {
-      color: #60a5fa !important;
-    }
-
-    /* 🌙 About + Contact contrasts (as you liked) */
+    /* 🌙 About + Contact contrasts */
     body.dark #aboutVMCTK h2,
     body.dark #contactSection h2 {
-      color: var(--vmc-yellow) !important;       /* bright yellow headings */
+      color: var(--vmc-yellow) !important;
     }
     body.dark #aboutVMCTK p,
     body.dark #contactSection p {
-      color: #f9fafb !important;                 /* bright paragraph text */
+      color: #f9fafb !important;
     }
     body.dark #aboutVMCTK strong,
     body.dark #aboutVMCTK em,
     body.dark #aboutVMCTK span {
-      color: var(--vmc-yellow) !important;       /* highlighted key phrases */
+      color: var(--vmc-yellow) !important;
     }
 
-    /* Featured heading in dark mode */
+    /* Keep featured heading visible in dark */
     body.dark #featuredSection h2 { color: var(--vmc-yellow) !important; }
 
-    /* Footer contrast in dark mode */
+    /* Footer contrast in dark */
     body.dark footer p,
     body.dark footer a { color: var(--vmc-yellow) !important; }
 
     /* ---------- Loading Screen ---------- */
     #loadingScreen {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: linear-gradient(135deg, var(--vmc-light-blue), var(--vmc-blue));
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.1rem;
-      z-index: 100;
-      transition: opacity 0.8s ease-out;
+      color: white; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      font-size: 1.1rem; z-index: 100; transition: opacity 0.8s ease-out;
     }
     #loadingScreen.fade-out { opacity: 0; visibility: hidden; }
 
     .spinner {
       border: 4px solid rgba(255, 255, 255, 0.3);
       border-top: 4px solid var(--vmc-yellow);
-      border-radius: 50%;
-      width: 40px; height: 40px;
-      animation: spin 1s linear infinite;
-      margin-bottom: 1rem;
+      border-radius: 50%; width: 40px; height: 40px;
+      animation: spin 1s linear infinite; margin-bottom: 1rem;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ---------- Header ---------- */
     header {
       background: linear-gradient(to right, var(--vmc-light-blue), var(--vmc-blue));
-      color: white;
-      transition: background-color 0.6s ease;
+      color: white; transition: background-color 0.6s ease;
     }
     body.dark header {
       background: linear-gradient(to right, #1e293b, var(--vmc-bg-dark));
@@ -182,6 +151,23 @@
     }
     footer a { color: inherit; text-decoration: none; transition: color 0.3s; }
     footer a:hover { color: var(--vmc-yellow); }
+
+    /* ---------- FINAL OVERRIDES: black titles & authors on cards in dark mode ---------- */
+    /* We place this AFTER all previous rules to ensure precedence. */
+    body.dark #bookList h3,
+    body.dark #featuredList h3 {
+      color: #111827 !important;          /* black titles for clarity */
+      text-shadow: none !important;       /* remove white glow from earlier rule */
+    }
+    body.dark #bookList p:not(.text-blue-500),
+    body.dark #featuredList p:not(.text-blue-500) {
+      color: #111827 !important;          /* black author/extra text */
+    }
+    /* keep language line blue */
+    body.dark #bookList .text-blue-500,
+    body.dark #featuredList .text-blue-500 {
+      color: #60a5fa !important;
+    }
   </style>
 </head>
 
