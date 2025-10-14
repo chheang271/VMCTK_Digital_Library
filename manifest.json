@@ -1,0 +1,14 @@
+{
+  "name": "VMCTK Library",
+  "short_name": "VMCTK",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1e40af",
+  "theme_color": "#1e40af",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "LOGO VMC.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "LOGO_VMC_white.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "splash_1024x2048.png", "sizes": "1024x2048", "type": "image/png" }
+  ]
+}
