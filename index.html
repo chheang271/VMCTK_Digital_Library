@@ -285,7 +285,7 @@
     <h1 id="mainTitle" class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
     <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
     <div class="mt-2 flex gap-2">
-      <!-- ✅ Flag icons added here -->
+      <!-- Flag icons on language buttons -->
       <button id="enBtn" class="px-3 py-1 flex items-center gap-1 rounded">
         <span>🇬🇧</span><span>English</span>
       </button>
@@ -518,7 +518,7 @@
         feedbackThanks: "សូមអរគុណចំពោះមតិយោបល់របស់អ្នក! 🙏",
         feedbackNeedContent: "សូមបន្ថែមពិន្ទុ ឬ មតិយោបល់មួយ។",
         feedbackNoBook: "រកមិនឃើញព័ត៌មានសៀវភៅ។",
-        feedbackError: "មិនអាចបញ្ជូនមតិយោបល់បានទេ សូមព្យាយាមម្ដងទៀត។",
+        feedbackError: "មិនអាចបញ្ជូនមតិយោបោះបានទេ សូមព្យាយាមម្ដងទៀត។",
         feedbackNetworkError: "បញ្ហាបណ្ដាញពេលបញ្ជូនមតិយោបល់។",
 
         firstToRead: "អ្នកជាលើកដំបូង ដែលអានសៀវភៅនេះ!",
@@ -814,7 +814,7 @@
     function goToTopOfBooks() {
       const target = document.getElementById("categorySection") || document.getElementById("bookList");
       if (!target) return;
-      const offset = 16; // small margin from top
+      const offset = 140; // scroll a bit higher so books are nicely centered on screen
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: "smooth" });
     }
