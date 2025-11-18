@@ -310,6 +310,9 @@
   <!-- Book List -->
   <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
 
+  <!-- Pagination -->
+  <div id="pagination" class="flex flex-wrap justify-center items-center gap-3 pb-6 px-4"></div>
+
   <!-- Modal -->
   <div id="bookModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content relative">
@@ -424,12 +427,13 @@
   <script>
     // Core config
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
-    const TRACKING_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
+    const TRACKING_URL = "https://script.google.com/macros/s/AKfycbz1vkHeeRTX5m_hh8J_mIoudyFOvoKdmrg5mniQNtsAxsUP6Ojbgct17sT9zCldjmA/exec";
     const FEEDBACK_URL = TRACKING_URL; // same endpoint
 
     const loadingScreen = document.getElementById("loadingScreen");
     const quoteText = document.getElementById("quoteText");
     const bookListEl = document.getElementById("bookList");
+    const paginationEl = document.getElementById("pagination");
 
     const quotes = [
       "📖 A reader lives a thousand lives before he dies.",
@@ -464,6 +468,10 @@
     let books = [];
     let currentBookIdx = null;
     let favoritesOnly = false;
+    let currentCategory = "All";
+    let currentSearchTerm = "";
+    let currentPage = 1;
+    const BOOKS_PER_PAGE = 12;
 
     // ----- Favorites (stored per user in localStorage) -----
     const FAVORITES_KEY = "vmctk_favorites";
@@ -545,6 +553,9 @@
       const parsed = Papa.parse(text, { header: true });
       books = parsed.data.filter(b => b.Title);
 
+      // store original index on each book
+      books.forEach((b, idx) => { b._idx = idx; });
+
       const featuredList = document.getElementById("featuredList");
       const categoryDropdown = document.getElementById("categoryDropdown");
       const favoritesToggle = document.getElementById("favoritesToggle");
@@ -562,7 +573,8 @@
 
       favoritesToggle.addEventListener("click", () => {
         favoritesOnly = !favoritesOnly;
-        showBooks(categoryDropdown.value);
+        currentPage = 1;
+        renderBooks();
       });
 
       books.forEach((b, originalIdx) => {
@@ -581,11 +593,18 @@
       loadingScreen.classList.add("fade-out");
     }
 
+    // wrapper so we don't lose this function
     function showBooks(category) {
+      currentCategory = category;
+      currentPage = 1;
+      renderBooks();
+    }
+
+    function renderBooks() {
       bookListEl.innerHTML = "";
 
       let filtered = books.filter(
-        (b) => category === "All" || b.Category?.trim() === category
+        (b) => currentCategory === "All" || (b.Category || "").trim() === currentCategory
       );
 
       if (favoritesOnly) {
@@ -593,16 +612,36 @@
         filtered = filtered.filter((b) => favIds.includes(String(b.ID)));
       }
 
-      filtered.forEach((b) => {
-        const idxForModal = books.findIndex(x =>
-          x["PDF Link"] === b["PDF Link"] && x.Title === b.Title
-        );
+      if (currentSearchTerm) {
+        const term = currentSearchTerm;
+        filtered = filtered.filter((b) => {
+          const title = (b.Title || "").toLowerCase();
+          const author = (b.Author || "").toLowerCase();
+          return title.includes(term) || author.includes(term);
+        });
+      }
 
+      const totalItems = filtered.length;
+      const totalPages = totalItems ? Math.ceil(totalItems / BOOKS_PER_PAGE) : 0;
+
+      if (!totalPages) {
+        bookListEl.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found.</p>`;
+        renderPagination(0, 0);
+        return;
+      }
+
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const start = (currentPage - 1) * BOOKS_PER_PAGE;
+      const end = start + BOOKS_PER_PAGE;
+      const pageItems = filtered.slice(start, end);
+
+      pageItems.forEach((b) => {
         const card = document.createElement("div");
         card.className =
           "relative rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
 
-        const bookId = b.ID || idxForModal;
+        const bookId = b.ID || b._idx;
 
         card.innerHTML = `
           <button class="favorite-btn" type="button" aria-label="Toggle favorite">♡</button>
@@ -612,7 +651,7 @@
           <p class="text-sm text-blue-500"> ${b.Language}</p>
         `;
 
-        card.onclick = () => openModal(idxForModal >= 0 ? idxForModal : 0);
+        card.onclick = () => openModal(b._idx);
         bookListEl.appendChild(card);
 
         const favBtn = card.querySelector(".favorite-btn");
@@ -642,9 +681,65 @@
         });
       });
 
-      if (filtered.length === 0) {
-        bookListEl.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found.</p>`;
+      renderPagination(totalPages, totalItems);
+    }
+
+    function renderPagination(totalPages, totalItems) {
+      paginationEl.innerHTML = "";
+      if (!totalPages || totalPages <= 1) return;
+
+      const startIndex = (currentPage - 1) * BOOKS_PER_PAGE + 1;
+      const endIndex = Math.min(currentPage * BOOKS_PER_PAGE, totalItems);
+
+      const info = document.createElement("span");
+      info.className = "text-xs text-gray-600 dark:text-gray-300";
+      info.textContent = `Showing ${startIndex}–${endIndex} of ${totalItems} books`;
+
+      const controls = document.createElement("div");
+      controls.className = "flex flex-wrap items-center gap-1";
+
+      const createBtn = (label, onClick, disabled = false, isActive = false) => {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.className =
+          "px-3 py-1 rounded text-xs border " +
+          (isActive
+            ? "bg-blue-600 text-white border-blue-600 font-semibold"
+            : "bg-white text-gray-700 border-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600");
+        if (disabled) {
+          btn.disabled = true;
+          btn.classList.add("opacity-60", "cursor-not-allowed");
+        } else {
+          btn.onclick = onClick;
+        }
+        return btn;
+      };
+
+      // First & Prev
+      controls.appendChild(
+        createBtn("« First", () => { if (currentPage !== 1) { currentPage = 1; renderBooks(); } }, currentPage === 1)
+      );
+      controls.appendChild(
+        createBtn("‹ Prev", () => { if (currentPage > 1) { currentPage--; renderBooks(); } }, currentPage === 1)
+      );
+
+      // Page numbers
+      for (let p = 1; p <= totalPages; p++) {
+        controls.appendChild(
+          createBtn(String(p), () => { currentPage = p; renderBooks(); }, false, p === currentPage)
+        );
       }
+
+      // Next & Last
+      controls.appendChild(
+        createBtn("Next ›", () => { if (currentPage < totalPages) { currentPage++; renderBooks(); } }, currentPage === totalPages)
+      );
+      controls.appendChild(
+        createBtn("Last »", () => { if (currentPage !== totalPages) { currentPage = totalPages; renderBooks(); } }, currentPage === totalPages)
+      );
+
+      paginationEl.appendChild(info);
+      paginationEl.appendChild(controls);
     }
 
     // Modal
@@ -755,32 +850,12 @@
     ["mouseenter", "touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
     ["mouseleave", "touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
 
-    // Search filter + "no results" message
+    // Search: integrated with pagination
     const searchEl = document.getElementById("searchInput");
     searchEl.addEventListener("input", e => {
-      const term = e.target.value.toLowerCase();
-      const cards = Array.from(document.querySelectorAll("#bookList > div"));
-      let visible = 0;
-      cards.forEach(card => {
-        const title = card.querySelector("h3").textContent.toLowerCase();
-        const author = card.querySelector("p").textContent.toLowerCase();
-        const match = title.includes(term) || author.includes(term);
-        card.style.display = match ? "block" : "none";
-        if (match) visible++;
-      });
-      const emptyId = "noSearchResults";
-      let empty = document.getElementById(emptyId);
-      if (!visible) {
-        if (!empty) {
-          empty = document.createElement("p");
-          empty.id = emptyId;
-          empty.className = "text-center text-gray-500 dark:text-gray-300 col-span-full";
-          bookListEl.appendChild(empty);
-        }
-        empty.textContent = `No books match “${term}”.`;
-      } else if (empty) {
-        empty.remove();
-      }
+      currentSearchTerm = e.target.value.toLowerCase();
+      currentPage = 1;
+      renderBooks();
     });
 
     // Feedback form logic
