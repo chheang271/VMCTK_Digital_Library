@@ -150,6 +150,27 @@
     }
     #categoryDropdown:hover { transform: scale(1.03); border-color: var(--vmc-light-blue); }
 
+    /* Favorites toggle button styles */
+    #favoritesToggle {
+      border: 2px solid var(--vmc-blue);
+      background-color: #ffffff;
+      color: #111827;
+      font-weight: 500;
+    }
+    #favoritesToggle:hover {
+      background-color: #fef9c3;
+      border-color: var(--vmc-yellow);
+    }
+    body.dark #favoritesToggle {
+      background-color: var(--vmc-yellow);
+      color: #111827;
+      border-color: var(--vmc-yellow);
+    }
+    body.dark #favoritesToggle:hover {
+      background-color: #facc15;
+      border-color: #facc15;
+    }
+
     /* ---------- Footer ---------- */
     footer {
       background: linear-gradient(to right, var(--vmc-blue), var(--vmc-light-blue));
@@ -203,7 +224,7 @@
       color: #9ca3af;
     }
 
-    /* ---------- Favorite button ---------- */
+    /* ---------- Favorite button on each card ---------- */
     .favorite-btn {
       position: absolute;
       top: 0.5rem;
@@ -267,7 +288,7 @@
       <button
         id="favoritesToggle"
         type="button"
-        class="px-3 py-1 text-sm border rounded shadow bg-white dark:bg-gray-800 dark:text-gray-200 hover:bg-yellow-50"
+        class="px-3 py-1 text-sm rounded shadow bg-white dark:bg-gray-800 dark:text-gray-200"
       >
         ⭐ My favorites
       </button>
@@ -404,7 +425,7 @@
     // Core config
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
     const TRACKING_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
-    const FEEDBACK_URL = TRACKING_URL; // same endpoint for now
+    const FEEDBACK_URL = TRACKING_URL;
 
     const loadingScreen = document.getElementById("loadingScreen");
     const quoteText = document.getElementById("quoteText");
@@ -541,11 +562,6 @@
 
       favoritesToggle.addEventListener("click", () => {
         favoritesOnly = !favoritesOnly;
-        if (favoritesOnly) {
-          favoritesToggle.classList.add("bg-yellow-100", "border-yellow-400");
-        } else {
-          favoritesToggle.classList.remove("bg-yellow-100", "border-yellow-400");
-        }
         showBooks(categoryDropdown.value);
       });
 
@@ -603,7 +619,7 @@
         updateFavoriteButton(favBtn, bookId);
 
         favBtn.addEventListener("click", (ev) => {
-          ev.stopPropagation(); // prevent opening modal
+          ev.stopPropagation();
           const nowFav = !isFavorite(bookId);
           setFavorite(bookId, nowFav);
           updateFavoriteButton(favBtn, bookId);
