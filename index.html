@@ -234,7 +234,8 @@
       <img id="modalCover" src="" alt="Book Cover" class="mx-auto rounded-lg shadow">
       <h2 id="modalTitle" class="font-bold text-lg mt-2"></h2>
       <p id="modalAuthor" class="text-gray-600 mb-1"></p>
-      <p id="modalLang" class="text-yellow-500 mb-3"></p>
+      <p id="modalLang" class="text-yellow-500 mb-1"></p>
+      <p id="modalViews" class="text-xs text-gray-500 mb-3"></p>
       <p id="modalDesc" class="text-gray-700 mb-4"></p>
       <div class="flex justify-between">
         <a id="modalRead" href="#" target="_blank" rel="noopener noreferrer" class="text-green-600 font-semibold">Read Online</a>
@@ -305,6 +306,8 @@
   <script>
     // Core config
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
+    const TRACKING_URL = "https://script.google.com/macros/s/AKfycbz1vkHeeRTX5m_hh8J_mIoudyFOvoKdmrg5mniQNtsAxsUP6Ojbgct17sT9zCldjmA/exec";
+
     const loadingScreen = document.getElementById("loadingScreen");
     const quoteText = document.getElementById("quoteText");
     const bookListEl = document.getElementById("bookList");
@@ -350,6 +353,40 @@
       if (!url) return "";
       const match = url.match(/[-\w]{25,}/);
       return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w600` : url;
+    }
+
+    // Increment view counter via Google Apps Script web app
+    async function incrementViews(book) {
+      const id = book.ID; // relies on "ID" column in your sheet
+      if (!id) {
+        console.warn("No ID for book:", book.Title);
+        return;
+      }
+
+      try {
+        const res = await fetch(TRACKING_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ id })
+        });
+
+        const data = await res.json();
+        if (data.success && typeof data.views !== "undefined") {
+          // Update local object
+          book.Views = data.views;
+
+          // If the modal is still showing this book, update the text
+          const viewsEl = document.getElementById("modalViews");
+          const titleEl = document.getElementById("modalTitle");
+          if (viewsEl && titleEl && titleEl.textContent === (book.Title || "Untitled")) {
+            viewsEl.textContent = `${data.views} reads`;
+          }
+        } else {
+          console.error("Tracking error:", data.error);
+        }
+      } catch (err) {
+        console.error("Failed to increment views:", err);
+      }
     }
 
     async function loadBooks() {
@@ -432,13 +469,46 @@
 
     function openModal(idx) {
       const b = books[idx];
+
       document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
-      document.getElementById("modalTitle").textContent = b.Title;
-      document.getElementById("modalAuthor").textContent = b.Author;
-      document.getElementById("modalLang").textContent = b.Language;
-      document.getElementById("modalDesc").textContent = b.Description;
-      document.getElementById("modalRead").href = b["PDF Link"];
-      document.getElementById("modalDownload").href = b["PDF Link"];
+      document.getElementById("modalTitle").textContent = b.Title || "Untitled";
+      document.getElementById("modalAuthor").textContent = b.Author || "Unknown author";
+      document.getElementById("modalLang").textContent = b.Language || "";
+
+      const viewsEl = document.getElementById("modalViews");
+      const currentViews = Number(b.Views) || 0;
+      viewsEl.textContent = currentViews
+        ? `${currentViews} reads`
+        : "Be the first to read this book!";
+
+      document.getElementById("modalDesc").textContent =
+        b.Description || "No description available yet.";
+
+      const readLink = document.getElementById("modalRead");
+      const dlLink = document.getElementById("modalDownload");
+      const pdf = b["PDF Link"];
+
+      // Clear any previous handler
+      readLink.onclick = null;
+
+      if (pdf) {
+        readLink.href = pdf;
+        dlLink.href = pdf;
+        readLink.classList.remove("pointer-events-none", "opacity-50");
+        dlLink.classList.remove("pointer-events-none", "opacity-50");
+
+        // When user clicks "Read Online", increment views
+        readLink.onclick = () => {
+          incrementViews(b); // fire tracking call
+          // allow normal behavior (open PDF in new tab)
+        };
+      } else {
+        readLink.href = "#";
+        dlLink.href = "#";
+        readLink.classList.add("pointer-events-none", "opacity-50");
+        dlLink.classList.add("pointer-events-none", "opacity-50");
+      }
+
       modal.classList.add("show");
     }
 
