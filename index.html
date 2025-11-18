@@ -176,6 +176,19 @@
     body.dark #featuredList .text-blue-500 {
       color: #60a5fa !important;
     }
+
+    /* ---------- Dark mode fixes for selects (rating / category) ---------- */
+    body.dark #feedbackRating,
+    body.dark #feedbackRating option {
+      background-color: #111827;
+      color: #f9fafb;
+    }
+
+    body.dark #categoryDropdown,
+    body.dark #categoryDropdown option {
+      background-color: #111827;
+      color: #f9fafb;
+    }
   </style>
 </head>
 
@@ -340,8 +353,8 @@
   <script>
     // Core config
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
-    const TRACKING_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
-    const FEEDBACK_URL = TRACKING_URL; // you can change this to another Apps Script URL if you separate feedback
+    const TRACKING_URL = "https://script.google.com/macros/s/AKfycbz1vkHeeRTX5m_hh8J_mIoudyFOvoKdmrg5mniQNtsAxsUP6Ojbgct17sT9zCldjmA/exec";
+    const FEEDBACK_URL = TRACKING_URL; // same endpoint for now
 
     const loadingScreen = document.getElementById("loadingScreen");
     const quoteText = document.getElementById("quoteText");
