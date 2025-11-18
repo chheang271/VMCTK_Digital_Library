@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VMCTK Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800">
+  <div class="min-h-screen max-w-5xl mx-auto px-4 py-6">
+    <header class="mb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">VMCTK Admin Dashboard</h1>
+        <p class="text-sm text-slate-500">
+          Stats from your Google Sheet (books & feedback)
+        </p>
+      </div>
+      <a href="index.html" class="text-sm text-blue-600 hover:underline">
+        ← Back to Library
+      </a>
+    </header>
+
+    <!-- Summary cards -->
+    <section id="summary" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-xl shadow p-4">
+        <p class="text-xs text-slate-500 uppercase tracking-wide">Total Books</p>
+        <p id="sumBooks" class="mt-1 text-2xl font-semibold">–</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4">
+        <p class="text-xs text-slate-500 uppercase tracking-wide">Total Reads</p>
+        <p id="sumViews" class="mt-1 text-2xl font-semibold">–</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4">
+        <p class="text-xs text-slate-500 uppercase tracking-wide">Feedback Entries</p>
+        <p id="sumFeedback" class="mt-1 text-2xl font-semibold">–</p>
+      </div>
+    </section>
+
+    <!-- Top viewed books -->
+    <section class="mb-6">
+      <h2 class="text-lg font-semibold mb-2">📈 Top 5 Most Read Books</h2>
+      <div class="bg-white rounded-xl shadow overflow-hidden">
+        <table class="min-w-full text-sm">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-3 py-2 text-left font-medium text-slate-500">#</th>
+              <th class="px-3 py-2 text-left font-medium text-slate-500">Title</th>
+              <th class="px-3 py-2 text-left font-medium text-slate-500">Category</th>
+              <th class="px-3 py-2 text-left font-medium text-slate-500">Language</th>
+              <th class="px-3 py-2 text-right font-medium text-slate-500">Reads</th>
+            </tr>
+          </thead>
+          <tbody id="topViewsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Top rated books -->
+    <section>
+      <h2 class="text-lg font-semibold mb-2">⭐ Top 5 Top Rated (by feedback)</h2>
+      <div class="bg-white rounded-xl shadow overflow-hidden">
+        <table class="min-w-full text-sm">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-3 py-2 text-left font-medium text-slate-500">#</th>
+              <th class="px-3 py-2 text-left font-medium text-slate-500">Title</th>
+              <th class="px-3 py-2 text-right font-medium text-slate-500">Avg Rating</th>
+              <th class="px-3 py-2 text-right font-medium text-slate-500"># Reviews</th>
+            </tr>
+          </thead>
+          <tbody id="topRatedBody"></tbody>
+        </table>
+      </div>
+      <p class="mt-2 text-xs text-slate-500">
+        Only books with at least 1 rating appear here.
+      </p>
+    </section>
+
+    <p id="errorMsg" class="mt-4 text-sm text-red-600"></p>
+  </div>
+
+  <script>
+    // 🔗 Your Apps Script web app URL (same as used in index.html)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
+
+    async function loadStats() {
+      const sumBooksEl    = document.getElementById("sumBooks");
+      const sumViewsEl    = document.getElementById("sumViews");
+      const sumFeedbackEl = document.getElementById("sumFeedback");
+      const topViewsBody  = document.getElementById("topViewsBody");
+      const topRatedBody  = document.getElementById("topRatedBody");
+      const errorMsg      = document.getElementById("errorMsg");
+
+      try {
+        const res = await fetch(SCRIPT_URL + "?mode=stats");
+        const data = await res.json();
+
+        if (!data.success) {
+          errorMsg.textContent = "Error: " + (data.error || "Unknown error");
+          return;
+        }
+
+        const stats = data.stats || {};
+
+        sumBooksEl.textContent    = stats.totalBooks ?? 0;
+        sumViewsEl.textContent    = stats.totalViews ?? 0;
+        sumFeedbackEl.textContent = stats.totalFeedbacks ?? 0;
+
+        // Top views table
+        topViewsBody.innerHTML = "";
+        (stats.topViews || []).forEach((b, i) => {
+          const tr = document.createElement("tr");
+          tr.className = i % 2 ? "bg-slate-50" : "bg-white";
+          tr.innerHTML = `
+            <td class="px-3 py-2">${i + 1}</td>
+            <td class="px-3 py-2 font-medium text-slate-800">${b.title || ""}</td>
+            <td class="px-3 py-2 text-slate-600">${b.category || ""}</td>
+            <td class="px-3 py-2 text-slate-600">${b.language || ""}</td>
+            <td class="px-3 py-2 text-right font-semibold">${b.views || 0}</td>
+          `;
+          topViewsBody.appendChild(tr);
+        });
+
+        // Top rated table
+        topRatedBody.innerHTML = "";
+        (stats.topRated || []).forEach((b, i) => {
+          const tr = document.createElement("tr");
+          tr.className = i % 2 ? "bg-slate-50" : "bg-white";
+          const avg = (b.avgRating || 0).toFixed(2);
+          tr.innerHTML = `
+            <td class="px-3 py-2">${i + 1}</td>
+            <td class="px-3 py-2 font-medium text-slate-800">${b.title || ""}</td>
+            <td class="px-3 py-2 text-right text-yellow-600 font-semibold">${avg}</td>
+            <td class="px-3 py-2 text-right text-slate-700">${b.count || 0}</td>
+          `;
+          topRatedBody.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error(err);
+        errorMsg.textContent = "Failed to load stats. Check console for details.";
+      }
+    }
+
+    loadStats();
+  </script>
+</body>
+</html>
