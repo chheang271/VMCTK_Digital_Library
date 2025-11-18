@@ -311,7 +311,7 @@
   <section id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4"></section>
 
   <!-- Pagination -->
-  <div id="pagination" class="flex flex-wrap justify-center items-center gap-3 pb-6 px-4"></div>
+  <div id="pagination" class="flex flex-col items-center gap-2 pb-6 px-4"></div>
 
   <!-- Modal -->
   <div id="bookModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -504,6 +504,18 @@
       btn.textContent = fav ? "❤" : "♡";
     }
 
+    function updateFavoritesToggleButton() {
+      const favoritesToggle = document.getElementById("favoritesToggle");
+      if (!favoritesToggle) return;
+      if (favoritesOnly) {
+        favoritesToggle.textContent = "⭐ My favorites (ON)";
+        favoritesToggle.classList.add("ring-2", "ring-yellow-400", "ring-offset-2");
+      } else {
+        favoritesToggle.textContent = "⭐ My favorites";
+        favoritesToggle.classList.remove("ring-2", "ring-yellow-400", "ring-offset-2");
+      }
+    }
+
     function getHdCover(url) {
       if (!url) return "";
       const match = url.match(/[-\w]{25,}/);
@@ -574,8 +586,11 @@
       favoritesToggle.addEventListener("click", () => {
         favoritesOnly = !favoritesOnly;
         currentPage = 1;
+        updateFavoritesToggleButton();
         renderBooks();
       });
+
+      updateFavoritesToggleButton();
 
       books.forEach((b, originalIdx) => {
         if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
@@ -692,11 +707,11 @@
       const endIndex = Math.min(currentPage * BOOKS_PER_PAGE, totalItems);
 
       const info = document.createElement("span");
-      info.className = "text-xs text-gray-600 dark:text-gray-300";
+      info.className = "block text-xs text-gray-600 dark:text-gray-300 text-center";
       info.textContent = `Showing ${startIndex}–${endIndex} of ${totalItems} books`;
 
       const controls = document.createElement("div");
-      controls.className = "flex flex-wrap items-center gap-1";
+      controls.className = "flex flex-wrap justify-center items-center gap-1";
 
       const createBtn = (label, onClick, disabled = false, isActive = false) => {
         const btn = document.createElement("button");
