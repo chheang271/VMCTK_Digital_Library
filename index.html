@@ -202,6 +202,33 @@
     body.dark #feedbackName::placeholder {
       color: #9ca3af;
     }
+
+    /* ---------- Favorite button ---------- */
+    .favorite-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 1.25rem;
+      line-height: 1;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #9ca3af;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .favorite-btn:hover {
+      transform: scale(1.15);
+      color: #f97316;
+    }
+    .favorite-btn.favorited {
+      color: #ef4444;
+    }
+    body.dark .favorite-btn {
+      color: #9ca3af;
+    }
+    body.dark .favorite-btn.favorited {
+      color: #fb7185;
+    }
   </style>
 </head>
 
@@ -230,11 +257,21 @@
     <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow" aria-label="Search books">
   </section>
 
-  <!-- Category Dropdown -->
+  <!-- Category + Favorites -->
   <section id="categorySection" class="p-4 flex justify-center">
-    <select id="categoryDropdown" class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800" aria-label="Filter by category">
-      <option value="All">All Categories</option>
-    </select>
+    <div class="flex flex-wrap items-center gap-3">
+      <select id="categoryDropdown" class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800" aria-label="Filter by category">
+        <option value="All">All Categories</option>
+      </select>
+
+      <button
+        id="favoritesToggle"
+        type="button"
+        class="px-3 py-1 text-sm border rounded shadow bg-white dark:bg-gray-800 dark:text-gray-200 hover:bg-yellow-50"
+      >
+        ⭐ My favorites
+      </button>
+    </div>
   </section>
 
   <!-- Featured -->
@@ -366,7 +403,7 @@
   <script>
     // Core config
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
-    const TRACKING_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
+    const TRACKING_URL = "https://script.google.com/macros/s/AKfycbz1vkHeeRTX5m_hh8J_mIoudyFOvoKdmrg5mniQNtsAxsUP6Ojbgct17sT9zCldjmA/exec";
     const FEEDBACK_URL = TRACKING_URL; // same endpoint for now
 
     const loadingScreen = document.getElementById("loadingScreen");
@@ -405,6 +442,38 @@
 
     let books = [];
     let currentBookIdx = null;
+    let favoritesOnly = false;
+
+    // ----- Favorites (stored per user in localStorage) -----
+    const FAVORITES_KEY = "vmctk_favorites";
+
+    function getFavoriteIds() {
+      try {
+        return JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]").map(String);
+      } catch {
+        return [];
+      }
+    }
+
+    function isFavorite(id) {
+      const favs = getFavoriteIds();
+      return favs.includes(String(id));
+    }
+
+    function setFavorite(id, fav) {
+      const list = getFavoriteIds();
+      const sid = String(id);
+      const idx = list.indexOf(sid);
+      if (fav && idx === -1) list.push(sid);
+      if (!fav && idx !== -1) list.splice(idx, 1);
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
+    }
+
+    function updateFavoriteButton(btn, id) {
+      const fav = isFavorite(id);
+      btn.classList.toggle("favorited", fav);
+      btn.textContent = fav ? "❤" : "♡";
+    }
 
     function getHdCover(url) {
       if (!url) return "";
@@ -457,6 +526,7 @@
 
       const featuredList = document.getElementById("featuredList");
       const categoryDropdown = document.getElementById("categoryDropdown");
+      const favoritesToggle = document.getElementById("favoritesToggle");
 
       bookListEl.innerHTML = "";
       featuredList.innerHTML = "";
@@ -467,6 +537,16 @@
 
       categoryDropdown.addEventListener("change", e => {
         showBooks(e.target.value);
+      });
+
+      favoritesToggle.addEventListener("click", () => {
+        favoritesOnly = !favoritesOnly;
+        if (favoritesOnly) {
+          favoritesToggle.classList.add("bg-yellow-100", "border-yellow-400");
+        } else {
+          favoritesToggle.classList.remove("bg-yellow-100", "border-yellow-400");
+        }
+        showBooks(categoryDropdown.value);
       });
 
       books.forEach((b, originalIdx) => {
@@ -488,7 +568,14 @@
     function showBooks(category) {
       bookListEl.innerHTML = "";
 
-      const filtered = books.filter(b => category === "All" || b.Category?.trim() === category);
+      let filtered = books.filter(
+        (b) => category === "All" || b.Category?.trim() === category
+      );
+
+      if (favoritesOnly) {
+        const favIds = getFavoriteIds();
+        filtered = filtered.filter((b) => favIds.includes(String(b.ID)));
+      }
 
       filtered.forEach((b) => {
         const idxForModal = books.findIndex(x =>
@@ -496,19 +583,35 @@
         );
 
         const card = document.createElement("div");
-        card.className = "rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
+        card.className =
+          "relative rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
+
+        const bookId = b.ID || idxForModal;
+
         card.innerHTML = `
+          <button class="favorite-btn" type="button" aria-label="Toggle favorite">♡</button>
           <img src="${getThumbCover(b["Cover Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
           <h3 class="font-bold">${b.Title}</h3>
           <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
           <p class="text-sm text-blue-500"> ${b.Language}</p>
         `;
+
         card.onclick = () => openModal(idxForModal >= 0 ? idxForModal : 0);
         bookListEl.appendChild(card);
+
+        const favBtn = card.querySelector(".favorite-btn");
+        updateFavoriteButton(favBtn, bookId);
+
+        favBtn.addEventListener("click", (ev) => {
+          ev.stopPropagation(); // prevent opening modal
+          const nowFav = !isFavorite(bookId);
+          setFavorite(bookId, nowFav);
+          updateFavoriteButton(favBtn, bookId);
+        });
       });
 
       if (filtered.length === 0) {
-        bookListEl.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found in this category.</p>`;
+        bookListEl.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found.</p>`;
       }
     }
 
