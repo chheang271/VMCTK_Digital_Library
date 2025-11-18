@@ -425,7 +425,7 @@
     // Core config
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
     const TRACKING_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
-    const FEEDBACK_URL = TRACKING_URL;
+    const FEEDBACK_URL = TRACKING_URL; // same endpoint
 
     const loadingScreen = document.getElementById("loadingScreen");
     const quoteText = document.getElementById("quoteText");
@@ -623,6 +623,22 @@
           const nowFav = !isFavorite(bookId);
           setFavorite(bookId, nowFav);
           updateFavoriteButton(favBtn, bookId);
+
+          // Record favorite in Google Sheet when adding
+          if (nowFav && typeof TRACKING_URL !== "undefined") {
+            try {
+              fetch(TRACKING_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                  type: "favorite",
+                  id: bookId
+                })
+              });
+            } catch (err) {
+              console.error("Failed to track favorite:", err);
+            }
+          }
         });
       });
 
@@ -807,7 +823,8 @@
             title: book.Title || "",
             rating,
             comment,
-            name
+            name,
+            ua: navigator.userAgent || ""
           })
         });
 
