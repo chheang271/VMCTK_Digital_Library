@@ -699,6 +699,7 @@
       renderPagination(totalPages, totalItems);
     }
 
+    // ---- NEW: compact pagination (max 7 page buttons) ----
     function renderPagination(totalPages, totalItems) {
       paginationEl.innerHTML = "";
       if (!totalPages || totalPages <= 1) return;
@@ -724,11 +725,13 @@
         if (disabled) {
           btn.disabled = true;
           btn.classList.add("opacity-60", "cursor-not-allowed");
-        } else {
+        } else if (onClick) {
           btn.onclick = onClick;
         }
         return btn;
       };
+
+      const MAX_VISIBLE_PAGES = 7;
 
       // First & Prev
       controls.appendChild(
@@ -738,8 +741,16 @@
         createBtn("‹ Prev", () => { if (currentPage > 1) { currentPage--; renderBooks(); } }, currentPage === 1)
       );
 
-      // Page numbers
-      for (let p = 1; p <= totalPages; p++) {
+      // Calculate sliding window for page numbers
+      let startPage = Math.max(1, currentPage - Math.floor(MAX_VISIBLE_PAGES / 2));
+      let endPage = startPage + MAX_VISIBLE_PAGES - 1;
+      if (endPage > totalPages) {
+        endPage = totalPages;
+        startPage = Math.max(1, endPage - MAX_VISIBLE_PAGES + 1);
+      }
+
+      // Page numbers (only 7 max)
+      for (let p = startPage; p <= endPage; p++) {
         controls.appendChild(
           createBtn(String(p), () => { currentPage = p; renderBooks(); }, false, p === currentPage)
         );
@@ -756,6 +767,7 @@
       paginationEl.appendChild(info);
       paginationEl.appendChild(controls);
     }
+    // ---- END compact pagination ----
 
     // Modal
     const modal = document.getElementById("bookModal");
