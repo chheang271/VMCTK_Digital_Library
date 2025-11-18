@@ -91,9 +91,23 @@
       const topRatedBody  = document.getElementById("topRatedBody");
       const errorMsg      = document.getElementById("errorMsg");
 
-      try {
+            try {
         const res = await fetch(SCRIPT_URL + "?mode=stats");
-        const data = await res.json();
+
+        let data;
+        try {
+          data = await res.json();
+        } catch (parseErr) {
+          const text = await res.text();
+          console.error("Non-JSON response:", text);
+          errorMsg.textContent = "Stats endpoint did not return JSON. See console.";
+          return;
+        }
+
+        if (!res.ok) {
+          errorMsg.textContent = "HTTP " + res.status + ": " + (data.error || "Unknown error");
+          return;
+        }
 
         if (!data.success) {
           errorMsg.textContent = "Error: " + (data.error || "Unknown error");
