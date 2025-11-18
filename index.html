@@ -812,12 +812,24 @@
 
     // ✅ Helper: scroll up to book section when changing page
     function goToTopOfBooks() {
-      const target = document.getElementById("categorySection") || document.getElementById("bookList");
-      if (!target) return;
-      const offset = 140; // scroll a bit higher so books are nicely centered on screen
-      const top = target.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
+  // Prefer to align the actual book list
+  const target = document.getElementById("bookList") || document.getElementById("categorySection");
+  if (!target) return;
+
+  // Use real header height so it works on desktop & mobile
+  const header = document.querySelector("header");
+  const headerHeight = header ? header.offsetHeight : 0;
+
+  // Extra spacing below the header (you can tweak this, e.g. 20 / 40 / 60)
+  const extra = 40;
+
+  const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - extra;
+
+  window.scrollTo({
+    top: Math.max(top, 0),
+    behavior: "smooth"
+  });
+}
 
     // ---- compact pagination (max 7 page buttons) ----
     function renderPagination(totalPages, totalItems) {
