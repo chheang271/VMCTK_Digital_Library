@@ -2,160 +2,573 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VMCTK Admin Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text-main: #111827;
+      --text-sub: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --accent-gold: #f59e0b;
+      --danger: #dc2626;
+      --muted: #9ca3af;
+      --success: #16a34a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .subtitle {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+    .back-link {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+      border: 1px solid var(--border);
+    }
+    .stat-box .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-sub);
+      margin: 0 0 6px;
+    }
+    .stat-box .value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 20px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .section-header span.icon {
+      font-size: 16px;
+    }
+    .section-header h2 {
+      font-size: 16px;
+      margin: 0;
+      font-weight: 600;
+    }
+    .section-note {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+      font-size: 13px;
+    }
+    thead {
+      background: #f9fafb;
+    }
+    th, td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+    tbody tr:hover {
+      background: #eff6ff;
+    }
+
+    td.num, th.num {
+      text-align: right;
+      white-space: nowrap;
+    }
+    td.rank {
+      width: 30px;
+      color: var(--muted);
+    }
+
+    .rating {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .error {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--danger);
+    }
+
+    /* Upload form styles */
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+      border: 1px solid var(--border);
+      margin-top: 10px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px 12px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .field label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      font-size: 13px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      outline: none;
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    .form-actions {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent);
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      cursor: pointer;
+      color: var(--text-sub);
+    }
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+    .status {
+      font-size: 12px;
+    }
+    .status.ok {
+      color: var(--success);
+    }
+    .status.fail {
+      color: var(--danger);
+    }
+
+    @media (max-width: 640px) {
+      .header {
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
-<body class="bg-slate-100 text-slate-800">
-  <div class="min-h-screen max-w-5xl mx-auto px-4 py-6">
-    <header class="mb-6 flex items-center justify-between">
+<body>
+  <div class="page">
+    <div class="header">
       <div>
-        <h1 class="text-2xl font-bold text-slate-900">VMCTK Admin Dashboard</h1>
-        <p class="text-sm text-slate-500">
-          Stats from your Google Sheet (books & feedback)
-        </p>
+        <h1 class="title">VMCTK Admin Dashboard</h1>
+        <p class="subtitle">Stats &amp; admin tools from your Google Sheets data</p>
       </div>
-      <a href="index.html" class="text-sm text-blue-600 hover:underline">
-        ← Back to Library
-      </a>
-    </header>
+      <div class="back-link">
+        ← <a href="index.html">Back to Library</a>
+      </div>
+    </div>
 
-    <!-- Summary cards -->
-    <section id="summary" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-      <div class="bg-white rounded-xl shadow p-4">
-        <p class="text-xs text-slate-500 uppercase tracking-wide">Total Books</p>
-        <p id="sumBooks" class="mt-1 text-2xl font-semibold">–</p>
+    <!-- Stats cards -->
+    <div class="stats-grid">
+      <div class="stat-box">
+        <p class="label">TOTAL BOOKS</p>
+        <p id="totalBooks" class="value">–</p>
       </div>
-      <div class="bg-white rounded-xl shadow p-4">
-        <p class="text-xs text-slate-500 uppercase tracking-wide">Total Reads</p>
-        <p id="sumViews" class="mt-1 text-2xl font-semibold">–</p>
+      <div class="stat-box">
+        <p class="label">TOTAL READS</p>
+        <p id="totalReads" class="value">–</p>
       </div>
-      <div class="bg-white rounded-xl shadow p-4">
-        <p class="text-xs text-slate-500 uppercase tracking-wide">Feedback Entries</p>
-        <p id="sumFeedback" class="mt-1 text-2xl font-semibold">–</p>
+      <div class="stat-box">
+        <p class="label">TOTAL FAVORITES</p>
+        <p id="totalFavorites" class="value">–</p>
       </div>
-    </section>
+      <div class="stat-box">
+        <p class="label">FEEDBACK ENTRIES</p>
+        <p id="totalFeedbacks" class="value">–</p>
+      </div>
+    </div>
 
-    <!-- Top viewed books -->
-    <section class="mb-6">
-      <h2 class="text-lg font-semibold mb-2">📈 Top 5 Most Read Books</h2>
-      <div class="bg-white rounded-xl shadow overflow-hidden">
-        <table class="min-w-full text-sm">
-          <thead class="bg-slate-50">
-            <tr>
-              <th class="px-3 py-2 text-left font-medium text-slate-500">#</th>
-              <th class="px-3 py-2 text-left font-medium text-slate-500">Title</th>
-              <th class="px-3 py-2 text-left font-medium text-slate-500">Category</th>
-              <th class="px-3 py-2 text-left font-medium text-slate-500">Language</th>
-              <th class="px-3 py-2 text-right font-medium text-slate-500">Reads</th>
-            </tr>
-          </thead>
-          <tbody id="topViewsBody"></tbody>
-        </table>
+    <!-- Top 5 Most Read -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">📚</span>
+        <h2>Top 5 Most Read Books</h2>
       </div>
-    </section>
+      <table>
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Language</th>
+            <th class="num">Reads</th>
+          </tr>
+        </thead>
+        <tbody id="mostReadBody">
+        </tbody>
+      </table>
+    </div>
 
-    <!-- Top rated books -->
-    <section>
-      <h2 class="text-lg font-semibold mb-2">⭐ Top 5 Top Rated (by feedback)</h2>
-      <div class="bg-white rounded-xl shadow overflow-hidden">
-        <table class="min-w-full text-sm">
-          <thead class="bg-slate-50">
-            <tr>
-              <th class="px-3 py-2 text-left font-medium text-slate-500">#</th>
-              <th class="px-3 py-2 text-left font-medium text-slate-500">Title</th>
-              <th class="px-3 py-2 text-right font-medium text-slate-500">Avg Rating</th>
-              <th class="px-3 py-2 text-right font-medium text-slate-500"># Reviews</th>
-            </tr>
-          </thead>
-          <tbody id="topRatedBody"></tbody>
-        </table>
+    <!-- Top 5 Top Rated -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">⭐</span>
+        <h2>Top 5 Top Rated (by feedback)</h2>
       </div>
-      <p class="mt-2 text-xs text-slate-500">
-        Only books with at least 1 rating appear here.
+      <p class="section-note">
+        Only books with at least 1 rating in the Feedback sheet are shown here.
       </p>
-    </section>
+      <table>
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Title</th>
+            <th class="num">Avg Rating</th>
+            <th class="num"># Reviews</th>
+          </tr>
+        </thead>
+        <tbody id="topRatedBody">
+        </tbody>
+      </table>
+    </div>
 
-    <p id="errorMsg" class="mt-4 text-sm text-red-600"></p>
+    <p id="errorMsg" class="error" style="display:none;"></p>
+
+    <!-- Admin: Upload new book -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">⬆️</span>
+        <h2>Add New Book to Library</h2>
+      </div>
+      <p class="section-note">
+        This form appends a new row to <strong>Sheet1</strong> using the same headers:
+        ID / Title / Author / Language / Category / Cover Original / Cover Link / PDF Link / Featured / Description / Views / Favorites
+      </p>
+      <div class="card">
+        <form id="uploadForm">
+          <div class="form-grid">
+            <div class="field">
+              <label for="title">Title *</label>
+              <input type="text" id="title" name="title" required />
+            </div>
+            <div class="field">
+              <label for="author">Author</label>
+              <input type="text" id="author" name="author" />
+            </div>
+            <div class="field">
+              <label for="language">Language</label>
+              <input type="text" id="language" name="language" placeholder="e.g., English, Khmer" />
+            </div>
+            <div class="field">
+              <label for="category">Category</label>
+              <input type="text" id="category" name="category" placeholder="e.g., Novel, Self-help" />
+            </div>
+            <div class="field">
+              <label for="coverOriginal">Cover Original URL</label>
+              <input type="text" id="coverOriginal" name="coverOriginal" placeholder="Original image link (optional)" />
+            </div>
+            <div class="field">
+              <label for="coverLink">Cover Link (Google Drive)</label>
+              <input type="text" id="coverLink" name="coverLink" placeholder="Share link of cover (if any)" />
+            </div>
+            <div class="field">
+              <label for="pdfLink">PDF Link (Google Drive)</label>
+              <input type="text" id="pdfLink" name="pdfLink" placeholder="Share link of PDF" />
+            </div>
+            <div class="field">
+              <label for="featured">Featured</label>
+              <select id="featured" name="featured">
+                <option value="">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column: 1 / -1;">
+              <label for="description">Description</label>
+              <textarea id="description" name="description" placeholder="Short description of the book"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="uploadSubmit">Add Book</button>
+            <button type="button" class="btn-secondary" id="uploadReset">Clear form</button>
+            <span id="uploadStatus" class="status"></span>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script>
-    // 🔗 Your Apps Script web app URL (same as used in index.html)
+    // Use your existing Apps Script web app URL
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
 
+    /*************** DASHBOARD STATS ***************/
     async function loadStats() {
-      const sumBooksEl    = document.getElementById("sumBooks");
-      const sumViewsEl    = document.getElementById("sumViews");
-      const sumFeedbackEl = document.getElementById("sumFeedback");
-      const topViewsBody  = document.getElementById("topViewsBody");
-      const topRatedBody  = document.getElementById("topRatedBody");
-      const errorMsg      = document.getElementById("errorMsg");
+      const errorEl = document.getElementById("errorMsg");
+      errorEl.style.display = "none";
+      errorEl.textContent = "";
 
-            try {
+      try {
         const res = await fetch(SCRIPT_URL + "?mode=stats");
-
-        let data;
-        try {
-          data = await res.json();
-        } catch (parseErr) {
-          const text = await res.text();
-          console.error("Non-JSON response:", text);
-          errorMsg.textContent = "Stats endpoint did not return JSON. See console.";
-          return;
-        }
-
-        if (!res.ok) {
-          errorMsg.textContent = "HTTP " + res.status + ": " + (data.error || "Unknown error");
-          return;
-        }
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
 
         if (!data.success) {
-          errorMsg.textContent = "Error: " + (data.error || "Unknown error");
-          return;
+          throw new Error(data.error || "Unknown error from script");
         }
 
-        const stats = data.stats || {};
+        document.getElementById("totalBooks").textContent = data.totalBooks ?? "0";
+        document.getElementById("totalReads").textContent = data.totalViews ?? "0";
+        document.getElementById("totalFavorites").textContent = data.totalFavorites ?? "0";
+        document.getElementById("totalFeedbacks").textContent = data.totalFeedbacks ?? "0";
 
-        sumBooksEl.textContent    = stats.totalBooks ?? 0;
-        sumViewsEl.textContent    = stats.totalViews ?? 0;
-        sumFeedbackEl.textContent = stats.totalFeedbacks ?? 0;
-
-        // Top views table
-        topViewsBody.innerHTML = "";
-        (stats.topViews || []).forEach((b, i) => {
-          const tr = document.createElement("tr");
-          tr.className = i % 2 ? "bg-slate-50" : "bg-white";
-          tr.innerHTML = `
-            <td class="px-3 py-2">${i + 1}</td>
-            <td class="px-3 py-2 font-medium text-slate-800">${b.title || ""}</td>
-            <td class="px-3 py-2 text-slate-600">${b.category || ""}</td>
-            <td class="px-3 py-2 text-slate-600">${b.language || ""}</td>
-            <td class="px-3 py-2 text-right font-semibold">${b.views || 0}</td>
-          `;
-          topViewsBody.appendChild(tr);
-        });
-
-        // Top rated table
-        topRatedBody.innerHTML = "";
-        (stats.topRated || []).forEach((b, i) => {
-          const tr = document.createElement("tr");
-          tr.className = i % 2 ? "bg-slate-50" : "bg-white";
-          const avg = (b.avgRating || 0).toFixed(2);
-          tr.innerHTML = `
-            <td class="px-3 py-2">${i + 1}</td>
-            <td class="px-3 py-2 font-medium text-slate-800">${b.title || ""}</td>
-            <td class="px-3 py-2 text-right text-yellow-600 font-semibold">${avg}</td>
-            <td class="px-3 py-2 text-right text-slate-700">${b.count || 0}</td>
-          `;
-          topRatedBody.appendChild(tr);
-        });
-
+        renderMostRead(data.topViews || []);
+        renderTopRated(data.topRated || []);
       } catch (err) {
-        console.error(err);
-        errorMsg.textContent = "Failed to load stats. Check console for details.";
+        console.error("Failed to load stats", err);
+        errorEl.textContent = "Failed to load stats. Check console for details.";
+        errorEl.style.display = "block";
       }
     }
 
+    function renderMostRead(rows) {
+      const tbody = document.getElementById("mostReadBody");
+      tbody.innerHTML = "";
+
+      if (!rows.length) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 5;
+        td.textContent = "No data yet.";
+        td.style.textAlign = "center";
+        td.style.color = "#6b7280";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+
+      rows.forEach((row, idx) => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td class="num rank">${idx + 1}</td>
+          <td>${row.title || ""}</td>
+          <td>${row.category || ""}</td>
+          <td>${row.language || ""}</td>
+          <td class="num">${row.views ?? 0}</td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderTopRated(rows) {
+      const tbody = document.getElementById("topRatedBody");
+      tbody.innerHTML = "";
+
+      if (!rows.length) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 4;
+        td.textContent = "No rated books yet.";
+        td.style.textAlign = "center";
+        td.style.color = "#6b7280";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+
+      rows.forEach((row, idx) => {
+        const tr = document.createElement("tr");
+
+        const avg = row.avgRating ?? 0;
+        const avgText = avg.toFixed(2);
+
+        tr.innerHTML = `
+          <td class="num rank">${idx + 1}</td>
+          <td>${row.title || ""}</td>
+          <td class="num rating">${avgText}</td>
+          <td class="num">${row.reviewCount ?? 0}</td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    /*************** ADMIN UPLOAD FORM ***************/
+    const uploadForm = document.getElementById("uploadForm");
+    const uploadStatus = document.getElementById("uploadStatus");
+    const uploadSubmit = document.getElementById("uploadSubmit");
+    const uploadReset = document.getElementById("uploadReset");
+
+    uploadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      uploadStatus.textContent = "";
+      uploadStatus.className = "status";
+
+      const formData = new FormData(uploadForm);
+
+      const title = formData.get("title")?.trim();
+      if (!title) {
+        uploadStatus.textContent = "Title is required.";
+        uploadStatus.classList.add("fail");
+        return;
+      }
+
+      uploadSubmit.disabled = true;
+      uploadSubmit.textContent = "Adding...";
+      uploadStatus.textContent = "Sending to Google Sheets...";
+      uploadStatus.classList.remove("ok", "fail");
+
+      try {
+        const body = new URLSearchParams({
+          type: "admin-add-book",
+          title: title,
+          author: formData.get("author") || "",
+          language: formData.get("language") || "",
+          category: formData.get("category") || "",
+          coverOriginal: formData.get("coverOriginal") || "",
+          coverLink: formData.get("coverLink") || "",
+          pdfLink: formData.get("pdfLink") || "",
+          featured: formData.get("featured") || "",
+          description: formData.get("description") || ""
+        });
+
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body
+        });
+
+        const data = await res.json().catch(() => null);
+
+        if (res.ok && data && data.success) {
+          uploadStatus.textContent = `Book added with ID ${data.id}.`;
+          uploadStatus.classList.add("ok");
+
+          // Optional: reset form after success
+          uploadForm.reset();
+
+          // Reload stats so totalBooks updates
+          loadStats();
+        } else {
+          uploadStatus.textContent = data && data.error
+            ? `Failed: ${data.error}`
+            : "Failed to add book. Please check console.";
+          uploadStatus.classList.add("fail");
+          console.error("Admin add error:", data);
+        }
+      } catch (err) {
+        console.error("Upload request failed:", err);
+        uploadStatus.textContent = "Network error while adding book.";
+        uploadStatus.classList.add("fail");
+      } finally {
+        uploadSubmit.disabled = false;
+        uploadSubmit.textContent = "Add Book";
+      }
+    });
+
+    uploadReset.addEventListener("click", () => {
+      uploadForm.reset();
+      uploadStatus.textContent = "";
+      uploadStatus.className = "status";
+    });
+
+    // Initial load
     loadStats();
   </script>
 </body>
