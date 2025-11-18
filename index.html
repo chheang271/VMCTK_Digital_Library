@@ -134,7 +134,7 @@
       justify-content: center;
       align-items: center;
       z-index: 50;
-      /* NEW: allow scrolling if content is tall */
+      /* allow scrolling if content is tall */
       padding: 1rem;
       overflow-y: auto;
     }
@@ -148,8 +148,8 @@
       padding: 1.5rem;
       max-width: 26rem;
       width: 100%;
-      max-height: 90vh;          /* NEW: fit within viewport */
-      overflow-y: auto;          /* NEW: scroll inside if needed */
+      max-height: 90vh;          /* fit within viewport */
+      overflow-y: auto;          /* scroll inside if needed */
       text-align: center;
       border: 2px solid var(--vmc-blue);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
@@ -283,7 +283,7 @@
   <header class="shadow p-4 flex flex-col items-center relative">
     <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
     <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2" alt="VMCTK Logo">
-    <h1 class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
+    <h1 id="mainTitle" class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
     <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
     <div class="mt-2">
       <button id="enBtn" class="px-3 py-1">English</button>
@@ -316,7 +316,9 @@
   <!-- Featured -->
   <section id="featuredSection" class="p-4">
     <div class="flex justify-between items-center mb-3">
-      <h2 class="text-xl sm:text-2xl font-bold text-yellow-500 tracking-wide">⭐ Featured Books</h2>
+      <h2 id="featuredHeading" class="text-xl sm:text-2xl font-bold text-yellow-500 tracking-wide">
+        ⭐ Featured Books
+      </h2>
       <div>
         <button id="scrollLeft" class="text-yellow-400 text-2xl hover:text-yellow-300" aria-label="Scroll featured left">◀</button>
         <button id="scrollRight" class="text-yellow-400 text-2xl hover:text-yellow-300 ml-2" aria-label="Scroll featured right">▶</button>
@@ -348,10 +350,14 @@
 
       <!-- Feedback section -->
       <div id="feedbackSection" class="mt-2 pt-3 border-t border-gray-200 dark:border-gray-600 text-left">
-        <h3 class="text-sm font-semibold mb-2 text-gray-800 dark:text-gray-100">Feedback on this book</h3>
+        <h3 id="feedbackHeading" class="text-sm font-semibold mb-2 text-gray-800 dark:text-gray-100">
+          Feedback on this book
+        </h3>
         <form id="feedbackForm" class="space-y-2">
           <div class="flex items-center gap-2">
-            <label for="feedbackRating" class="text-xs text-gray-700 dark:text-gray-300">Rating:</label>
+            <label id="ratingLabel" for="feedbackRating" class="text-xs text-gray-700 dark:text-gray-300">
+              Rating:
+            </label>
             <select id="feedbackRating" class="border rounded px-2 py-1 text-xs dark:bg-gray-700 dark:text-gray-100 dark:border-gray-500">
               <option value="">– Select –</option>
               <option value="1">1 ★</option>
@@ -453,35 +459,112 @@
     const bookListEl = document.getElementById("bookList");
     const paginationEl = document.getElementById("pagination");
 
-    const quotes = [
-      "📖 A reader lives a thousand lives before he dies.",
-      "🌱 Knowledge shared is knowledge multiplied.",
-      "🚀 The future belongs to those who learn today.",
-      "💡 Small steps every day create big change.",
-      "🤝 Sharing a book is sharing a world.",
-      "📚 អ្នកអានសៀវភៅគឺជាអ្នកដឹកនាំនាពេលអនាគតរបស់យើង។",
-      "🌞 ការអានសៀវភៅជាគន្លងទៅរកពន្លឺនៃចំណេះដឹង។",
-      "🌈 Education is the most powerful weapon to change the world.",
-      "❤️ Learn not for school, but for life.",
-      "🎓 Reading is dreaming with open eyes."
-    ];
+    // ----- UI translations (English / Khmer) -----
+    const uiText = {
+      en: {
+        pageTitle: "VMCTK Digital Library",
+        headerTitle: "VMCTK Digital Library",
+        subtitle: "Volunteer for My Community",
+        searchPlaceholder: "Search books...",
+        allCategories: "All Categories",
+        favorites: "⭐ My favorites",
+        favoritesOn: "⭐ My favorites (ON)",
+        featuredHeading: "⭐ Featured Books",
+
+        readOnline: "Read Online",
+        download: "Download",
+
+        feedbackHeading: "Feedback on this book",
+        ratingLabel: "Rating:",
+        feedbackPlaceholder: "Share your thoughts (optional)...",
+        namePlaceholder: "Your name (optional)",
+        feedbackSubmit: "Submit feedback",
+        feedbackSending: "Sending feedback...",
+        feedbackThanks: "Thank you for your feedback! 🙏",
+        feedbackNeedContent: "Please add a rating or a comment.",
+        feedbackNoBook: "Cannot find book information.",
+        feedbackError: "Could not send feedback. Please try again later.",
+        feedbackNetworkError: "Network error while sending feedback.",
+
+        firstToRead: "Be the first to read this book!",
+        readsLabel: (n) => `${n} reads`,
+        paginationShowing: (start, end, total) =>
+          `Showing ${start}–${end} of ${total} books`,
+        noBooks: "No books found."
+      },
+      kh: {
+        pageTitle: "បណ្ណាល័យឌីជីថល VMCTK",
+        headerTitle: "បណ្ណាល័យឌីជីថល VMCTK",
+        subtitle: "ស្ម័គ្រចិត្តសម្រាប់សហគមន៍របស់ខ្ញុំ",
+        searchPlaceholder: "ស្វែងរកសៀវភៅ...",
+        allCategories: "ប្រភេទទាំងអស់",
+        favorites: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត",
+        favoritesOn: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត (បើក)",
+        featuredHeading: "⭐ សៀវភៅពិសេស",
+
+        readOnline: "អានអនឡាញ",
+        download: "ទាញយក",
+
+        feedbackHeading: "មតិយោបល់អំពីសៀវភៅនេះ",
+        ratingLabel: "វាយតម្លៃ៖",
+        feedbackPlaceholder: "បញ្ចេញមតិយោបល់របស់អ្នក (ជាជម្រើស)...",
+        namePlaceholder: "ឈ្មោះរបស់អ្នក (ជាជម្រើស)",
+        feedbackSubmit: "បញ្ជូនមតិយោបល់",
+        feedbackSending: "កំពុងបញ្ជូនមតិយោបល់...",
+        feedbackThanks: "សូមអរគុណចំពោះមតិយោបល់របស់អ្នក! 🙏",
+        feedbackNeedContent: "សូមបន្ថែមពិន្ទុ ឬ មតិយោបល់មួយ។",
+        feedbackNoBook: "រកមិនឃើញព័ត៌មានសៀវភៅ។",
+        feedbackError: "មិនអាចបញ្ជូនមតិយោបល់បានទេ សូមព្យាយាមម្ដងទៀត។",
+        feedbackNetworkError: "បញ្ហាបណ្ដាញពេលបញ្ជូនមតិយោបល់។",
+
+        firstToRead: "អ្នកជាលើកដំបូង ដែលអានសៀវភៅនេះ!",
+        readsLabel: (n) => `${n} ដងអាន`,
+        paginationShowing: (start, end, total) =>
+          `កំពុងបង្ហាញ ${start}–${end} នៃសៀវភៅសរុប ${total} ក្បាល`,
+        noBooks: "រកមិនឃើញសៀវភៅទេ។"
+      }
+    };
+
+    let currentLang = localStorage.getItem("vmctk_lang") || "en";
+
+    // Quotes per language
+    const quotesByLang = {
+      en: [
+        "📖 A reader lives a thousand lives before he dies.",
+        "🌱 Knowledge shared is knowledge multiplied.",
+        "🚀 The future belongs to those who learn today.",
+        "💡 Small steps every day create big change.",
+        "🤝 Sharing a book is sharing a world.",
+        "🌈 Education is the most powerful weapon to change the world.",
+        "❤️ Learn not for school, but for life.",
+        "🎓 Reading is dreaming with open eyes."
+      ],
+      kh: [
+        "📚 អ្នកអានសៀវភៅគឺជាអ្នកដឹកនាំនាពេលអនាគតរបស់យើង។",
+        "🌞 ការអានសៀវភៅជាគន្លងទៅរកពន្លឺនៃចំណេះដឹង។",
+        "📘 កុំឈប់រៀន ព្រោះពិភពលោកមិនឈប់ផ្លាស់ប្ដូរឡើយ។",
+        "🌟 សៀវភៅល្អមួយ អាចផ្លាស់ប្ដូរជីវិតអ្នកបាន។"
+      ]
+    };
 
     function showRandomQuote() {
-      let current = quotes[Math.floor(Math.random() * quotes.length)];
-      quoteText.textContent = current;
-      setTimeout(() => {
+      function pickNext() {
+        const list = quotesByLang[currentLang] || quotesByLang.en;
+        if (!list || !list.length) return;
+        const current = quoteText.textContent;
+        let nextQ;
+        do {
+          nextQ = list[Math.floor(Math.random() * list.length)];
+        } while (list.length > 1 && nextQ === current);
         quoteText.style.opacity = "0";
         setTimeout(() => {
-          let nextQ;
-          do {
-            nextQ = quotes[Math.floor(Math.random() * quotes.length)];
-          } while (nextQ === current);
           quoteText.textContent = nextQ;
           quoteText.style.opacity = "1";
-        }, 1000);
-      }, 4000);
+        }, 500);
+      }
+      pickNext();
+      setInterval(pickNext, 5000);
     }
-    showRandomQuote();
 
     let books = [];
     let currentBookIdx = null;
@@ -525,11 +608,13 @@
     function updateFavoritesToggleButton() {
       const favoritesToggle = document.getElementById("favoritesToggle");
       if (!favoritesToggle) return;
+      const t = uiText[currentLang] || uiText.en;
+
       if (favoritesOnly) {
-        favoritesToggle.textContent = "⭐ My favorites (ON)";
+        favoritesToggle.textContent = t.favoritesOn;
         favoritesToggle.classList.add("ring-2", "ring-yellow-400", "ring-offset-2");
       } else {
-        favoritesToggle.textContent = "⭐ My favorites";
+        favoritesToggle.textContent = t.favorites;
         favoritesToggle.classList.remove("ring-2", "ring-yellow-400", "ring-offset-2");
       }
     }
@@ -566,8 +651,9 @@
 
           const viewsEl = document.getElementById("modalViews");
           const titleEl = document.getElementById("modalTitle");
+          const t = uiText[currentLang] || uiText.en;
           if (viewsEl && titleEl && titleEl.textContent === (book.Title || "Untitled")) {
-            viewsEl.textContent = `${data.views} reads`;
+            viewsEl.textContent = t.readsLabel(data.views);
           }
         } else {
           console.error("Tracking error:", data.error);
@@ -594,7 +680,8 @@
       featuredList.innerHTML = "";
 
       const categories = [...new Set(books.map(b => b.Category?.trim()).filter(Boolean))];
-      categoryDropdown.innerHTML = `<option value="All">All Categories</option>` +
+      const t = uiText[currentLang] || uiText.en;
+      categoryDropdown.innerHTML = `<option value="All">${t.allCategories}</option>` +
         categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
 
       categoryDropdown.addEventListener("change", e => {
@@ -656,9 +743,11 @@
 
       const totalItems = filtered.length;
       const totalPages = totalItems ? Math.ceil(totalItems / BOOKS_PER_PAGE) : 0;
+      const t = uiText[currentLang] || uiText.en;
 
       if (!totalPages) {
-        bookListEl.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">No books found.</p>`;
+        bookListEl.innerHTML =
+          `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">${t.noBooks}</p>`;
         renderPagination(0, 0);
         return;
       }
@@ -724,10 +813,11 @@
 
       const startIndex = (currentPage - 1) * BOOKS_PER_PAGE + 1;
       const endIndex = Math.min(currentPage * BOOKS_PER_PAGE, totalItems);
+      const t = uiText[currentLang] || uiText.en;
 
       const info = document.createElement("span");
       info.className = "block text-xs text-gray-600 dark:text-gray-300 text-center";
-      info.textContent = `Showing ${startIndex}–${endIndex} of ${totalItems} books`;
+      info.textContent = t.paginationShowing(startIndex, endIndex, totalItems);
 
       const controls = document.createElement("div");
       controls.className = "flex flex-wrap justify-center items-center gap-1";
@@ -797,6 +887,7 @@
     function openModal(idx) {
       const b = books[idx];
       currentBookIdx = idx;
+      const t = uiText[currentLang] || uiText.en;
 
       document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
       document.getElementById("modalTitle").textContent = b.Title || "Untitled";
@@ -806,8 +897,8 @@
       const viewsEl = document.getElementById("modalViews");
       const currentViews = Number(b.Views) || 0;
       viewsEl.textContent = currentViews
-        ? `${currentViews} reads`
-        : "Be the first to read this book!";
+        ? t.readsLabel(currentViews)
+        : t.firstToRead;
 
       document.getElementById("modalDesc").textContent =
         b.Description || "No description available yet.";
@@ -815,6 +906,10 @@
       const readLink = document.getElementById("modalRead");
       const dlLink = document.getElementById("modalDownload");
       const pdf = b["PDF Link"];
+
+      // update button labels based on language
+      readLink.textContent = t.readOnline;
+      dlLink.textContent = t.download;
 
       readLink.onclick = null;
 
@@ -840,19 +935,137 @@
       feedbackName.value = "";
       feedbackStatus.textContent = "";
       feedbackSubmit.disabled = false;
-      feedbackSubmit.textContent = "Submit feedback";
+      feedbackSubmit.textContent = t.feedbackSubmit;
 
       modal.classList.add("show");
     }
 
-    // Language toggle
+    // Feedback form logic (DOM refs)
+    const feedbackForm = document.getElementById("feedbackForm");
+    const feedbackRating = document.getElementById("feedbackRating");
+    const feedbackComment = document.getElementById("feedbackComment");
+    const feedbackName = document.getElementById("feedbackName");
+    const feedbackStatus = document.getElementById("feedbackStatus");
+    const feedbackSubmit = document.getElementById("feedbackSubmit");
+
+    feedbackForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const t = uiText[currentLang] || uiText.en;
+
+      if (currentBookIdx === null || !books[currentBookIdx]) {
+        feedbackStatus.textContent = t.feedbackNoBook;
+        return;
+      }
+
+      const book = books[currentBookIdx];
+      const rating = feedbackRating.value.trim();
+      const comment = feedbackComment.value.trim();
+      const name = feedbackName.value.trim();
+
+      if (!rating && !comment) {
+        feedbackStatus.textContent = t.feedbackNeedContent;
+        return;
+      }
+
+      feedbackSubmit.disabled = true;
+      feedbackSubmit.textContent = t.feedbackSending;
+      feedbackStatus.textContent = t.feedbackSending;
+
+      try {
+        const res = await fetch(FEEDBACK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            type: "feedback",
+            id: book.ID || "",
+            title: book.Title || "",
+            rating,
+            comment,
+            name,
+            ua: navigator.userAgent || ""
+          })
+        });
+
+        const data = await res.json().catch(() => null);
+
+        if (res.ok && data && data.success !== false) {
+          feedbackStatus.textContent = t.feedbackThanks;
+          feedbackRating.value = "";
+          feedbackComment.value = "";
+          feedbackName.value = "";
+        } else {
+          feedbackStatus.textContent = t.feedbackError;
+          console.error("Feedback error:", data);
+        }
+      } catch (err) {
+        console.error("Feedback request failed:", err);
+        feedbackStatus.textContent = t.feedbackNetworkError;
+      } finally {
+        feedbackSubmit.disabled = false;
+        feedbackSubmit.textContent = t.feedbackSubmit;
+      }
+    });
+
+    // Language-aware UI update
+    function applyLanguage() {
+      const t = uiText[currentLang] || uiText.en;
+
+      // document title & header subtitle/title
+      document.title = t.pageTitle;
+      const subtitleEl = document.getElementById("subtitle");
+      if (subtitleEl) subtitleEl.textContent = t.subtitle;
+      const mainTitleEl = document.getElementById("mainTitle");
+      if (mainTitleEl) mainTitleEl.textContent = t.headerTitle;
+
+      // search placeholder
+      const searchEl = document.getElementById("searchInput");
+      if (searchEl) searchEl.placeholder = t.searchPlaceholder;
+
+      // "All categories" option (first)
+      const catDropdown = document.getElementById("categoryDropdown");
+      if (catDropdown && catDropdown.options.length > 0) {
+        catDropdown.options[0].textContent = t.allCategories;
+      }
+
+      // featured heading
+      const fh = document.getElementById("featuredHeading");
+      if (fh) fh.textContent = t.featuredHeading;
+
+      // read/download labels (if modal is open)
+      const readLink = document.getElementById("modalRead");
+      const dlLink = document.getElementById("modalDownload");
+      if (readLink) readLink.textContent = t.readOnline;
+      if (dlLink) dlLink.textContent = t.download;
+
+      // feedback section
+      const fbHeading = document.getElementById("feedbackHeading");
+      const ratingLabel = document.getElementById("ratingLabel");
+      if (fbHeading) fbHeading.textContent = t.feedbackHeading;
+      if (ratingLabel) ratingLabel.textContent = t.ratingLabel;
+
+      if (feedbackComment) feedbackComment.placeholder = t.feedbackPlaceholder;
+      if (feedbackName) feedbackName.placeholder = t.namePlaceholder;
+      if (feedbackSubmit) feedbackSubmit.textContent = t.feedbackSubmit;
+
+      updateFavoritesToggleButton();
+    }
+
+    // Language toggle (EN / KH)
     document.getElementById("enBtn").onclick = () => {
+      currentLang = "en";
+      localStorage.setItem("vmctk_lang", currentLang);
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
+      applyLanguage();
+      renderBooks(); // refresh pagination and list texts
     };
     document.getElementById("khBtn").onclick = () => {
+      currentLang = "kh";
+      localStorage.setItem("vmctk_lang", currentLang);
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
+      applyLanguage();
+      renderBooks();
     };
 
     // Theme toggle
@@ -901,72 +1114,17 @@
       renderBooks();
     });
 
-    // Feedback form logic
-    const feedbackForm = document.getElementById("feedbackForm");
-    const feedbackRating = document.getElementById("feedbackRating");
-    const feedbackComment = document.getElementById("feedbackComment");
-    const feedbackName = document.getElementById("feedbackName");
-    const feedbackStatus = document.getElementById("feedbackStatus");
-    const feedbackSubmit = document.getElementById("feedbackSubmit");
-
-    feedbackForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      if (currentBookIdx === null || !books[currentBookIdx]) {
-        feedbackStatus.textContent = "Cannot find book information.";
-        return;
+    // Initial load
+    window.onload = () => {
+      // show correct language sections first
+      if (currentLang === "kh") {
+        ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
+        ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
       }
-
-      const book = books[currentBookIdx];
-      const rating = feedbackRating.value.trim();
-      const comment = feedbackComment.value.trim();
-      const name = feedbackName.value.trim();
-
-      if (!rating && !comment) {
-        feedbackStatus.textContent = "Please add a rating or a comment.";
-        return;
-      }
-
-      feedbackSubmit.disabled = true;
-      feedbackSubmit.textContent = "Sending...";
-      feedbackStatus.textContent = "Sending feedback...";
-
-      try {
-        const res = await fetch(FEEDBACK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            type: "feedback",
-            id: book.ID || "",
-            title: book.Title || "",
-            rating,
-            comment,
-            name,
-            ua: navigator.userAgent || ""
-          })
-        });
-
-        const data = await res.json().catch(() => null);
-
-        if (res.ok && data && data.success !== false) {
-          feedbackStatus.textContent = "Thank you for your feedback! 🙏";
-          feedbackRating.value = "";
-          feedbackComment.value = "";
-          feedbackName.value = "";
-        } else {
-          feedbackStatus.textContent = "Could not send feedback. Please try again later.";
-          console.error("Feedback error:", data);
-        }
-      } catch (err) {
-        console.error("Feedback request failed:", err);
-        feedbackStatus.textContent = "Network error while sending feedback.";
-      } finally {
-        feedbackSubmit.disabled = false;
-        feedbackSubmit.textContent = "Submit feedback";
-      }
-    });
-
-    window.onload = loadBooks;
+      applyLanguage();
+      showRandomQuote();
+      loadBooks();
+    };
   </script>
 </body>
 </html>
