@@ -46,6 +46,10 @@
       font-size: 24px;
       font-weight: 700;
       margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
     .subtitle {
       margin: 4px 0 0;
@@ -58,6 +62,21 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* Admin only badge */
+    .admin-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background: #fee2e2;
+      color: #b91c1c;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     /* Language toggle buttons */
@@ -88,6 +107,16 @@
       background: #ffffff;
       color: var(--text-main);
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.15);
+    }
+
+    .logout-link {
+      border: none;
+      background: none;
+      font-size: 12px;
+      color: var(--text-sub);
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
     }
 
     .stats-grid {
@@ -216,6 +245,73 @@
       background: #1d4ed8;
     }
 
+    /* Login overlay */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .login-overlay.hidden {
+      display: none;
+    }
+    .login-box {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px 22px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+      border: 1px solid var(--border);
+    }
+    .login-title {
+      margin: 0 0 4px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .login-subtitle {
+      margin: 0 0 12px;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .login-field {
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .login-field label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+    .login-field input {
+      font-size: 13px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      outline: none;
+    }
+    .login-field input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+    .login-error {
+      font-size: 11px;
+      color: var(--danger);
+      min-height: 14px;
+      margin-top: 4px;
+    }
+    .login-button {
+      margin-top: 8px;
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+
     @media (max-width: 640px) {
       .header {
         align-items: flex-start;
@@ -227,10 +323,38 @@
   </style>
 </head>
 <body>
-  <div class="page">
+  <!-- LOGIN OVERLAY -->
+  <div id="adminLoginOverlay" class="login-overlay">
+    <div class="login-box">
+      <h2 id="loginTitle" class="login-title">Admin login</h2>
+      <p id="loginSubtitle" class="login-subtitle">
+        This area is restricted to admins only.
+      </p>
+      <form id="adminLoginForm">
+        <div class="login-field">
+          <label id="loginUserLabel" for="loginUser">Username</label>
+          <input id="loginUser" type="text" autocomplete="username" />
+        </div>
+        <div class="login-field">
+          <label id="loginPassLabel" for="loginPass">Password</label>
+          <input id="loginPass" type="password" autocomplete="current-password" />
+        </div>
+        <div id="loginError" class="login-error"></div>
+        <button type="submit" id="loginButton" class="btn-primary login-button">
+          Log in
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN PAGE -->
+  <div class="page" id="mainPage">
     <div class="header">
       <div>
-        <h1 class="title" id="headerTitle">VMCTK Admin Dashboard</h1>
+        <h1 class="title" id="headerTitle">
+          VMCTK Admin Dashboard
+          <span class="admin-badge" id="adminOnlyBadge">Admin only</span>
+        </h1>
         <p class="subtitle" id="headerSubtitle">
           Stats &amp; admin tools from your Google Sheets data
         </p>
@@ -245,6 +369,9 @@
           </button>
         </div>
         <span>← <a id="backLink" href="index.html">Back to Library</a></span>
+        <button id="logoutBtn" type="button" class="logout-link">
+          Log out
+        </button>
       </div>
     </div>
 
@@ -325,7 +452,6 @@
         <p class="section-note" id="uploadHint">
           For security, only admins with access to the upload page can add new books.
         </p>
-        <!-- 🔗 Fixed: underscore version -->
         <a id="uploadPageLink" href="admin_upload.html" class="btn-primary">
           Open upload page
         </a>
@@ -334,6 +460,11 @@
   </div>
 
   <script>
+    // ⚠️ Simple front-end login – change these
+    const ADMIN_USER = "vmcadmin";
+    const ADMIN_PASS = "vmc2024";
+    const LOGIN_KEY = "vmctk_admin_logged_in";
+
     const SCRIPT_URL =
       "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
 
@@ -342,11 +473,15 @@
         pageTitle: "VMCTK Admin Dashboard",
         headerTitle: "VMCTK Admin Dashboard",
         headerSubtitle: "Stats & admin tools from your Google Sheets data",
+        adminOnlyBadge: "Admin only",
         backToLibrary: "Back to Library",
+        logout: "Log out",
+
         totalBooksLabel: "TOTAL BOOKS",
         totalReadsLabel: "TOTAL READS",
         totalFavoritesLabel: "TOTAL FAVORITES",
         totalFeedbacksLabel: "FEEDBACK ENTRIES",
+
         mostReadTitle: "Top 5 Most Read Books",
         topRatedTitle: "Top 5 Top Rated (by feedback)",
         topRatedNote:
@@ -357,6 +492,7 @@
         uploadHint:
           "For security, only admins with access to the upload page can add new books.",
         uploadButtonLabel: "Open upload page",
+
         thRank: "#",
         thTitle: "Title",
         thCategory: "Category",
@@ -364,20 +500,32 @@
         thReads: "Reads",
         thAvgRating: "Avg Rating",
         thReviews: "# Reviews",
+
         noDataMostRead: "No data yet.",
         noDataTopRated: "No rated books yet.",
-        statsError: "Failed to load stats. Check console for details."
+        statsError: "Failed to load stats. Check console for details.",
+
+        loginTitle: "Admin login",
+        loginSubtitle: "This area is restricted to admins only.",
+        loginUserLabel: "Username",
+        loginPassLabel: "Password",
+        loginButton: "Log in",
+        loginError: "Incorrect username or password."
       },
       kh: {
         pageTitle: "ផ្ទាំងគ្រប់គ្រង VMCTK",
         headerTitle: "ផ្ទាំងគ្រប់គ្រង VMCTK",
         headerSubtitle:
           "ស្ថិតិ និងឧបករណ៍គ្រប់គ្រងពីទិន្នន័យក្នុង Google Sheets",
+        adminOnlyBadge: "សម្រាប់ Admin ប៉ុណ្ណោះ",
         backToLibrary: "ត្រលប់ទៅបណ្ណាល័យ",
+        logout: "ចេញពីគណនី",
+
         totalBooksLabel: "ចំនួនសៀវភៅសរុប",
         totalReadsLabel: "ចំនួនអានសរុប",
         totalFavoritesLabel: "សៀវភៅដែលចូលចិត្តសរុប",
         totalFeedbacksLabel: "ចំនួនមតិយោបល់",
+
         mostReadTitle: "សៀវភៅអានច្រើនបំផុត ៥ ក្បាល",
         topRatedTitle: "សៀវភៅពេញនិយម ៥ ក្បាល (តាមការវាយតម្លៃ)",
         topRatedNote:
@@ -388,6 +536,7 @@
         uploadHint:
           "ដើម្បីរក្សាសុវត្ថិភាព មានតែអ្នកគ្រប់គ្រង (admin) ប៉ុណ្ណោះ ដែលអាចចូលប្រើទំព័របញ្ចូលសៀវភៅបាន។",
         uploadButtonLabel: "បើកទំព័របញ្ចូលសៀវភៅ",
+
         thRank: "ល.រ",
         thTitle: "ចំណងជើង",
         thCategory: "ប្រភេទ",
@@ -395,9 +544,17 @@
         thReads: "ចំនួនអាន",
         thAvgRating: "ពិន្ទុមធ្យម",
         thReviews: "ចំនួនមតិយោបល់",
+
         noDataMostRead: "មិនទាន់មានទិន្នន័យទេ។",
         noDataTopRated: "មិនទាន់មានសៀវភៅដែលបានវាយតម្លៃទេ។",
-        statsError: "មិនអាចទាញយកស្ថិតិបានទេ។ សូមពិនិត្យ Console។"
+        statsError: "មិនអាចទាញយកស្ថិតិបានទេ។ សូមពិនិត្យ Console។",
+
+        loginTitle: "ចូលប្រើសម្រាប់ Admin",
+        loginSubtitle: "តំបន់នេះសម្រាប់អ្នកគ្រប់គ្រងប៉ុណ្ណោះ។",
+        loginUserLabel: "ឈ្មោះអ្នកប្រើ",
+        loginPassLabel: "ពាក្យសម្ងាត់",
+        loginButton: "ចូលប្រើ",
+        loginError: "ឈ្មោះអ្នកប្រើ ឬ ពាក្យសម្ងាត់ មិនត្រឹមត្រូវ។"
       }
     };
 
@@ -410,32 +567,48 @@
 
     function applyAdminLanguage() {
       const t = adminText[currentLang] || adminText.en;
+
       document.title = t.pageTitle;
       setText("headerTitle", t.headerTitle);
       setText("headerSubtitle", t.headerSubtitle);
+      setText("adminOnlyBadge", t.adminOnlyBadge);
       setText("backLink", t.backToLibrary);
+      setText("logoutBtn", t.logout);
+
       setText("statTotalBooksLabel", t.totalBooksLabel);
       setText("statTotalReadsLabel", t.totalReadsLabel);
       setText("statTotalFavoritesLabel", t.totalFavoritesLabel);
       setText("statTotalFeedbacksLabel", t.totalFeedbacksLabel);
+
       setText("mostReadTitle", t.mostReadTitle);
       setText("topRatedTitle", t.topRatedTitle);
       setText("topRatedNote", t.topRatedNote);
       setText("uploadTitle", t.uploadTitle);
       setText("uploadNote", t.uploadNote);
       setText("uploadHint", t.uploadHint);
+
       const uploadPageLink = document.getElementById("uploadPageLink");
       if (uploadPageLink) uploadPageLink.textContent = t.uploadButtonLabel;
+
       setText("thMostReadRank", t.thRank);
       setText("thMostReadTitle", t.thTitle);
       setText("thMostReadCategory", t.thCategory);
       setText("thMostReadLanguage", t.thLanguage);
       setText("thMostReadReads", t.thReads);
+
       setText("thTopRatedRank", t.thRank);
       setText("thTopRatedTitle", t.thTitle);
       setText("thTopRatedAvgRating", t.thAvgRating);
       setText("thTopRatedReviews", t.thReviews);
 
+      // Login overlay text
+      setText("loginTitle", t.loginTitle);
+      setText("loginSubtitle", t.loginSubtitle);
+      setText("loginUserLabel", t.loginUserLabel);
+      setText("loginPassLabel", t.loginPassLabel);
+      setText("loginButton", t.loginButton);
+
+      // Language toggle styles
       const enBtn = document.getElementById("adminEnBtn");
       const khBtn = document.getElementById("adminKhBtn");
       if (enBtn && khBtn) {
@@ -531,6 +704,43 @@
       });
     }
 
+    // LOGIN LOGIC
+    function setupLogin() {
+      const overlay = document.getElementById("adminLoginOverlay");
+      const form = document.getElementById("adminLoginForm");
+      const errorEl = document.getElementById("loginError");
+      const loggedIn = localStorage.getItem(LOGIN_KEY) === "yes";
+
+      if (loggedIn) {
+        overlay.classList.add("hidden");
+      } else {
+        overlay.classList.remove("hidden");
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const t = adminText[currentLang] || adminText.en;
+        const user = document.getElementById("loginUser").value.trim();
+        const pass = document.getElementById("loginPass").value;
+        if (user === ADMIN_USER && pass === ADMIN_PASS) {
+          localStorage.setItem(LOGIN_KEY, "yes");
+          overlay.classList.add("hidden");
+          errorEl.textContent = "";
+        } else {
+          errorEl.textContent = t.loginError;
+        }
+      });
+    }
+
+    function setupLogout() {
+      const btn = document.getElementById("logoutBtn");
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        localStorage.removeItem(LOGIN_KEY);
+        location.reload();
+      });
+    }
+
     const adminEnBtn = document.getElementById("adminEnBtn");
     const adminKhBtn = document.getElementById("adminKhBtn");
 
@@ -548,8 +758,13 @@
       loadStats();
     });
 
+    // Initial load
     applyAdminLanguage();
-    loadStats();
+    setupLogin();
+    setupLogout();
+    if (localStorage.getItem(LOGIN_KEY) === "yes") {
+      loadStats();
+    }
   </script>
 </body>
 </html>
