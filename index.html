@@ -300,12 +300,35 @@
     <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow" aria-label="Search books">
   </section>
 
-  <!-- Category + Favorites -->
+  <!-- Category + Favorites + Sort -->
   <section id="categorySection" class="p-4 flex justify-center">
     <div class="flex flex-wrap items-center gap-3">
-      <select id="categoryDropdown" class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800" aria-label="Filter by category">
+      <select
+        id="categoryDropdown"
+        class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800"
+        aria-label="Filter by category"
+      >
         <option value="All">All Categories</option>
       </select>
+
+      <!-- Sort dropdown -->
+      <div class="flex items-center gap-2">
+        <label
+          id="sortLabel"
+          for="sortDropdown"
+          class="text-sm text-gray-700 dark:text-gray-200"
+        >
+          Sort:
+        </label>
+        <select
+          id="sortDropdown"
+          class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800"
+        >
+          <option value="default">Default</option>
+          <option value="title">Title (A–Z)</option>
+          <option value="views">Most read</option>
+        </select>
+      </div>
 
       <button
         id="favoritesToggle"
@@ -329,6 +352,17 @@
       </div>
     </div>
     <div id="featuredList"></div>
+  </section>
+
+  <!-- Top Reads (from stats endpoint) -->
+  <section id="topReadsSection" class="p-4 bg-white dark:bg-gray-900">
+    <div class="flex justify-between items-center mb-3">
+      <h2 id="topReadsHeading" class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">
+        🏆 Top 5 Most-Read Books
+      </h2>
+      <p id="statsSummary" class="text-xs text-gray-500 dark:text-gray-300"></p>
+    </div>
+    <div id="topReadsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"></div>
   </section>
 
   <!-- Book List -->
@@ -457,6 +491,7 @@
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS75RiAFZNe61Mrh8jhMpnYX-o0XaJynvA2Ho2kfDBzrkeA1ewCftd90oZ2WDIAmeTvHX5c1uKoxIGU/pub?output=csv";
     const TRACKING_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
     const FEEDBACK_URL = TRACKING_URL; // same endpoint
+    const STATS_URL = TRACKING_URL + "?mode=stats"; // stats endpoint
 
     const loadingScreen = document.getElementById("loadingScreen");
     const quoteText = document.getElementById("quoteText");
@@ -474,6 +509,17 @@
         favorites: "⭐ My favorites",
         favoritesOn: "⭐ My favorites (ON)",
         featuredHeading: "⭐ Featured Books",
+
+        // sort UI
+        sortLabel: "Sort:",
+        sortDefault: "Default",
+        sortTitle: "Title (A–Z)",
+        sortViews: "Most read",
+
+        // top reads section
+        topReadsHeading: "🏆 Top 5 Most-Read Books",
+        statsSummary: (books, views) =>
+          `${books} books · ${views} total reads`,
 
         readOnline: "Read Online",
         download: "Download",
@@ -505,6 +551,17 @@
         favorites: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត",
         favoritesOn: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត (បើក)",
         featuredHeading: "⭐ សៀវភៅពិសេស",
+
+        // sort UI
+        sortLabel: "តម្រៀប៖",
+        sortDefault: "លំនាំដើម",
+        sortTitle: "ចំណងជើង (ក–អ)",
+        sortViews: "អានច្រើនបំផុត",
+
+        // top reads section
+        topReadsHeading: "🏆 សៀវភៅអានច្រើនបំផុត 5 ក្បាល",
+        statsSummary: (books, views) =>
+          `${books} សៀវភៅ · ${views} ដងអានសរុប`,
 
         readOnline: "អានអនឡាញ",
         download: "ទាញយក",
@@ -577,6 +634,9 @@
     let currentSearchTerm = "";
     let currentPage = 1;
     const BOOKS_PER_PAGE = 12;
+
+    // sort state
+    let currentSort = localStorage.getItem("vmctk_sort") || "default";
 
     // ----- Favorites (stored per user in localStorage) -----
     const FAVORITES_KEY = "vmctk_favorites";
@@ -679,6 +739,7 @@
       const featuredList = document.getElementById("featuredList");
       const categoryDropdown = document.getElementById("categoryDropdown");
       const favoritesToggle = document.getElementById("favoritesToggle");
+      const sortDropdown = document.getElementById("sortDropdown");
 
       bookListEl.innerHTML = "";
       featuredList.innerHTML = "";
@@ -698,6 +759,18 @@
         updateFavoritesToggleButton();
         renderBooks();
       });
+
+      // sort dropdown behavior
+      if (sortDropdown) {
+        // localize labels if needed (after uiText update)
+        sortDropdown.value = currentSort;
+        sortDropdown.addEventListener("change", (e) => {
+          currentSort = e.target.value || "default";
+          localStorage.setItem("vmctk_sort", currentSort);
+          currentPage = 1;
+          renderBooks();
+        });
+      }
 
       updateFavoritesToggleButton();
 
@@ -742,6 +815,21 @@
           const title = (b.Title || "").toLowerCase();
           const author = (b.Author || "").toLowerCase();
           return title.includes(term) || author.includes(term);
+        });
+      }
+
+      // sort logic
+      if (currentSort === "title") {
+        filtered.sort((a, b) =>
+          (a.Title || "").localeCompare(b.Title || "", undefined, {
+            sensitivity: "base",
+          })
+        );
+      } else if (currentSort === "views") {
+        filtered.sort((a, b) => {
+          const va = Number(a.Views) || 0;
+          const vb = Number(b.Views) || 0;
+          return vb - va; // most read first
         });
       }
 
@@ -812,12 +900,12 @@
 
     // ✅ Helper: scroll up to book section when changing page
     function goToTopOfBooks() {
-  const target = document.getElementById("categorySection") || document.getElementById("bookList");
-  if (!target) return;
-  const offset = 170; // scroll a bit higher so books are nicely centered on screen
-  const top = target.getBoundingClientRect().top + window.scrollY - offset;
-  window.scrollTo({ top, behavior: "smooth" });
-}
+      const target = document.getElementById("categorySection") || document.getElementById("bookList");
+      if (!target) return;
+      const offset = 170; // scroll a bit higher so books are nicely centered on screen
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
 
     // ---- compact pagination (max 7 page buttons) ----
     function renderPagination(totalPages, totalItems) {
@@ -1070,9 +1158,23 @@
         catDropdown.options[0].textContent = t.allCategories;
       }
 
+      // sort label + options
+      const sortLabel = document.getElementById("sortLabel");
+      const sortDropdown = document.getElementById("sortDropdown");
+      if (sortLabel) sortLabel.textContent = t.sortLabel;
+      if (sortDropdown && sortDropdown.options.length >= 3) {
+        sortDropdown.options[0].textContent = t.sortDefault;
+        sortDropdown.options[1].textContent = t.sortTitle;
+        sortDropdown.options[2].textContent = t.sortViews;
+      }
+
       // featured heading
       const fh = document.getElementById("featuredHeading");
       if (fh) fh.textContent = t.featuredHeading;
+
+      // top reads heading (summary is set when stats load)
+      const trh = document.getElementById("topReadsHeading");
+      if (trh && t.topReadsHeading) trh.textContent = t.topReadsHeading;
 
       // read/download labels (if modal is open)
       const readLink = document.getElementById("modalRead");
@@ -1101,6 +1203,7 @@
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
       renderBooks(); // refresh pagination and list texts
+      loadStatsForPublic(); // refresh summary text language
     };
     document.getElementById("khBtn").onclick = () => {
       currentLang = "kh";
@@ -1109,6 +1212,7 @@
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
       renderBooks();
+      loadStatsForPublic();
     };
 
     // Theme toggle
@@ -1157,8 +1261,87 @@
       renderBooks();
     });
 
+    // Load stats for public homepage
+    async function loadStatsForPublic() {
+      const section = document.getElementById("topReadsSection");
+      const listEl = document.getElementById("topReadsList");
+      const summaryEl = document.getElementById("statsSummary");
+      const t = uiText[currentLang] || uiText.en;
+
+      if (!section || !listEl) return;
+
+      try {
+        const res = await fetch(STATS_URL);
+        const data = await res.json();
+
+        if (!data || data.success === false) {
+          console.error("Stats error:", data);
+          section.classList.add("hidden");
+          return;
+        }
+
+        // Summary text
+        if (summaryEl && typeof t.statsSummary === "function") {
+          summaryEl.textContent = t.statsSummary(
+            data.totalBooks ?? 0,
+            data.totalViews ?? 0
+          );
+        }
+
+        const topViews = data.topViews || [];
+        if (!topViews.length) {
+          section.classList.add("hidden");
+          return;
+        }
+
+        listEl.innerHTML = "";
+        section.classList.remove("hidden");
+
+        topViews.forEach((item) => {
+          const bookId = String(item.id || "");
+          // Try to match full book object by ID so we can reuse cover & modal
+          const book = books.find(b => String(b.ID) === bookId);
+
+          const card = document.createElement("div");
+          card.className =
+            "relative rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
+
+          let coverSrc = "";
+          if (book && book["Cover Link"]) {
+            coverSrc = getThumbCover(book["Cover Link"]);
+          }
+
+          card.innerHTML = `
+            ${coverSrc
+              ? `<img src="${coverSrc}" loading="lazy" decoding="async" alt="Cover of ${item.title || ""}" class="book-cover mb-2">`
+              : `<div class="mb-2 h-32 w-full rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs text-gray-500 dark:text-gray-300">No cover</div>`
+            }
+            <h3 class="font-bold text-sm line-clamp-2">${item.title || "Untitled"}</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-300">
+              ${item.category || ""} ${item.language ? "· " + item.language : ""}
+            </p>
+            <p class="text-xs text-blue-500 mt-1">
+              👁 ${t.readsLabel(item.views || 0)}
+            </p>
+          `;
+
+          if (book && typeof book._idx !== "undefined") {
+            card.addEventListener("click", () => openModal(book._idx));
+          } else {
+            // If we can't match the book in CSV, disable click
+            card.classList.add("cursor-default");
+          }
+
+          listEl.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Failed to load public stats:", err);
+        if (section) section.classList.add("hidden");
+      }
+    }
+
     // Initial load
-    window.onload = () => {
+    window.onload = async () => {
       // show correct language sections first
       if (currentLang === "kh") {
         ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
@@ -1166,7 +1349,8 @@
       }
       applyLanguage();
       showRandomQuote();
-      loadBooks();
+      await loadBooks();        // make sure 'books' is populated
+      loadStatsForPublic();     // now we can match stats to books
     };
   </script>
 </body>
