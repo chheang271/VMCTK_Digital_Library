@@ -8,16 +8,39 @@
 </head>
 <body class="bg-slate-100 text-slate-800">
   <div class="min-h-screen max-w-3xl mx-auto px-4 py-6">
-    <header class="mb-6 flex items-center justify-between">
+    <header class="mb-6 flex items-center justify-between gap-3 flex-wrap">
       <div>
-        <h1 class="text-2xl font-bold text-slate-900">Add New Book</h1>
-        <p class="text-sm text-slate-500">
+        <h1 id="pageHeading" class="text-2xl font-bold text-slate-900">Add New Book</h1>
+        <p id="pageSubtitle" class="text-sm text-slate-500">
           This form will append a new row to <strong>Sheet1</strong> in your Google Sheet.
         </p>
       </div>
-      <div class="flex gap-3 text-sm">
-        <a href="admin.html" class="text-blue-600 hover:underline">📊 Dashboard</a>
-        <a href="index.html" class="text-blue-600 hover:underline">← Back to Library</a>
+
+      <div class="flex items-center gap-3 text-sm">
+        <!-- Language toggle -->
+        <div class="inline-flex items-center rounded-full border border-slate-300 bg-slate-200 overflow-hidden">
+          <button
+            id="uploadEnBtn"
+            type="button"
+            class="px-3 py-1 text-xs flex items-center gap-1 bg-white text-slate-800 font-semibold"
+          >
+            <span>🇬🇧</span><span>EN</span>
+          </button>
+          <button
+            id="uploadKhBtn"
+            type="button"
+            class="px-3 py-1 text-xs flex items-center gap-1 text-slate-600"
+          >
+            <span>🇰🇭</span><span>KH</span>
+          </button>
+        </div>
+
+        <a id="dashboardLink" href="admin.html" class="text-blue-600 hover:underline">
+          📊 Dashboard
+        </a>
+        <a id="backToLibraryLink" href="index.html" class="text-blue-600 hover:underline">
+          ← Back to Library
+        </a>
       </div>
     </header>
 
@@ -25,7 +48,11 @@
       <form id="bookForm" class="space-y-4">
         <!-- Admin key -->
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1" for="adminKey">
+          <label
+            id="labelAdminKey"
+            class="block text-xs font-semibold text-slate-600 mb-1"
+            for="adminKey"
+          >
             Admin key <span class="text-red-500">*</span>
           </label>
           <input
@@ -40,7 +67,11 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1" for="title">
+            <label
+              id="labelTitle"
+              class="block text-xs font-semibold text-slate-600 mb-1"
+              for="title"
+            >
               Title <span class="text-red-500">*</span>
             </label>
             <input
@@ -54,7 +85,11 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1" for="author">
+            <label
+              id="labelAuthor"
+              class="block text-xs font-semibold text-slate-600 mb-1"
+              for="author"
+            >
               Author
             </label>
             <input
@@ -69,7 +104,11 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1" for="language">
+            <label
+              id="labelLanguage"
+              class="block text-xs font-semibold text-slate-600 mb-1"
+              for="language"
+            >
               Language
             </label>
             <select
@@ -77,16 +116,20 @@
               name="language"
               class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
             >
-              <option value="">– Select –</option>
-              <option value="Khmer">Khmer</option>
-              <option value="English">English</option>
-              <option value="Bilingual">Bilingual</option>
-              <option value="Other">Other</option>
+              <option id="optLangDefault" value="">– Select –</option>
+              <option id="optLangKhmer" value="Khmer">Khmer</option>
+              <option id="optLangEnglish" value="English">English</option>
+              <option id="optLangBilingual" value="Bilingual">Bilingual</option>
+              <option id="optLangOther" value="Other">Other</option>
             </select>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1" for="category">
+            <label
+              id="labelCategory"
+              class="block text-xs font-semibold text-slate-600 mb-1"
+              for="category"
+            >
               Category
             </label>
             <input
@@ -101,7 +144,11 @@
 
         <!-- PDF link -->
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1" for="pdfLink">
+          <label
+            id="labelPdfLink"
+            class="block text-xs font-semibold text-slate-600 mb-1"
+            for="pdfLink"
+          >
             PDF Link (Google Drive) <span class="text-red-500">*</span>
           </label>
           <input
@@ -112,14 +159,18 @@
             class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
             placeholder="https://drive.google.com/file/d/…"
           />
-          <p class="text-xs text-slate-500 mt-1">
+          <p id="helpPdfLink" class="text-xs text-slate-500 mt-1">
             Upload the PDF to Google Drive, click “Share → Anyone with the link → Viewer”, then paste the link here.
           </p>
         </div>
 
         <!-- Cover link -->
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1" for="coverOriginal">
+          <label
+            id="labelCoverOriginal"
+            class="block text-xs font-semibold text-slate-600 mb-1"
+            for="coverOriginal"
+          >
             Cover image link (Google Drive)
           </label>
           <input
@@ -129,7 +180,7 @@
             class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
             placeholder="https://drive.google.com/file/d/…"
           />
-          <p class="text-xs text-slate-500 mt-1">
+          <p id="helpCoverOriginal" class="text-xs text-slate-500 mt-1">
             The script will auto-generate a thumbnail URL for <strong>Cover Link</strong> using this file.
           </p>
         </div>
@@ -137,7 +188,11 @@
         <!-- Featured + description -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1" for="featured">
+            <label
+              id="labelFeatured"
+              class="block text-xs font-semibold text-slate-600 mb-1"
+              for="featured"
+            >
               Featured
             </label>
             <select
@@ -145,13 +200,17 @@
               name="featured"
               class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
             >
-              <option value="">No</option>
-              <option value="Yes">Yes</option>
+              <option id="optFeaturedNo" value="">No</option>
+              <option id="optFeaturedYes" value="Yes">Yes</option>
             </select>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1" for="description">
+            <label
+              id="labelDescription"
+              class="block text-xs font-semibold text-slate-600 mb-1"
+              for="description"
+            >
               Short description
             </label>
             <textarea
@@ -180,20 +239,234 @@
 
   <script>
     // 🔗 Your Apps Script Web App URL (same one used in index.html & admin.html)
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
+    const SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
 
-    const form      = document.getElementById("bookForm");
+    /*************** LANGUAGE TEXTS ***************/
+    const uploadText = {
+      en: {
+        pageTitle: "VMCTK – Add New Book",
+        heading: "Add New Book",
+        subtitle: 'This form will append a new row to "Sheet1" in your Google Sheet.',
+        dashboardLink: "📊 Dashboard",
+        backToLibrary: "← Back to Library",
+
+        adminKeyLabel: "Admin key *",
+        adminKeyPlaceholder: "Enter the same ADMIN_KEY as in Apps Script",
+
+        titleLabel: "Title *",
+        titlePlaceholder: "Book title",
+
+        authorLabel: "Author",
+        authorPlaceholder: "Author name",
+
+        languageLabel: "Language",
+        languageDefault: "– Select –",
+        languageKhmer: "Khmer",
+        languageEnglish: "English",
+        languageBilingual: "Bilingual",
+        languageOther: "Other",
+
+        categoryLabel: "Category",
+        categoryPlaceholder: "e.g. Novel, Education, Children",
+
+        pdfLabel: "PDF Link (Google Drive) *",
+        pdfPlaceholder: "https://drive.google.com/file/d/…",
+        pdfHelp:
+          "Upload the PDF to Google Drive, click “Share → Anyone with the link → Viewer”, then paste the link here.",
+
+        coverOriginalLabel: "Cover image link (Google Drive)",
+        coverOriginalPlaceholder: "https://drive.google.com/file/d/…",
+        coverOriginalHelp:
+          "The script will auto-generate a thumbnail URL for Cover Link using this file.",
+
+        featuredLabel: "Featured",
+        featuredNo: "No",
+        featuredYes: "Yes",
+
+        descriptionLabel: "Short description",
+        descriptionPlaceholder: "Optional short description...",
+
+        buttonAdd: "Add book",
+        buttonAdding: "Adding…",
+
+        statusNonJson: "Server returned a non-JSON response. Check console.",
+        statusErrorPrefix: "Error: ",
+        statusUnknownError: "Unknown error",
+        statusBookAddedPrefix: "✅ Book added with ID ",
+        statusNetworkError: "Network error while adding book."
+      },
+      kh: {
+        pageTitle: "VMCTK – បន្ថែមសៀវភៅថ្មី",
+        heading: "បន្ថែមសៀវភៅថ្មី",
+        subtitle:
+          "ទម្រង់នេះនឹងបន្ថែមជួរដេកថ្មីទៅ \"Sheet1\" ក្នុង Google Sheet របស់អ្នក។",
+        dashboardLink: "📊 ផ្ទាំងគ្រប់គ្រង",
+        backToLibrary: "← ត្រលប់ទៅបណ្ណាល័យ",
+
+        adminKeyLabel: "លេខសម្ងាត់អ្នកគ្រប់គ្រង *",
+        adminKeyPlaceholder: "បញ្ចូល ADMIN_KEY ដូចក្នុង Apps Script",
+
+        titleLabel: "ចំណងជើង *",
+        titlePlaceholder: "ចំណងជើងសៀវភៅ",
+
+        authorLabel: "អ្នកនិពន្ធ",
+        authorPlaceholder: "ឈ្មោះអ្នកនិពន្ធ",
+
+        languageLabel: "ភាសា",
+        languageDefault: "– ជ្រើស –",
+        languageKhmer: "ខ្មែរ",
+        languageEnglish: "អង់គ្លេស",
+        languageBilingual: "ពីរភាសា",
+        languageOther: "ផ្សេងទៀត",
+
+        categoryLabel: "ប្រភេទ",
+        categoryPlaceholder: "ឧ. នាវល, អប់រំ, កុមារ",
+
+        pdfLabel: "តំណរភ្ជាប់ PDF (Google Drive) *",
+        pdfPlaceholder: "https://drive.google.com/file/d/…",
+        pdfHelp:
+          "ផ្ទុកឯកសារ PDF ទៅ Google Drive បន្ទាប់មកចុច “Share → Anyone with the link → Viewer” ហើយបិទភ្ជាប់តំណនៅទីនេះ។",
+
+        coverOriginalLabel: "តំណរគម្របសៀវភៅ (Google Drive)",
+        coverOriginalPlaceholder: "https://drive.google.com/file/d/…",
+        coverOriginalHelp:
+          "Script នឹងបង្កើត URL រូបតូចសម្រាប់ Cover Link ដោយស្វ័យប្រវត្តិពីឯកសារនេះ។",
+
+        featuredLabel: "សៀវភៅពិសេស",
+        featuredNo: "ទេ",
+        featuredYes: "បាទ/ចាស",
+
+        descriptionLabel: "ពណ៌នាខ្លី",
+        descriptionPlaceholder: "ពណ៌នាខ្លីអំពីសៀវភៅ (មិនចាំបាច់)...",
+
+        buttonAdd: "បន្ថែមសៀវភៅ",
+        buttonAdding: "កំពុងបន្ថែម...",
+
+        statusNonJson: "ម៉ាស៊ីនមេមិនឆ្លើយតបជា JSON ទេ។ សូមពិនិត្យ Console។",
+        statusErrorPrefix: "កំហុស៖ ",
+        statusUnknownError: "មិនដឹងមូលហេតុ",
+        statusBookAddedPrefix: "✅ បានបន្ថែមសៀវភៅជាមួយ ID ",
+        statusNetworkError: "បញ្ហាបណ្ដាញពេលបន្ថែមសៀវភៅ។"
+      }
+    };
+
+    // Share the same key with admin.html so language stays in sync
+    let currentLang = localStorage.getItem("vmctk_admin_lang") || "en";
+
+    function applyUploadLanguage() {
+      const t = uploadText[currentLang] || uploadText.en;
+
+      // <title>
+      document.title = t.pageTitle;
+
+      // Header
+      const headingEl = document.getElementById("pageHeading");
+      const subtitleEl = document.getElementById("pageSubtitle");
+      const dashboardLink = document.getElementById("dashboardLink");
+      const backToLibrary = document.getElementById("backToLibraryLink");
+
+      if (headingEl) headingEl.textContent = t.heading;
+      if (subtitleEl) subtitleEl.textContent = t.subtitle;
+      if (dashboardLink) dashboardLink.textContent = t.dashboardLink;
+      if (backToLibrary) backToLibrary.textContent = t.backToLibrary;
+
+      // Labels
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+
+      setText("labelAdminKey", t.adminKeyLabel);
+      setText("labelTitle", t.titleLabel);
+      setText("labelAuthor", t.authorLabel);
+      setText("labelLanguage", t.languageLabel);
+      setText("labelCategory", t.categoryLabel);
+      setText("labelPdfLink", t.pdfLabel);
+      setText("labelCoverOriginal", t.coverOriginalLabel);
+      setText("labelFeatured", t.featuredLabel);
+      setText("labelDescription", t.descriptionLabel);
+
+      // Placeholders & help texts
+      const adminKeyInput = document.getElementById("adminKey");
+      const titleInput = document.getElementById("title");
+      const authorInput = document.getElementById("author");
+      const categoryInput = document.getElementById("category");
+      const pdfInput = document.getElementById("pdfLink");
+      const coverOrigInput = document.getElementById("coverOriginal");
+      const descriptionInput = document.getElementById("description");
+
+      if (adminKeyInput) adminKeyInput.placeholder = t.adminKeyPlaceholder;
+      if (titleInput) titleInput.placeholder = t.titlePlaceholder;
+      if (authorInput) authorInput.placeholder = t.authorPlaceholder;
+      if (categoryInput) categoryInput.placeholder = t.categoryPlaceholder;
+      if (pdfInput) pdfInput.placeholder = t.pdfPlaceholder;
+      if (coverOrigInput) coverOrigInput.placeholder = t.coverOriginalPlaceholder;
+      if (descriptionInput) descriptionInput.placeholder = t.descriptionPlaceholder;
+
+      const helpPdf = document.getElementById("helpPdfLink");
+      const helpCover = document.getElementById("helpCoverOriginal");
+      if (helpPdf) helpPdf.textContent = t.pdfHelp;
+      if (helpCover) helpCover.textContent = t.coverOriginalHelp;
+
+      // Language select options
+      const optDefault = document.getElementById("optLangDefault");
+      const optKhmer = document.getElementById("optLangKhmer");
+      const optEnglish = document.getElementById("optLangEnglish");
+      const optBilingual = document.getElementById("optLangBilingual");
+      const optOther = document.getElementById("optLangOther");
+
+      if (optDefault) optDefault.textContent = t.languageDefault;
+      if (optKhmer) optKhmer.textContent = t.languageKhmer;
+      if (optEnglish) optEnglish.textContent = t.languageEnglish;
+      if (optBilingual) optBilingual.textContent = t.languageBilingual;
+      if (optOther) optOther.textContent = t.languageOther;
+
+      // Featured options
+      const optFeatNo = document.getElementById("optFeaturedNo");
+      const optFeatYes = document.getElementById("optFeaturedYes");
+      if (optFeatNo) optFeatNo.textContent = t.featuredNo;
+      if (optFeatYes) optFeatYes.textContent = t.featuredYes;
+
+      // Button label
+      const submitBtn = document.getElementById("submitBtn");
+      if (submitBtn) submitBtn.textContent = t.buttonAdd;
+
+      // Status text shouldn't be auto-cleared here
+
+      // Language toggle visuals
+      const enBtn = document.getElementById("uploadEnBtn");
+      const khBtn = document.getElementById("uploadKhBtn");
+      if (enBtn && khBtn) {
+        if (currentLang === "en") {
+          enBtn.classList.add("bg-white", "text-slate-800", "font-semibold");
+          khBtn.classList.remove("bg-white", "text-slate-800", "font-semibold");
+          khBtn.classList.add("text-slate-600");
+        } else {
+          khBtn.classList.add("bg-white", "text-slate-800", "font-semibold");
+          enBtn.classList.remove("bg-white", "text-slate-800", "font-semibold");
+          enBtn.classList.add("text-slate-600");
+        }
+      }
+    }
+
+    /*************** FORM SUBMIT ***************/
+    const form = document.getElementById("bookForm");
     const submitBtn = document.getElementById("submitBtn");
     const statusMsg = document.getElementById("statusMsg");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const t = uploadText[currentLang] || uploadText.en;
+
       statusMsg.textContent = "";
       submitBtn.disabled = true;
-      submitBtn.textContent = "Adding…";
+      submitBtn.textContent = t.buttonAdding;
 
       const formData = new FormData(form);
-      formData.append("type", "addBook");
+
+      // NOTE: this type matches Apps Script: 'admin-add-book'
+      formData.append("type", "admin-add-book");
 
       try {
         const res = await fetch(SCRIPT_URL, {
@@ -208,26 +481,51 @@
         } catch (parseErr) {
           const text = await res.text();
           console.error("Non-JSON response:", text);
-          statusMsg.textContent = "Server returned a non-JSON response. Check console.";
+          statusMsg.textContent = t.statusNonJson;
           return;
         }
 
         if (!data.success) {
           console.error("Add book error:", data);
-          statusMsg.textContent = "Error: " + (data.error || "Unknown error");
+          const msg =
+            t.statusErrorPrefix + (data.error || t.statusUnknownError);
+          statusMsg.textContent = msg;
           return;
         }
 
-        statusMsg.textContent = "✅ Book added with ID " + (data.book?.id ?? "");
+        // Prefer data.id, but also support data.book?.id if your script returns that
+        const newId = data.id ?? (data.book && data.book.id) ?? "";
+        statusMsg.textContent = t.statusBookAddedPrefix + newId;
         form.reset();
       } catch (err) {
         console.error(err);
-        statusMsg.textContent = "Network error while adding book.";
+        const tNow = uploadText[currentLang] || uploadText.en;
+        statusMsg.textContent = tNow.statusNetworkError;
       } finally {
+        const tNow = uploadText[currentLang] || uploadText.en;
         submitBtn.disabled = false;
-        submitBtn.textContent = "Add book";
+        submitBtn.textContent = tNow.buttonAdd;
       }
     });
+
+    /*************** LANGUAGE TOGGLE EVENTS ***************/
+    const uploadEnBtn = document.getElementById("uploadEnBtn");
+    const uploadKhBtn = document.getElementById("uploadKhBtn");
+
+    uploadEnBtn.addEventListener("click", () => {
+      currentLang = "en";
+      localStorage.setItem("vmctk_admin_lang", currentLang);
+      applyUploadLanguage();
+    });
+
+    uploadKhBtn.addEventListener("click", () => {
+      currentLang = "kh";
+      localStorage.setItem("vmctk_admin_lang", currentLang);
+      applyUploadLanguage();
+    });
+
+    // Initial load
+    applyUploadLanguage();
   </script>
 </body>
 </html>
