@@ -36,7 +36,7 @@
 
     .header {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       margin-bottom: 20px;
       gap: 12px;
@@ -46,77 +46,58 @@
       font-size: 24px;
       font-weight: 700;
       margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
     }
     .subtitle {
       margin: 4px 0 0;
       font-size: 13px;
       color: var(--text-sub);
     }
+    .admin-tag {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--danger);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     .back-link {
       font-size: 13px;
       white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
     }
 
-    /* Admin only badge */
-    .admin-badge {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 9999px;
-      background: #fee2e2;
-      color: #b91c1c;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* Language toggle buttons */
+    /* Language toggle pill */
     .lang-toggle {
       display: inline-flex;
-      gap: 4px;
-      border-radius: 9999px;
-      padding: 2px;
-      background: #e5e7eb;
+      align-items: center;
+      border-radius: 999px;
       border: 1px solid var(--border);
+      background: #e5e7eb;
+      overflow: hidden;
+      font-size: 11px;
     }
     .lang-btn {
       border: none;
       background: transparent;
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 9999px;
-      cursor: pointer;
-      display: inline-flex;
+      padding: 4px 10px;
+      display: flex;
       align-items: center;
       gap: 4px;
+      cursor: pointer;
       color: var(--text-sub);
+      font-size: 11px;
     }
     .lang-btn span.flag {
-      font-size: 14px;
+      font-size: 13px;
     }
     .lang-btn.active {
       background: #ffffff;
       color: var(--text-main);
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.15);
-    }
-
-    .logout-link {
-      border: none;
-      background: none;
-      font-size: 12px;
-      color: var(--text-sub);
-      cursor: pointer;
-      text-decoration: underline;
-      padding: 0;
+      font-weight: 600;
     }
 
     .stats-grid {
@@ -209,8 +190,7 @@
     }
 
     .rating {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-        "Liberation Mono", "Courier New", monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
 
     .error {
@@ -219,7 +199,7 @@
       color: var(--danger);
     }
 
-    /* Simple card used for upload link block */
+    /* Card used for the "open upload page" area */
     .card {
       background: var(--card);
       border-radius: 12px;
@@ -232,165 +212,82 @@
     .btn-primary {
       border: none;
       border-radius: 999px;
-      padding: 7px 16px;
+      padding: 8px 18px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       background: var(--accent);
       color: #ffffff;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       text-decoration: none;
     }
     .btn-primary:hover {
       background: #1d4ed8;
+      text-decoration: none;
     }
 
-    /* Login overlay */
-    .login-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-    .login-overlay.hidden {
-      display: none;
-    }
-    .login-box {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 20px 22px;
-      width: 100%;
-      max-width: 360px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
-      border: 1px solid var(--border);
-    }
-    .login-title {
-      margin: 0 0 4px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .login-subtitle {
-      margin: 0 0 12px;
-      font-size: 12px;
-      color: var(--text-sub);
-    }
-    .login-field {
-      margin-bottom: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .login-field label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-sub);
-    }
-    .login-field input {
-      font-size: 13px;
-      padding: 6px 8px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      outline: none;
-    }
-    .login-field input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent-soft);
-    }
-    .login-error {
-      font-size: 11px;
-      color: var(--danger);
-      min-height: 14px;
-      margin-top: 4px;
-    }
-    .login-button {
+    .upload-card-footer {
       margin-top: 8px;
-      width: 100%;
-      justify-content: center;
-      text-align: center;
+      font-size: 11px;
+      color: var(--text-sub);
     }
 
     @media (max-width: 640px) {
       .header {
         align-items: flex-start;
       }
-      .back-link {
+      .header-right {
         align-items: flex-start;
       }
     }
   </style>
 </head>
 <body>
-  <!-- LOGIN OVERLAY -->
-  <div id="adminLoginOverlay" class="login-overlay">
-    <div class="login-box">
-      <h2 id="loginTitle" class="login-title">Admin login</h2>
-      <p id="loginSubtitle" class="login-subtitle">
-        This area is restricted to admins only.
-      </p>
-      <form id="adminLoginForm">
-        <div class="login-field">
-          <label id="loginUserLabel" for="loginUser">Username</label>
-          <input id="loginUser" type="text" autocomplete="username" />
-        </div>
-        <div class="login-field">
-          <label id="loginPassLabel" for="loginPass">Password</label>
-          <input id="loginPass" type="password" autocomplete="current-password" />
-        </div>
-        <div id="loginError" class="login-error"></div>
-        <button type="submit" id="loginButton" class="btn-primary login-button">
-          Log in
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MAIN PAGE -->
-  <div class="page" id="mainPage">
+  <div class="page">
     <div class="header">
       <div>
-        <h1 class="title" id="headerTitle">
-          VMCTK Admin Dashboard
-          <span class="admin-badge" id="adminOnlyBadge">Admin only</span>
-        </h1>
-        <p class="subtitle" id="headerSubtitle">
-          Stats &amp; admin tools from your Google Sheets data
+        <h1 class="title" id="headerTitle">VMCTK Admin Dashboard</h1>
+        <p class="subtitle" id="headerSubtitle">Stats &amp; admin tools from your Google Sheets data</p>
+        <p class="admin-tag" id="adminOnlyTag">
+          🔒 Admin only – please keep this page private.
         </p>
       </div>
-      <div class="back-link">
-        <div class="lang-toggle">
-          <button id="adminEnBtn" class="lang-btn active" type="button">
-            <span class="flag">🇬🇧</span><span>EN</span>
+
+      <div class="header-right">
+        <!-- Language toggle -->
+        <div class="lang-toggle" aria-label="Language toggle">
+          <button id="adminEnBtn" type="button" class="lang-btn active">
+            <span class="flag">🇬🇧</span><span id="adminEnLabel">EN</span>
           </button>
-          <button id="adminKhBtn" class="lang-btn" type="button">
-            <span class="flag">🇰🇭</span><span>KH</span>
+          <button id="adminKhBtn" type="button" class="lang-btn">
+            <span class="flag">🇰🇭</span><span id="adminKhLabel">KH</span>
           </button>
         </div>
-        <span>← <a id="backLink" href="index.html">Back to Library</a></span>
-        <button id="logoutBtn" type="button" class="logout-link">
-          Log out
-        </button>
+
+        <div class="back-link">
+          ← <a href="index.html" id="backToLibraryLink">Back to Library</a>
+        </div>
       </div>
     </div>
 
     <!-- Stats cards -->
     <div class="stats-grid">
       <div class="stat-box">
-        <p class="label" id="statTotalBooksLabel">TOTAL BOOKS</p>
+        <p class="label" id="labelTotalBooks">TOTAL BOOKS</p>
         <p id="totalBooks" class="value">–</p>
       </div>
       <div class="stat-box">
-        <p class="label" id="statTotalReadsLabel">TOTAL READS</p>
+        <p class="label" id="labelTotalReads">TOTAL READS</p>
         <p id="totalReads" class="value">–</p>
       </div>
       <div class="stat-box">
-        <p class="label" id="statTotalFavoritesLabel">TOTAL FAVORITES</p>
+        <p class="label" id="labelTotalFavorites">TOTAL FAVORITES</p>
         <p id="totalFavorites" class="value">–</p>
       </div>
       <div class="stat-box">
-        <p class="label" id="statTotalFeedbacksLabel">FEEDBACK ENTRIES</p>
+        <p class="label" id="labelTotalFeedbacks">FEEDBACK ENTRIES</p>
         <p id="totalFeedbacks" class="value">–</p>
       </div>
     </div>
@@ -399,19 +296,21 @@
     <div class="section">
       <div class="section-header">
         <span class="icon">📚</span>
-        <h2 id="mostReadTitle">Top 5 Most Read Books</h2>
+        <h2 id="mostReadHeading">Top 5 Most Read Books</h2>
       </div>
+      <p class="section-note" id="mostReadNote"></p>
       <table>
         <thead>
           <tr>
-            <th class="num" id="thMostReadRank">#</th>
-            <th id="thMostReadTitle">Title</th>
-            <th id="thMostReadCategory">Category</th>
-            <th id="thMostReadLanguage">Language</th>
-            <th class="num" id="thMostReadReads">Reads</th>
+            <th class="num">#</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Language</th>
+            <th class="num">Reads</th>
           </tr>
         </thead>
-        <tbody id="mostReadBody"></tbody>
+        <tbody id="mostReadBody">
+        </tbody>
       </table>
     </div>
 
@@ -419,7 +318,7 @@
     <div class="section">
       <div class="section-header">
         <span class="icon">⭐</span>
-        <h2 id="topRatedTitle">Top 5 Top Rated (by feedback)</h2>
+        <h2 id="topRatedHeading">Top 5 Top Rated (by feedback)</h2>
       </div>
       <p class="section-note" id="topRatedNote">
         Only books with at least 1 rating in the Feedback sheet are shown here.
@@ -427,188 +326,142 @@
       <table>
         <thead>
           <tr>
-            <th class="num" id="thTopRatedRank">#</th>
-            <th id="thTopRatedTitle">Title</th>
-            <th class="num" id="thTopRatedAvgRating">Avg Rating</th>
-            <th class="num" id="thTopRatedReviews"># Reviews</th>
+            <th class="num">#</th>
+            <th>Title</th>
+            <th class="num">Avg Rating</th>
+            <th class="num"># Reviews</th>
           </tr>
         </thead>
-        <tbody id="topRatedBody"></tbody>
+        <tbody id="topRatedBody">
+        </tbody>
       </table>
     </div>
 
     <p id="errorMsg" class="error" style="display:none;"></p>
 
-    <!-- Admin: link to upload page -->
+    <!-- Admin: open upload page (no direct form) -->
     <div class="section">
       <div class="section-header">
-        <span class="icon">⬆️</span>
-        <h2 id="uploadTitle">Add New Book to Library</h2>
+        <span class="icon">📥</span>
+        <h2 id="addSectionTitle">Add New Book to Library</h2>
       </div>
-      <p class="section-note" id="uploadNote">
+      <p class="section-note" id="addSectionNote">
         Use the separate upload page to add or edit books in the library.
       </p>
       <div class="card">
-        <p class="section-note" id="uploadHint">
+        <p class="section-note upload-card-footer" id="addSectionInfo">
           For security, only admins with access to the upload page can add new books.
         </p>
-        <a id="uploadPageLink" href="admin_upload.html" class="btn-primary">
-          Open upload page
+        <a href="admin_upload.html" class="btn-primary" id="openUploadBtn">
+          <span>🔓</span><span id="openUploadBtnLabel">Open upload page</span>
         </a>
       </div>
     </div>
   </div>
 
   <script>
-    // ⚠️ Simple front-end login – change these
-    const ADMIN_USER = "vmctkadmin";
-    const ADMIN_PASS = "@vmc2025";
-    const LOGIN_KEY = "vmctk_admin_logged_in";
+    // Same Apps Script web app URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
 
-    const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
-
+    /*************** LANGUAGE TEXTS ***************/
     const adminText = {
       en: {
         pageTitle: "VMCTK Admin Dashboard",
         headerTitle: "VMCTK Admin Dashboard",
         headerSubtitle: "Stats & admin tools from your Google Sheets data",
-        adminOnlyBadge: "Admin only",
+        adminOnlyTag: "🔒 Admin only – please keep this page private.",
         backToLibrary: "Back to Library",
-        logout: "Log out",
+        langEn: "EN",
+        langKh: "KH",
 
-        totalBooksLabel: "TOTAL BOOKS",
-        totalReadsLabel: "TOTAL READS",
-        totalFavoritesLabel: "TOTAL FAVORITES",
-        totalFeedbacksLabel: "FEEDBACK ENTRIES",
+        labelTotalBooks: "TOTAL BOOKS",
+        labelTotalReads: "TOTAL READS",
+        labelTotalFavorites: "TOTAL FAVORITES",
+        labelTotalFeedbacks: "FEEDBACK ENTRIES",
 
-        mostReadTitle: "Top 5 Most Read Books",
-        topRatedTitle: "Top 5 Top Rated (by feedback)",
-        topRatedNote:
-          "Only books with at least 1 rating in the Feedback sheet are shown here.",
-        uploadTitle: "Add New Book to Library",
-        uploadNote:
-          "Use the separate upload page to add or edit books in the library.",
-        uploadHint:
-          "For security, only admins with access to the upload page can add new books.",
-        uploadButtonLabel: "Open upload page",
+        mostReadHeading: "Top 5 Most Read Books",
+        mostReadNote: "",
+        topRatedHeading: "Top 5 Top Rated (by feedback)",
+        topRatedNote: "Only books with at least 1 rating in the Feedback sheet are shown here.",
+        noMostRead: "No data yet.",
+        noTopRated: "No rated books yet.",
+        errorStats: "Failed to load stats. Check console for details.",
 
-        thRank: "#",
-        thTitle: "Title",
-        thCategory: "Category",
-        thLanguage: "Language",
-        thReads: "Reads",
-        thAvgRating: "Avg Rating",
-        thReviews: "# Reviews",
-
-        noDataMostRead: "No data yet.",
-        noDataTopRated: "No rated books yet.",
-        statsError: "Failed to load stats. Check console for details.",
-
-        loginTitle: "Admin login",
-        loginSubtitle: "This area is restricted to admins only.",
-        loginUserLabel: "Username",
-        loginPassLabel: "Password",
-        loginButton: "Log in",
-        loginError: "Incorrect username or password."
+        addSectionTitle: "Add New Book to Library",
+        addSectionNote: "Use the separate upload page to add or edit books in the library.",
+        addSectionInfo: "For security, only admins with access to the upload page can add new books.",
+        openUploadBtn: "Open upload page"
       },
       kh: {
-        pageTitle: "ផ្ទាំងគ្រប់គ្រង VMCTK",
+        pageTitle: "VMCTK – ផ្ទាំងគ្រប់គ្រង",
         headerTitle: "ផ្ទាំងគ្រប់គ្រង VMCTK",
-        headerSubtitle:
-          "ស្ថិតិ និងឧបករណ៍គ្រប់គ្រងពីទិន្នន័យក្នុង Google Sheets",
-        adminOnlyBadge: "សម្រាប់ Admin ប៉ុណ្ណោះ",
+        headerSubtitle: "ស្ថិតិ និងឧបករណ៍សម្រាប់អ្នកគ្រប់គ្រង ពីទិន្នន័យ Google Sheets",
+        adminOnlyTag: "🔒 សម្រាប់អ្នកគ្រប់គ្រងប៉ុណ្ណោះ – សូមកុំចែករំលែកតំណនេះ។",
         backToLibrary: "ត្រលប់ទៅបណ្ណាល័យ",
-        logout: "ចេញពីគណនី",
+        langEn: "EN",
+        langKh: "KH",
 
-        totalBooksLabel: "ចំនួនសៀវភៅសរុប",
-        totalReadsLabel: "ចំនួនអានសរុប",
-        totalFavoritesLabel: "សៀវភៅដែលចូលចិត្តសរុប",
-        totalFeedbacksLabel: "ចំនួនមតិយោបល់",
+        labelTotalBooks: "សៀវភៅសរុប",
+        labelTotalReads: "ចំនួនអានសរុប",
+        labelTotalFavorites: "ចំនួនចូលចិត្តសរុប",
+        labelTotalFeedbacks: "ចំនួនមតិយោបល់",
 
-        mostReadTitle: "សៀវភៅអានច្រើនបំផុត ៥ ក្បាល",
-        topRatedTitle: "សៀវភៅពេញនិយម ៥ ក្បាល (តាមការវាយតម្លៃ)",
-        topRatedNote:
-          "បង្ហាញតែសៀវភៅដែលមានការវាយតម្លៃយ៉ាងហោចណាស់ ១ ដងក្នុងសន្លឹក Feedback ប៉ុណ្ណោះ។",
-        uploadTitle: "បន្ថែមសៀវភៅថ្មីទៅបណ្ណាល័យ",
-        uploadNote:
-          "សម្រាប់បន្ថែម ឬកែប្រែសៀវភៅ សូមប្រើទំព័របញ្ចូលសៀវភៅ (upload) ខាងក្រៅ។",
-        uploadHint:
-          "ដើម្បីរក្សាសុវត្ថិភាព មានតែអ្នកគ្រប់គ្រង (admin) ប៉ុណ្ណោះ ដែលអាចចូលប្រើទំព័របញ្ចូលសៀវភៅបាន។",
-        uploadButtonLabel: "បើកទំព័របញ្ចូលសៀវភៅ",
+        mostReadHeading: "សៀវភៅដែលអានច្រើនបំផុត 5 ក្បាល",
+        mostReadNote: "",
+        topRatedHeading: "សៀវភៅដែលបានវាយតម្លៃល្អបំផុត 5 ក្បាល",
+        topRatedNote: "បង្ហាញតែសៀវភៅដែលមានពិន្ទុវាយតម្លៃយ៉ាងហោចណាស់ 1 ដងនៅក្នុងសន្លឹក Feedback ប៉ុណ្ណោះ។",
+        noMostRead: "មិនទាន់មានទិន្នន័យទេ។",
+        noTopRated: "មិនទាន់មានសៀវភៅដែលមានការវាយតម្លៃទេ។",
+        errorStats: "មិនអាចទាញយកស្ថិតិបានទេ។ សូមពិនិត្យ Console។",
 
-        thRank: "ល.រ",
-        thTitle: "ចំណងជើង",
-        thCategory: "ប្រភេទ",
-        thLanguage: "ភាសា",
-        thReads: "ចំនួនអាន",
-        thAvgRating: "ពិន្ទុមធ្យម",
-        thReviews: "ចំនួនមតិយោបល់",
-
-        noDataMostRead: "មិនទាន់មានទិន្នន័យទេ។",
-        noDataTopRated: "មិនទាន់មានសៀវភៅដែលបានវាយតម្លៃទេ។",
-        statsError: "មិនអាចទាញយកស្ថិតិបានទេ។ សូមពិនិត្យ Console។",
-
-        loginTitle: "ចូលប្រើសម្រាប់ Admin",
-        loginSubtitle: "តំបន់នេះសម្រាប់អ្នកគ្រប់គ្រងប៉ុណ្ណោះ។",
-        loginUserLabel: "ឈ្មោះអ្នកប្រើ",
-        loginPassLabel: "ពាក្យសម្ងាត់",
-        loginButton: "ចូលប្រើ",
-        loginError: "ឈ្មោះអ្នកប្រើ ឬ ពាក្យសម្ងាត់ មិនត្រឹមត្រូវ។"
+        addSectionTitle: "បន្ថែមសៀវភៅថ្មីចូលបណ្ណាល័យ",
+        addSectionNote: "សូមប្រើទំព័រផ្ទុកសៀវភៅ ដើម្បីបន្ថែម ឬកែប្រែសៀវភៅ។",
+        addSectionInfo: "សុវត្ថិភាព៖ មានតែអ្នកគ្រប់គ្រងដែលបានអនុញ្ញាតប៉ុណ្ណោះ ទើបអាចបន្ថែមសៀវភៅថ្មីបាន។",
+        openUploadBtn: "បើកទំព័រផ្ទុកសៀវភៅ"
       }
     };
 
     let currentLang = localStorage.getItem("vmctk_admin_lang") || "en";
 
-    function setText(id, value) {
-      const el = document.getElementById(id);
-      if (el && value !== undefined && value !== null) el.textContent = value;
+    function getAdminText() {
+      return adminText[currentLang] || adminText.en;
     }
 
     function applyAdminLanguage() {
-      const t = adminText[currentLang] || adminText.en;
+      const t = getAdminText();
 
       document.title = t.pageTitle;
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el && typeof value === "string") el.textContent = value;
+      };
+
       setText("headerTitle", t.headerTitle);
       setText("headerSubtitle", t.headerSubtitle);
-      setText("adminOnlyBadge", t.adminOnlyBadge);
-      setText("backLink", t.backToLibrary);
-      setText("logoutBtn", t.logout);
+      setText("adminOnlyTag", t.adminOnlyTag);
+      setText("backToLibraryLink", t.backToLibrary);
 
-      setText("statTotalBooksLabel", t.totalBooksLabel);
-      setText("statTotalReadsLabel", t.totalReadsLabel);
-      setText("statTotalFavoritesLabel", t.totalFavoritesLabel);
-      setText("statTotalFeedbacksLabel", t.totalFeedbacksLabel);
+      setText("labelTotalBooks", t.labelTotalBooks);
+      setText("labelTotalReads", t.labelTotalReads);
+      setText("labelTotalFavorites", t.labelTotalFavorites);
+      setText("labelTotalFeedbacks", t.labelTotalFeedbacks);
 
-      setText("mostReadTitle", t.mostReadTitle);
-      setText("topRatedTitle", t.topRatedTitle);
+      setText("mostReadHeading", t.mostReadHeading);
+      setText("mostReadNote", t.mostReadNote);
+      setText("topRatedHeading", t.topRatedHeading);
       setText("topRatedNote", t.topRatedNote);
-      setText("uploadTitle", t.uploadTitle);
-      setText("uploadNote", t.uploadNote);
-      setText("uploadHint", t.uploadHint);
 
-      const uploadPageLink = document.getElementById("uploadPageLink");
-      if (uploadPageLink) uploadPageLink.textContent = t.uploadButtonLabel;
+      setText("addSectionTitle", t.addSectionTitle);
+      setText("addSectionNote", t.addSectionNote);
+      setText("addSectionInfo", t.addSectionInfo);
+      setText("openUploadBtnLabel", t.openUploadBtn);
 
-      setText("thMostReadRank", t.thRank);
-      setText("thMostReadTitle", t.thTitle);
-      setText("thMostReadCategory", t.thCategory);
-      setText("thMostReadLanguage", t.thLanguage);
-      setText("thMostReadReads", t.thReads);
+      // Language button labels
+      setText("adminEnLabel", t.langEn);
+      setText("adminKhLabel", t.langKh);
 
-      setText("thTopRatedRank", t.thRank);
-      setText("thTopRatedTitle", t.thTitle);
-      setText("thTopRatedAvgRating", t.thAvgRating);
-      setText("thTopRatedReviews", t.thReviews);
-
-      // Login overlay text
-      setText("loginTitle", t.loginTitle);
-      setText("loginSubtitle", t.loginSubtitle);
-      setText("loginUserLabel", t.loginUserLabel);
-      setText("loginPassLabel", t.loginPassLabel);
-      setText("loginButton", t.loginButton);
-
-      // Language toggle styles
+      // Toggle button active classes
       const enBtn = document.getElementById("adminEnBtn");
       const khBtn = document.getElementById("adminKhBtn");
       if (enBtn && khBtn) {
@@ -622,149 +475,118 @@
       }
     }
 
+    /*************** DASHBOARD STATS ***************/
     async function loadStats() {
       const errorEl = document.getElementById("errorMsg");
-      const t = adminText[currentLang] || adminText.en;
       errorEl.style.display = "none";
       errorEl.textContent = "";
+      const t = getAdminText();
+
       try {
         const res = await fetch(SCRIPT_URL + "?mode=stats");
         if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
-        if (!data.success) throw new Error(data.error || "Unknown error");
-        document.getElementById("totalBooks").textContent =
-          data.totalBooks ?? "0";
-        document.getElementById("totalReads").textContent =
-          data.totalViews ?? "0";
-        document.getElementById("totalFavorites").textContent =
-          data.totalFavorites ?? "0";
-        document.getElementById("totalFeedbacks").textContent =
-          data.totalFeedbacks ?? "0";
+
+        if (!data.success) {
+          throw new Error(data.error || "Unknown error from script");
+        }
+
+        document.getElementById("totalBooks").textContent = data.totalBooks ?? "0";
+        document.getElementById("totalReads").textContent = data.totalViews ?? "0";
+        document.getElementById("totalFavorites").textContent = data.totalFavorites ?? "0";
+        document.getElementById("totalFeedbacks").textContent = data.totalFeedbacks ?? "0";
+
         renderMostRead(data.topViews || []);
         renderTopRated(data.topRated || []);
       } catch (err) {
         console.error("Failed to load stats", err);
-        errorEl.textContent = t.statsError;
+        errorEl.textContent = t.errorStats;
         errorEl.style.display = "block";
       }
     }
 
     function renderMostRead(rows) {
       const tbody = document.getElementById("mostReadBody");
-      const t = adminText[currentLang] || adminText.en;
       tbody.innerHTML = "";
+      const t = getAdminText();
+
       if (!rows.length) {
         const tr = document.createElement("tr");
         const td = document.createElement("td");
         td.colSpan = 5;
-        td.textContent = t.noDataMostRead;
+        td.textContent = t.noMostRead;
         td.style.textAlign = "center";
         td.style.color = "#6b7280";
         tr.appendChild(td);
         tbody.appendChild(tr);
         return;
       }
+
       rows.forEach((row, idx) => {
         const tr = document.createElement("tr");
+
         tr.innerHTML = `
           <td class="num rank">${idx + 1}</td>
           <td>${row.title || ""}</td>
           <td>${row.category || ""}</td>
           <td>${row.language || ""}</td>
-          <td class="num">${row.views ?? 0}</td>`;
+          <td class="num">${row.views ?? 0}</td>
+        `;
+
         tbody.appendChild(tr);
       });
     }
 
     function renderTopRated(rows) {
       const tbody = document.getElementById("topRatedBody");
-      const t = adminText[currentLang] || adminText.en;
       tbody.innerHTML = "";
+      const t = getAdminText();
+
       if (!rows.length) {
         const tr = document.createElement("tr");
         const td = document.createElement("td");
         td.colSpan = 4;
-        td.textContent = t.noDataTopRated;
+        td.textContent = t.noTopRated;
         td.style.textAlign = "center";
         td.style.color = "#6b7280";
         tr.appendChild(td);
         tbody.appendChild(tr);
         return;
       }
+
       rows.forEach((row, idx) => {
         const tr = document.createElement("tr");
+
         const avg = row.avgRating ?? 0;
         const avgText = avg.toFixed(2);
+
         tr.innerHTML = `
           <td class="num rank">${idx + 1}</td>
           <td>${row.title || ""}</td>
           <td class="num rating">${avgText}</td>
-          <td class="num">${row.reviewCount ?? 0}</td>`;
+          <td class="num">${row.reviewCount ?? 0}</td>
+        `;
+
         tbody.appendChild(tr);
       });
     }
 
-    // LOGIN LOGIC
-    function setupLogin() {
-      const overlay = document.getElementById("adminLoginOverlay");
-      const form = document.getElementById("adminLoginForm");
-      const errorEl = document.getElementById("loginError");
-      const loggedIn = localStorage.getItem(LOGIN_KEY) === "yes";
-
-      if (loggedIn) {
-        overlay.classList.add("hidden");
-      } else {
-        overlay.classList.remove("hidden");
-      }
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const t = adminText[currentLang] || adminText.en;
-        const user = document.getElementById("loginUser").value.trim();
-        const pass = document.getElementById("loginPass").value;
-        if (user === ADMIN_USER && pass === ADMIN_PASS) {
-          localStorage.setItem(LOGIN_KEY, "yes");
-          overlay.classList.add("hidden");
-          errorEl.textContent = "";
-        } else {
-          errorEl.textContent = t.loginError;
-        }
-      });
-    }
-
-    function setupLogout() {
-      const btn = document.getElementById("logoutBtn");
-      if (!btn) return;
-      btn.addEventListener("click", () => {
-        localStorage.removeItem(LOGIN_KEY);
-        location.reload();
-      });
-    }
-
-    const adminEnBtn = document.getElementById("adminEnBtn");
-    const adminKhBtn = document.getElementById("adminKhBtn");
-
-    adminEnBtn.addEventListener("click", () => {
+    /*************** LANGUAGE TOGGLE EVENTS ***************/
+    document.getElementById("adminEnBtn").addEventListener("click", () => {
       currentLang = "en";
       localStorage.setItem("vmctk_admin_lang", currentLang);
       applyAdminLanguage();
-      loadStats();
     });
 
-    adminKhBtn.addEventListener("click", () => {
+    document.getElementById("adminKhBtn").addEventListener("click", () => {
       currentLang = "kh";
       localStorage.setItem("vmctk_admin_lang", currentLang);
       applyAdminLanguage();
-      loadStats();
     });
 
     // Initial load
     applyAdminLanguage();
-    setupLogin();
-    setupLogout();
-    if (localStorage.getItem(LOGIN_KEY) === "yes") {
-      loadStats();
-    }
+    loadStats();
   </script>
 </body>
 </html>
