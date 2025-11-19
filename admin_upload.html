@@ -14,6 +14,10 @@
         <p id="pageSubtitle" class="text-sm text-slate-500">
           This form will append a new row to <strong>Sheet1</strong> in your Google Sheet.
         </p>
+        <!-- 🔒 Admin-only message -->
+        <p id="adminOnlyTag" class="text-xs text-red-600 mt-1">
+          🔒 Admin only – please keep this page private.
+        </p>
       </div>
 
       <div class="flex items-center gap-3 text-sm">
@@ -231,7 +235,7 @@
           >
             Add book
           </button>
-          <!-- class will be set dynamically (grey / green / red) -->
+          <!-- class is controlled in JS (grey/green/red) -->
           <span id="statusMsg" class="text-xs"></span>
         </div>
       </form>
@@ -249,6 +253,7 @@
         pageTitle: "VMCTK – Add New Book",
         heading: "Add New Book",
         subtitle: 'This form will append a new row to "Sheet1" in your Google Sheet.',
+        adminOnly: "🔒 Admin only – please keep this page private.",
         dashboardLink: "📊 Dashboard",
         backToLibrary: "← Back to Library",
 
@@ -303,6 +308,7 @@
         heading: "បន្ថែមសៀវភៅថ្មី",
         subtitle:
           "ទម្រង់នេះនឹងបន្ថែមជួរដេកថ្មីទៅ \"Sheet1\" ក្នុង Google Sheet របស់អ្នក។",
+        adminOnly: "🔒 សម្រាប់អ្នកគ្រប់គ្រងប៉ុណ្ណោះ – សូមកុំចែករំលែកតំណនេះ។",
         dashboardLink: "📊 ផ្ទាំងគ្រប់គ្រង",
         backToLibrary: "← ត្រលប់ទៅបណ្ណាល័យ",
 
@@ -368,11 +374,13 @@
       const subtitleEl = document.getElementById("pageSubtitle");
       const dashboardLink = document.getElementById("dashboardLink");
       const backToLibrary = document.getElementById("backToLibraryLink");
+      const adminOnlyTag = document.getElementById("adminOnlyTag");
 
       if (headingEl) headingEl.textContent = t.heading;
       if (subtitleEl) subtitleEl.textContent = t.subtitle;
       if (dashboardLink) dashboardLink.textContent = t.dashboardLink;
       if (backToLibrary) backToLibrary.textContent = t.backToLibrary;
+      if (adminOnlyTag) adminOnlyTag.textContent = t.adminOnly;
 
       // Labels
       const setText = (id, value) => {
@@ -460,7 +468,7 @@
       e.preventDefault();
       const t = uploadText[currentLang] || uploadText.en;
 
-      // Reset status style to neutral grey
+      // neutral style first
       statusMsg.className = "text-xs text-slate-500";
       statusMsg.textContent = "";
       submitBtn.disabled = true;
@@ -494,7 +502,6 @@
           statusMsg.className = "text-xs text-red-600";
 
           if (data.error === "Invalid admin key") {
-            // Special friendly message for wrong admin password
             statusMsg.textContent = t.statusInvalidKey;
           } else {
             const msg =
