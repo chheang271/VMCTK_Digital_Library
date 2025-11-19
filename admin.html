@@ -302,11 +302,11 @@
       <table>
         <thead>
           <tr>
-            <th class="num">#</th>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Language</th>
-            <th class="num">Reads</th>
+            <th class="num" id="thMostRank">#</th>
+            <th id="thMostTitle">Title</th>
+            <th id="thMostCategory">Category</th>
+            <th id="thMostLanguage">Language</th>
+            <th class="num" id="thMostReads">Reads</th>
           </tr>
         </thead>
         <tbody id="mostReadBody">
@@ -326,10 +326,10 @@
       <table>
         <thead>
           <tr>
-            <th class="num">#</th>
-            <th>Title</th>
-            <th class="num">Avg Rating</th>
-            <th class="num"># Reviews</th>
+            <th class="num" id="thRatedRank">#</th>
+            <th id="thRatedTitle">Title</th>
+            <th class="num" id="thRatedAvg">Avg Rating</th>
+            <th class="num" id="thRatedReviews"># Reviews</th>
           </tr>
         </thead>
         <tbody id="topRatedBody">
@@ -349,7 +349,7 @@
         Use the separate upload page to add or edit books in the library.
       </p>
       <div class="card">
-        <p class="section-note upload-card-footer" id="addSectionInfo">
+        <p class="upload-card-footer" id="addSectionInfo">
           For security, only admins with access to the upload page can add new books.
         </p>
         <a href="admin_upload.html" class="btn-primary" id="openUploadBtn">
@@ -360,7 +360,7 @@
   </div>
 
   <script>
-    // Same Apps Script web app URL
+    // Use your existing Apps Script web app URL
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
 
     /*************** LANGUAGE TEXTS ***************/
@@ -381,8 +381,19 @@
 
         mostReadHeading: "Top 5 Most Read Books",
         mostReadNote: "",
+        thMostRank: "#",
+        thMostTitle: "Title",
+        thMostCategory: "Category",
+        thMostLanguage: "Language",
+        thMostReads: "Reads",
+
         topRatedHeading: "Top 5 Top Rated (by feedback)",
         topRatedNote: "Only books with at least 1 rating in the Feedback sheet are shown here.",
+        thRatedRank: "#",
+        thRatedTitle: "Title",
+        thRatedAvg: "Avg Rating",
+        thRatedReviews: "# Reviews",
+
         noMostRead: "No data yet.",
         noTopRated: "No rated books yet.",
         errorStats: "Failed to load stats. Check console for details.",
@@ -408,8 +419,19 @@
 
         mostReadHeading: "សៀវភៅដែលអានច្រើនបំផុត 5 ក្បាល",
         mostReadNote: "",
+        thMostRank: "#",
+        thMostTitle: "ចំណងជើង",
+        thMostCategory: "ប្រភេទ",
+        thMostLanguage: "ភាសា",
+        thMostReads: "ចំនួនអាន",
+
         topRatedHeading: "សៀវភៅដែលបានវាយតម្លៃល្អបំផុត 5 ក្បាល",
         topRatedNote: "បង្ហាញតែសៀវភៅដែលមានពិន្ទុវាយតម្លៃយ៉ាងហោចណាស់ 1 ដងនៅក្នុងសន្លឹក Feedback ប៉ុណ្ណោះ។",
+        thRatedRank: "#",
+        thRatedTitle: "ចំណងជើង",
+        thRatedAvg: "ពិន្ទុមធ្យម",
+        thRatedReviews: "ចំនួនមតិយោបល់",
+
         noMostRead: "មិនទាន់មានទិន្នន័យទេ។",
         noTopRated: "មិនទាន់មានសៀវភៅដែលមានការវាយតម្លៃទេ។",
         errorStats: "មិនអាចទាញយកស្ថិតិបានទេ។ សូមពិនិត្យ Console។",
@@ -421,6 +443,7 @@
       }
     };
 
+    // Share language preference with admin_upload.html
     let currentLang = localStorage.getItem("vmctk_admin_lang") || "en";
 
     function getAdminText() {
@@ -437,21 +460,37 @@
         if (el && typeof value === "string") el.textContent = value;
       };
 
+      // Header & nav
       setText("headerTitle", t.headerTitle);
       setText("headerSubtitle", t.headerSubtitle);
       setText("adminOnlyTag", t.adminOnlyTag);
       setText("backToLibraryLink", t.backToLibrary);
 
+      // Stats labels
       setText("labelTotalBooks", t.labelTotalBooks);
       setText("labelTotalReads", t.labelTotalReads);
       setText("labelTotalFavorites", t.labelTotalFavorites);
       setText("labelTotalFeedbacks", t.labelTotalFeedbacks);
 
+      // Section headings / notes
       setText("mostReadHeading", t.mostReadHeading);
       setText("mostReadNote", t.mostReadNote);
       setText("topRatedHeading", t.topRatedHeading);
       setText("topRatedNote", t.topRatedNote);
 
+      // Table headers
+      setText("thMostRank", t.thMostRank);
+      setText("thMostTitle", t.thMostTitle);
+      setText("thMostCategory", t.thMostCategory);
+      setText("thMostLanguage", t.thMostLanguage);
+      setText("thMostReads", t.thMostReads);
+
+      setText("thRatedRank", t.thRatedRank);
+      setText("thRatedTitle", t.thRatedTitle);
+      setText("thRatedAvg", t.thRatedAvg);
+      setText("thRatedReviews", t.thRatedReviews);
+
+      // Bottom section (upload link)
       setText("addSectionTitle", t.addSectionTitle);
       setText("addSectionNote", t.addSectionNote);
       setText("addSectionInfo", t.addSectionInfo);
