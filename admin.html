@@ -312,7 +312,7 @@
 
     <p id="errorMsg" class="error" style="display:none;"></p>
 
-    <!-- Admin: link to upload page (NO inline form here) -->
+    <!-- Admin: link to upload page -->
     <div class="section">
       <div class="section-header">
         <span class="icon">⬆️</span>
@@ -325,8 +325,8 @@
         <p class="section-note" id="uploadHint">
           For security, only admins with access to the upload page can add new books.
         </p>
-        <!-- Link to your upload page; adjust filename if needed -->
-        <a id="uploadPageLink" href="admin-upload.html" class="btn-primary">
+        <!-- 🔗 Fixed: underscore version -->
+        <a id="uploadPageLink" href="admin_upload.html" class="btn-primary">
           Open upload page
         </a>
       </div>
@@ -334,25 +334,19 @@
   </div>
 
   <script>
-    // Use your existing Apps Script web app URL
     const SCRIPT_URL =
       "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
 
-    /*************** LANGUAGE TEXTS ***************/
     const adminText = {
       en: {
         pageTitle: "VMCTK Admin Dashboard",
         headerTitle: "VMCTK Admin Dashboard",
         headerSubtitle: "Stats & admin tools from your Google Sheets data",
         backToLibrary: "Back to Library",
-
-        // Stats labels
         totalBooksLabel: "TOTAL BOOKS",
         totalReadsLabel: "TOTAL READS",
         totalFavoritesLabel: "TOTAL FAVORITES",
         totalFeedbacksLabel: "FEEDBACK ENTRIES",
-
-        // Sections
         mostReadTitle: "Top 5 Most Read Books",
         topRatedTitle: "Top 5 Top Rated (by feedback)",
         topRatedNote:
@@ -363,8 +357,6 @@
         uploadHint:
           "For security, only admins with access to the upload page can add new books.",
         uploadButtonLabel: "Open upload page",
-
-        // Table headers
         thRank: "#",
         thTitle: "Title",
         thCategory: "Category",
@@ -372,8 +364,6 @@
         thReads: "Reads",
         thAvgRating: "Avg Rating",
         thReviews: "# Reviews",
-
-        // No data messages
         noDataMostRead: "No data yet.",
         noDataTopRated: "No rated books yet.",
         statsError: "Failed to load stats. Check console for details."
@@ -384,14 +374,10 @@
         headerSubtitle:
           "ស្ថិតិ និងឧបករណ៍គ្រប់គ្រងពីទិន្នន័យក្នុង Google Sheets",
         backToLibrary: "ត្រលប់ទៅបណ្ណាល័យ",
-
-        // Stats labels
         totalBooksLabel: "ចំនួនសៀវភៅសរុប",
         totalReadsLabel: "ចំនួនអានសរុប",
         totalFavoritesLabel: "សៀវភៅដែលចូលចិត្តសរុប",
         totalFeedbacksLabel: "ចំនួនមតិយោបល់",
-
-        // Sections
         mostReadTitle: "សៀវភៅអានច្រើនបំផុត ៥ ក្បាល",
         topRatedTitle: "សៀវភៅពេញនិយម ៥ ក្បាល (តាមការវាយតម្លៃ)",
         topRatedNote:
@@ -402,8 +388,6 @@
         uploadHint:
           "ដើម្បីរក្សាសុវត្ថិភាព មានតែអ្នកគ្រប់គ្រង (admin) ប៉ុណ្ណោះ ដែលអាចចូលប្រើទំព័របញ្ចូលសៀវភៅបាន។",
         uploadButtonLabel: "បើកទំព័របញ្ចូលសៀវភៅ",
-
-        // Table headers
         thRank: "ល.រ",
         thTitle: "ចំណងជើង",
         thCategory: "ប្រភេទ",
@@ -411,8 +395,6 @@
         thReads: "ចំនួនអាន",
         thAvgRating: "ពិន្ទុមធ្យម",
         thReviews: "ចំនួនមតិយោបល់",
-
-        // No data messages
         noDataMostRead: "មិនទាន់មានទិន្នន័យទេ។",
         noDataTopRated: "មិនទាន់មានសៀវភៅដែលបានវាយតម្លៃទេ។",
         statsError: "មិនអាចទាញយកស្ថិតិបានទេ។ សូមពិនិត្យ Console។"
@@ -423,53 +405,37 @@
 
     function setText(id, value) {
       const el = document.getElementById(id);
-      if (el && value !== undefined && value !== null) {
-        el.textContent = value;
-      }
+      if (el && value !== undefined && value !== null) el.textContent = value;
     }
 
     function applyAdminLanguage() {
       const t = adminText[currentLang] || adminText.en;
-
-      // <title>
       document.title = t.pageTitle;
-
-      // Header
       setText("headerTitle", t.headerTitle);
       setText("headerSubtitle", t.headerSubtitle);
       setText("backLink", t.backToLibrary);
-
-      // Stats labels
       setText("statTotalBooksLabel", t.totalBooksLabel);
       setText("statTotalReadsLabel", t.totalReadsLabel);
       setText("statTotalFavoritesLabel", t.totalFavoritesLabel);
       setText("statTotalFeedbacksLabel", t.totalFeedbacksLabel);
-
-      // Section titles / notes
       setText("mostReadTitle", t.mostReadTitle);
       setText("topRatedTitle", t.topRatedTitle);
       setText("topRatedNote", t.topRatedNote);
       setText("uploadTitle", t.uploadTitle);
       setText("uploadNote", t.uploadNote);
       setText("uploadHint", t.uploadHint);
-
-      // Upload button text
       const uploadPageLink = document.getElementById("uploadPageLink");
       if (uploadPageLink) uploadPageLink.textContent = t.uploadButtonLabel;
-
-      // Table headers
       setText("thMostReadRank", t.thRank);
       setText("thMostReadTitle", t.thTitle);
       setText("thMostReadCategory", t.thCategory);
       setText("thMostReadLanguage", t.thLanguage);
       setText("thMostReadReads", t.thReads);
-
       setText("thTopRatedRank", t.thRank);
       setText("thTopRatedTitle", t.thTitle);
       setText("thTopRatedAvgRating", t.thAvgRating);
       setText("thTopRatedReviews", t.thReviews);
 
-      // Language toggle button styles
       const enBtn = document.getElementById("adminEnBtn");
       const khBtn = document.getElementById("adminKhBtn");
       if (enBtn && khBtn) {
@@ -483,22 +449,16 @@
       }
     }
 
-    /*************** DASHBOARD STATS ***************/
     async function loadStats() {
       const errorEl = document.getElementById("errorMsg");
       const t = adminText[currentLang] || adminText.en;
       errorEl.style.display = "none";
       errorEl.textContent = "";
-
       try {
         const res = await fetch(SCRIPT_URL + "?mode=stats");
         if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
-
-        if (!data.success) {
-          throw new Error(data.error || "Unknown error from script");
-        }
-
+        if (!data.success) throw new Error(data.error || "Unknown error");
         document.getElementById("totalBooks").textContent =
           data.totalBooks ?? "0";
         document.getElementById("totalReads").textContent =
@@ -507,7 +467,6 @@
           data.totalFavorites ?? "0";
         document.getElementById("totalFeedbacks").textContent =
           data.totalFeedbacks ?? "0";
-
         renderMostRead(data.topViews || []);
         renderTopRated(data.topRated || []);
       } catch (err) {
@@ -521,7 +480,6 @@
       const tbody = document.getElementById("mostReadBody");
       const t = adminText[currentLang] || adminText.en;
       tbody.innerHTML = "";
-
       if (!rows.length) {
         const tr = document.createElement("tr");
         const td = document.createElement("td");
@@ -533,7 +491,6 @@
         tbody.appendChild(tr);
         return;
       }
-
       rows.forEach((row, idx) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -541,8 +498,7 @@
           <td>${row.title || ""}</td>
           <td>${row.category || ""}</td>
           <td>${row.language || ""}</td>
-          <td class="num">${row.views ?? 0}</td>
-        `;
+          <td class="num">${row.views ?? 0}</td>`;
         tbody.appendChild(tr);
       });
     }
@@ -551,7 +507,6 @@
       const tbody = document.getElementById("topRatedBody");
       const t = adminText[currentLang] || adminText.en;
       tbody.innerHTML = "";
-
       if (!rows.length) {
         const tr = document.createElement("tr");
         const td = document.createElement("td");
@@ -563,23 +518,19 @@
         tbody.appendChild(tr);
         return;
       }
-
       rows.forEach((row, idx) => {
         const tr = document.createElement("tr");
         const avg = row.avgRating ?? 0;
         const avgText = avg.toFixed(2);
-
         tr.innerHTML = `
           <td class="num rank">${idx + 1}</td>
           <td>${row.title || ""}</td>
           <td class="num rating">${avgText}</td>
-          <td class="num">${row.reviewCount ?? 0}</td>
-        `;
+          <td class="num">${row.reviewCount ?? 0}</td>`;
         tbody.appendChild(tr);
       });
     }
 
-    /*************** LANGUAGE TOGGLE EVENTS ***************/
     const adminEnBtn = document.getElementById("adminEnBtn");
     const adminKhBtn = document.getElementById("adminKhBtn");
 
@@ -597,7 +548,6 @@
       loadStats();
     });
 
-    // Initial load
     applyAdminLanguage();
     loadStats();
   </script>
