@@ -180,7 +180,8 @@
     }
 
     .rating {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
     }
 
     .error {
@@ -189,7 +190,7 @@
       color: var(--danger);
     }
 
-    /* Upload form styles */
+    /* Simple card used for upload link block */
     .card {
       background: var(--card);
       border-radius: 12px;
@@ -198,48 +199,7 @@
       border: 1px solid var(--border);
       margin-top: 10px;
     }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px 12px;
-    }
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .field label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-sub);
-    }
-    .field input,
-    .field select,
-    .field textarea {
-      font-size: 13px;
-      padding: 6px 8px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      outline: none;
-    }
-    .field textarea {
-      resize: vertical;
-      min-height: 60px;
-    }
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent-soft);
-    }
 
-    .form-actions {
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
     .btn-primary {
       border: none;
       border-radius: 999px;
@@ -249,31 +209,11 @@
       cursor: pointer;
       background: var(--accent);
       color: #ffffff;
+      display: inline-block;
+      text-decoration: none;
     }
     .btn-primary:hover {
       background: #1d4ed8;
-    }
-    .btn-secondary {
-      border-radius: 999px;
-      padding: 7px 14px;
-      font-size: 12px;
-      font-weight: 500;
-      border: 1px solid var(--border);
-      background: #f9fafb;
-      cursor: pointer;
-      color: var(--text-sub);
-    }
-    .btn-secondary:hover {
-      background: #e5e7eb;
-    }
-    .status {
-      font-size: 12px;
-    }
-    .status.ok {
-      color: var(--success);
-    }
-    .status.fail {
-      color: var(--danger);
     }
 
     @media (max-width: 640px) {
@@ -291,7 +231,9 @@
     <div class="header">
       <div>
         <h1 class="title" id="headerTitle">VMCTK Admin Dashboard</h1>
-        <p class="subtitle" id="headerSubtitle">Stats &amp; admin tools from your Google Sheets data</p>
+        <p class="subtitle" id="headerSubtitle">
+          Stats &amp; admin tools from your Google Sheets data
+        </p>
       </div>
       <div class="back-link">
         <div class="lang-toggle">
@@ -342,8 +284,7 @@
             <th class="num" id="thMostReadReads">Reads</th>
           </tr>
         </thead>
-        <tbody id="mostReadBody">
-        </tbody>
+        <tbody id="mostReadBody"></tbody>
       </table>
     </div>
 
@@ -365,80 +306,37 @@
             <th class="num" id="thTopRatedReviews"># Reviews</th>
           </tr>
         </thead>
-        <tbody id="topRatedBody">
-        </tbody>
+        <tbody id="topRatedBody"></tbody>
       </table>
     </div>
 
     <p id="errorMsg" class="error" style="display:none;"></p>
 
-    <!-- Admin: Upload new book -->
+    <!-- Admin: link to upload page (NO inline form here) -->
     <div class="section">
       <div class="section-header">
         <span class="icon">⬆️</span>
         <h2 id="uploadTitle">Add New Book to Library</h2>
       </div>
       <p class="section-note" id="uploadNote">
-        This form appends a new row to <strong>Sheet1</strong> using the same headers:
-        ID / Title / Author / Language / Category / Cover Original / Cover Link / PDF Link / Featured / Description / Views / Favorites
+        Use the separate upload page to add or edit books in the library.
       </p>
       <div class="card">
-        <form id="uploadForm">
-          <div class="form-grid">
-            <div class="field">
-              <label for="title" id="labelTitle">Title *</label>
-              <input type="text" id="title" name="title" />
-            </div>
-            <div class="field">
-              <label for="author" id="labelAuthor">Author</label>
-              <input type="text" id="author" name="author" />
-            </div>
-            <div class="field">
-              <label for="language" id="labelLanguage">Language</label>
-              <input type="text" id="language" name="language" placeholder="e.g., English, Khmer" />
-            </div>
-            <div class="field">
-              <label for="category" id="labelCategory">Category</label>
-              <input type="text" id="category" name="category" placeholder="e.g., Novel, Self-help" />
-            </div>
-            <div class="field">
-              <label for="coverOriginal" id="labelCoverOriginal">Cover Original URL</label>
-              <input type="text" id="coverOriginal" name="coverOriginal" placeholder="Original image link (optional)" />
-            </div>
-            <div class="field">
-              <label for="coverLink" id="labelCoverLink">Cover Link (Google Drive)</label>
-              <input type="text" id="coverLink" name="coverLink" placeholder="Share link of cover (if any)" />
-            </div>
-            <div class="field">
-              <label for="pdfLink" id="labelPdfLink">PDF Link (Google Drive)</label>
-              <input type="text" id="pdfLink" name="pdfLink" placeholder="Share link of PDF" />
-            </div>
-            <div class="field">
-              <label for="featured" id="labelFeatured">Featured</label>
-              <select id="featured" name="featured">
-                <option value="">No</option>
-                <option value="Yes">Yes</option>
-              </select>
-            </div>
-            <div class="field" style="grid-column: 1 / -1;">
-              <label for="description" id="labelDescription">Description</label>
-              <textarea id="description" name="description" placeholder="Short description of the book"></textarea>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn-primary" id="uploadSubmit">Add Book</button>
-            <button type="button" class="btn-secondary" id="uploadReset">Clear form</button>
-            <span id="uploadStatus" class="status"></span>
-          </div>
-        </form>
+        <p class="section-note" id="uploadHint">
+          For security, only admins with access to the upload page can add new books.
+        </p>
+        <!-- Link to your upload page; adjust filename if needed -->
+        <a id="uploadPageLink" href="admin-upload.html" class="btn-primary">
+          Open upload page
+        </a>
       </div>
     </div>
   </div>
 
   <script>
     // Use your existing Apps Script web app URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
+    const SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
 
     /*************** LANGUAGE TEXTS ***************/
     const adminText = {
@@ -457,10 +355,14 @@
         // Sections
         mostReadTitle: "Top 5 Most Read Books",
         topRatedTitle: "Top 5 Top Rated (by feedback)",
-        topRatedNote: "Only books with at least 1 rating in the Feedback sheet are shown here.",
+        topRatedNote:
+          "Only books with at least 1 rating in the Feedback sheet are shown here.",
         uploadTitle: "Add New Book to Library",
         uploadNote:
-          "This form appends a new row to Sheet1 using the headers: ID / Title / Author / Language / Category / Cover Original / Cover Link / PDF Link / Featured / Description / Views / Favorites",
+          "Use the separate upload page to add or edit books in the library.",
+        uploadHint:
+          "For security, only admins with access to the upload page can add new books.",
+        uploadButtonLabel: "Open upload page",
 
         // Table headers
         thRank: "#",
@@ -474,44 +376,13 @@
         // No data messages
         noDataMostRead: "No data yet.",
         noDataTopRated: "No rated books yet.",
-        statsError: "Failed to load stats. Check console for details.",
-
-        // Form labels
-        labelTitle: "Title *",
-        labelAuthor: "Author",
-        labelLanguage: "Language",
-        labelCategory: "Category",
-        labelCoverOriginal: "Cover Original URL",
-        labelCoverLink: "Cover Link (Google Drive)",
-        labelPdfLink: "PDF Link (Google Drive)",
-        labelFeatured: "Featured",
-        labelDescription: "Description",
-
-        // Placeholders
-        phLanguage: "e.g., English, Khmer",
-        phCategory: "e.g., Novel, Self-help",
-        phCoverOriginal: "Original image link (optional)",
-        phCoverLink: "Share link of cover (if any)",
-        phPdfLink: "Share link of PDF",
-        phDescription: "Short description of the book",
-
-        // Buttons
-        btnAddBook: "Add Book",
-        btnAdding: "Adding...",
-        btnClearForm: "Clear form",
-
-        // Upload messages
-        msgTitleRequired: "Title is required.",
-        msgSending: "Sending to Google Sheets...",
-        msgUploadSuccess: (id) => `Book added with ID ${id}.`,
-        msgUploadFailedWithError: (err) => `Failed: ${err}`,
-        msgUploadFailedGeneric: "Failed to add book. Please check console.",
-        msgUploadNetworkError: "Network error while adding book."
+        statsError: "Failed to load stats. Check console for details."
       },
       kh: {
         pageTitle: "ផ្ទាំងគ្រប់គ្រង VMCTK",
         headerTitle: "ផ្ទាំងគ្រប់គ្រង VMCTK",
-        headerSubtitle: "ស្ថិតិ និងឧបករណ៍គ្រប់គ្រងពីទិន្នន័យក្នុង Google Sheets",
+        headerSubtitle:
+          "ស្ថិតិ និងឧបករណ៍គ្រប់គ្រងពីទិន្នន័យក្នុង Google Sheets",
         backToLibrary: "ត្រលប់ទៅបណ្ណាល័យ",
 
         // Stats labels
@@ -523,10 +394,14 @@
         // Sections
         mostReadTitle: "សៀវភៅអានច្រើនបំផុត ៥ ក្បាល",
         topRatedTitle: "សៀវភៅពេញនិយម ៥ ក្បាល (តាមការវាយតម្លៃ)",
-        topRatedNote: "បង្ហាញតែសៀវភៅដែលមានការវាយតម្លៃយ៉ាងហោចណាស់ ១ ដងក្នុងសន្លឹក Feedback ប៉ុណ្ណោះ។",
+        topRatedNote:
+          "បង្ហាញតែសៀវភៅដែលមានការវាយតម្លៃយ៉ាងហោចណាស់ ១ ដងក្នុងសន្លឹក Feedback ប៉ុណ្ណោះ។",
         uploadTitle: "បន្ថែមសៀវភៅថ្មីទៅបណ្ណាល័យ",
         uploadNote:
-          "ទម្រង់នេះ នឹងបន្ថែមជួរដេកថ្មីទៅ Sheet1 ដោយប្រើក្បាលជួរឈរ: ID / Title / Author / Language / Category / Cover Original / Cover Link / PDF Link / Featured / Description / Views / Favorites",
+          "សម្រាប់បន្ថែម ឬកែប្រែសៀវភៅ សូមប្រើទំព័របញ្ចូលសៀវភៅ (upload) ខាងក្រៅ។",
+        uploadHint:
+          "ដើម្បីរក្សាសុវត្ថិភាព មានតែអ្នកគ្រប់គ្រង (admin) ប៉ុណ្ណោះ ដែលអាចចូលប្រើទំព័របញ្ចូលសៀវភៅបាន។",
+        uploadButtonLabel: "បើកទំព័របញ្ចូលសៀវភៅ",
 
         // Table headers
         thRank: "ល.រ",
@@ -540,39 +415,7 @@
         // No data messages
         noDataMostRead: "មិនទាន់មានទិន្នន័យទេ។",
         noDataTopRated: "មិនទាន់មានសៀវភៅដែលបានវាយតម្លៃទេ។",
-        statsError: "មិនអាចទាញយកស្ថិតិបានទេ។ សូមពិនិត្យ Console។",
-
-        // Form labels
-        labelTitle: "ចំណងជើង *",
-        labelAuthor: "អ្នកនិពន្ធ",
-        labelLanguage: "ភាសា",
-        labelCategory: "ប្រភេទ",
-        labelCoverOriginal: "URL រូបគម្របដើម",
-        labelCoverLink: "តំណរភ្ជាប់គម្រប (Google Drive)",
-        labelPdfLink: "តំណរភ្ជាប់ PDF (Google Drive)",
-        labelFeatured: "ពិសេស",
-        labelDescription: "ពណ៌នាសៀវភៅ",
-
-        // Placeholders
-        phLanguage: "ឧ. ភាសាអង់គ្លេស, ខ្មែរ",
-        phCategory: "ឧ. នាវល, អប់រំ, សៀវភៅបណ្តុះបណ្តា",
-        phCoverOriginal: "តំណររូបភាពដើម (ជាជម្រើស)",
-        phCoverLink: "តំណរគម្របសៀវភៅ (បើមាន)",
-        phPdfLink: "តំណរឯកសារ PDF",
-        phDescription: "ពណ៌នាខ្លីអំពីសៀវភៅ",
-
-        // Buttons
-        btnAddBook: "បន្ថែមសៀវភៅ",
-        btnAdding: "កំពុងបន្ថែម...",
-        btnClearForm: "សម្អាតទម្រង់",
-
-        // Upload messages
-        msgTitleRequired: "ត្រូវការចំណងជើងសៀវភៅ។",
-        msgSending: "កំពុងផ្ញើទិន្នន័យទៅ Google Sheets...",
-        msgUploadSuccess: (id) => `បានបន្ថែមសៀវភៅជាមួយ ID ${id} រួចរាល់។`,
-        msgUploadFailedWithError: (err) => `បរាជ័យ៖ ${err}`,
-        msgUploadFailedGeneric: "មិនអាចបន្ថែមសៀវភៅបានទេ។ សូមពិនិត្យ Console។",
-        msgUploadNetworkError: "បញ្ហាបណ្ដាញពេលបន្ថែមសៀវភៅ។"
+        statsError: "មិនអាចទាញយកស្ថិតិបានទេ។ សូមពិនិត្យ Console។"
       }
     };
 
@@ -608,6 +451,11 @@
       setText("topRatedNote", t.topRatedNote);
       setText("uploadTitle", t.uploadTitle);
       setText("uploadNote", t.uploadNote);
+      setText("uploadHint", t.uploadHint);
+
+      // Upload button text
+      const uploadPageLink = document.getElementById("uploadPageLink");
+      if (uploadPageLink) uploadPageLink.textContent = t.uploadButtonLabel;
 
       // Table headers
       setText("thMostReadRank", t.thRank);
@@ -620,38 +468,6 @@
       setText("thTopRatedTitle", t.thTitle);
       setText("thTopRatedAvgRating", t.thAvgRating);
       setText("thTopRatedReviews", t.thReviews);
-
-      // Form labels
-      setText("labelTitle", t.labelTitle);
-      setText("labelAuthor", t.labelAuthor);
-      setText("labelLanguage", t.labelLanguage);
-      setText("labelCategory", t.labelCategory);
-      setText("labelCoverOriginal", t.labelCoverOriginal);
-      setText("labelCoverLink", t.labelCoverLink);
-      setText("labelPdfLink", t.labelPdfLink);
-      setText("labelFeatured", t.labelFeatured);
-      setText("labelDescription", t.labelDescription);
-
-      // Placeholders
-      const languageInput = document.getElementById("language");
-      const categoryInput = document.getElementById("category");
-      const coverOriginalInput = document.getElementById("coverOriginal");
-      const coverLinkInput = document.getElementById("coverLink");
-      const pdfLinkInput = document.getElementById("pdfLink");
-      const descriptionInput = document.getElementById("description");
-
-      if (languageInput) languageInput.placeholder = t.phLanguage;
-      if (categoryInput) categoryInput.placeholder = t.phCategory;
-      if (coverOriginalInput) coverOriginalInput.placeholder = t.phCoverOriginal;
-      if (coverLinkInput) coverLinkInput.placeholder = t.phCoverLink;
-      if (pdfLinkInput) pdfLinkInput.placeholder = t.phPdfLink;
-      if (descriptionInput) descriptionInput.placeholder = t.phDescription;
-
-      // Buttons
-      const uploadSubmit = document.getElementById("uploadSubmit");
-      const uploadReset = document.getElementById("uploadReset");
-      if (uploadSubmit) uploadSubmit.textContent = t.btnAddBook;
-      if (uploadReset) uploadReset.textContent = t.btnClearForm;
 
       // Language toggle button styles
       const enBtn = document.getElementById("adminEnBtn");
@@ -683,10 +499,14 @@
           throw new Error(data.error || "Unknown error from script");
         }
 
-        document.getElementById("totalBooks").textContent = data.totalBooks ?? "0";
-        document.getElementById("totalReads").textContent = data.totalViews ?? "0";
-        document.getElementById("totalFavorites").textContent = data.totalFavorites ?? "0";
-        document.getElementById("totalFeedbacks").textContent = data.totalFeedbacks ?? "0";
+        document.getElementById("totalBooks").textContent =
+          data.totalBooks ?? "0";
+        document.getElementById("totalReads").textContent =
+          data.totalViews ?? "0";
+        document.getElementById("totalFavorites").textContent =
+          data.totalFavorites ?? "0";
+        document.getElementById("totalFeedbacks").textContent =
+          data.totalFeedbacks ?? "0";
 
         renderMostRead(data.topViews || []);
         renderTopRated(data.topRated || []);
@@ -716,7 +536,6 @@
 
       rows.forEach((row, idx) => {
         const tr = document.createElement("tr");
-
         tr.innerHTML = `
           <td class="num rank">${idx + 1}</td>
           <td>${row.title || ""}</td>
@@ -724,7 +543,6 @@
           <td>${row.language || ""}</td>
           <td class="num">${row.views ?? 0}</td>
         `;
-
         tbody.appendChild(tr);
       });
     }
@@ -748,7 +566,6 @@
 
       rows.forEach((row, idx) => {
         const tr = document.createElement("tr");
-
         const avg = row.avgRating ?? 0;
         const avgText = avg.toFixed(2);
 
@@ -758,92 +575,9 @@
           <td class="num rating">${avgText}</td>
           <td class="num">${row.reviewCount ?? 0}</td>
         `;
-
         tbody.appendChild(tr);
       });
     }
-
-    /*************** ADMIN UPLOAD FORM ***************/
-    const uploadForm = document.getElementById("uploadForm");
-    const uploadStatus = document.getElementById("uploadStatus");
-    const uploadSubmit = document.getElementById("uploadSubmit");
-    const uploadReset = document.getElementById("uploadReset");
-
-    uploadForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const t = adminText[currentLang] || adminText.en;
-      uploadStatus.textContent = "";
-      uploadStatus.className = "status";
-
-      const formData = new FormData(uploadForm);
-
-      const title = formData.get("title")?.trim();
-      if (!title) {
-        uploadStatus.textContent = t.msgTitleRequired;
-        uploadStatus.classList.add("fail");
-        return;
-      }
-
-      uploadSubmit.disabled = true;
-      uploadSubmit.textContent = t.btnAdding;
-      uploadStatus.textContent = t.msgSending;
-      uploadStatus.classList.remove("ok", "fail");
-
-      try {
-        const body = new URLSearchParams({
-          type: "admin-add-book",
-          title: title,
-          author: formData.get("author") || "",
-          language: formData.get("language") || "",
-          category: formData.get("category") || "",
-          coverOriginal: formData.get("coverOriginal") || "",
-          coverLink: formData.get("coverLink") || "",
-          pdfLink: formData.get("pdfLink") || "",
-          featured: formData.get("featured") || "",
-          description: formData.get("description") || ""
-        });
-
-        const res = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body
-        });
-
-        const data = await res.json().catch(() => null);
-
-        if (res.ok && data && data.success) {
-          const idText = data.id ?? "";
-          uploadStatus.textContent = t.msgUploadSuccess(idText);
-          uploadStatus.classList.add("ok");
-
-          // Optional: reset form after success
-          uploadForm.reset();
-
-          // Reload stats so totalBooks updates
-          loadStats();
-        } else {
-          uploadStatus.textContent = data && data.error
-            ? t.msgUploadFailedWithError(data.error)
-            : t.msgUploadFailedGeneric;
-          uploadStatus.classList.add("fail");
-          console.error("Admin add error:", data);
-        }
-      } catch (err) {
-        console.error("Upload request failed:", err);
-        uploadStatus.textContent = t.msgUploadNetworkError;
-        uploadStatus.classList.add("fail");
-      } finally {
-        const tNow = adminText[currentLang] || adminText.en;
-        uploadSubmit.disabled = false;
-        uploadSubmit.textContent = tNow.btnAddBook;
-      }
-    });
-
-    uploadReset.addEventListener("click", () => {
-      uploadForm.reset();
-      uploadStatus.textContent = "";
-      uploadStatus.className = "status";
-    });
 
     /*************** LANGUAGE TOGGLE EVENTS ***************/
     const adminEnBtn = document.getElementById("adminEnBtn");
