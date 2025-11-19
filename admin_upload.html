@@ -7,10 +7,82 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 text-slate-800">
+
+  <!-- 🔐 Login overlay (same idea as admin.html) -->
+  <div
+    id="adminLoginOverlay"
+    class="fixed inset-0 bg-slate-900/70 flex items-center justify-center z-50"
+  >
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-sm p-5">
+      <h2 id="loginTitleUpload" class="text-lg font-semibold text-slate-900">
+        Admin login
+      </h2>
+      <p
+        id="loginSubtitleUpload"
+        class="text-xs text-slate-500 mb-3"
+      >
+        This page is restricted to admins only.
+      </p>
+      <form id="adminLoginForm" class="space-y-3">
+        <div class="flex flex-col gap-1">
+          <label
+            id="loginUserLabelUpload"
+            for="loginUserUpload"
+            class="text-xs font-semibold text-slate-600"
+          >
+            Username
+          </label>
+          <input
+            id="loginUserUpload"
+            type="text"
+            autocomplete="username"
+            class="border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label
+            id="loginPassLabelUpload"
+            for="loginPassUpload"
+            class="text-xs font-semibold text-slate-600"
+          >
+            Password
+          </label>
+          <input
+            id="loginPassUpload"
+            type="password"
+            autocomplete="current-password"
+            class="border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
+          />
+        </div>
+        <p
+          id="loginErrorUpload"
+          class="text-xs text-red-600 min-h-[1rem]"
+        ></p>
+        <button
+          id="loginButtonUpload"
+          type="submit"
+          class="w-full px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded shadow hover:bg-blue-700"
+        >
+          Log in
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
   <div class="min-h-screen max-w-3xl mx-auto px-4 py-6">
     <header class="mb-6 flex items-center justify-between gap-3 flex-wrap">
       <div>
-        <h1 id="pageHeading" class="text-2xl font-bold text-slate-900">Add New Book</h1>
+        <h1 id="pageHeading" class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          Add New Book
+          <!-- tiny Admin only badge -->
+          <span
+            id="adminOnlyBadgeUpload"
+            class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-700 border border-red-200"
+          >
+            Admin only
+          </span>
+        </h1>
         <p id="pageSubtitle" class="text-sm text-slate-500">
           This form will append a new row to <strong>Sheet1</strong> in your Google Sheet.
         </p>
@@ -238,15 +310,21 @@
   </div>
 
   <script>
-    // 🔗 Your Apps Script Web App URL (same one used in index.html & admin.html)
+    // 🔗 Same Apps Script Web App URL
     const SCRIPT_URL =
       "https://script.google.com/macros/s/AKfycbwah-ItVQyz8--t-qJRTFxkuzM5Yh-KQMyvcV-bcPzOZf6jU_9oWKKMurCyoUmqYBAM/exec";
+
+    // 🔐 Simple front-end admin login (same as admin.html)
+    const ADMIN_USER = "vmcadmin";        // ← change to your username
+    const ADMIN_PASS = "vmc2024";         // ← change to your password
+    const LOGIN_KEY  = "vmctk_admin_logged_in";
 
     /*************** LANGUAGE TEXTS ***************/
     const uploadText = {
       en: {
         pageTitle: "VMCTK – Add New Book",
         heading: "Add New Book",
+        adminOnlyBadge: "Admin only",
         subtitle: 'This form will append a new row to "Sheet1" in your Google Sheet.',
         dashboardLink: "📊 Dashboard",
         backToLibrary: "← Back to Library",
@@ -294,11 +372,20 @@
         statusErrorPrefix: "Error: ",
         statusUnknownError: "Unknown error",
         statusBookAddedPrefix: "✅ Book added with ID ",
-        statusNetworkError: "Network error while adding book."
+        statusNetworkError: "Network error while adding book.",
+
+        // Login overlay
+        loginTitle: "Admin login",
+        loginSubtitle: "This page is restricted to admins only.",
+        loginUserLabel: "Username",
+        loginPassLabel: "Password",
+        loginButton: "Log in",
+        loginError: "Incorrect username or password."
       },
       kh: {
         pageTitle: "VMCTK – បន្ថែមសៀវភៅថ្មី",
         heading: "បន្ថែមសៀវភៅថ្មី",
+        adminOnlyBadge: "សម្រាប់ Admin ប៉ុណ្ណោះ",
         subtitle:
           "ទម្រង់នេះនឹងបន្ថែមជួរដេកថ្មីទៅ \"Sheet1\" ក្នុង Google Sheet របស់អ្នក។",
         dashboardLink: "📊 ផ្ទាំងគ្រប់គ្រង",
@@ -347,31 +434,38 @@
         statusErrorPrefix: "កំហុស៖ ",
         statusUnknownError: "មិនដឹងមូលហេតុ",
         statusBookAddedPrefix: "✅ បានបន្ថែមសៀវភៅជាមួយ ID ",
-        statusNetworkError: "បញ្ហាបណ្ដាញពេលបន្ថែមសៀវភៅ។"
+        statusNetworkError: "បញ្ហាបណ្ដាញពេលបន្ថែមសៀវភៅ។",
+
+        // Login overlay
+        loginTitle: "ចូលប្រើសម្រាប់ Admin",
+        loginSubtitle: "ទំព័រនេះសម្រាប់អ្នកគ្រប់គ្រងប៉ុណ្ណោះ។",
+        loginUserLabel: "ឈ្មោះអ្នកប្រើ",
+        loginPassLabel: "ពាក្យសម្ងាត់",
+        loginButton: "ចូលប្រើ",
+        loginError: "ឈ្មោះអ្នកប្រើ ឬ ពាក្យសម្ងាត់ មិនត្រឹមត្រូវ។"
       }
     };
 
-    // Share the same key with admin.html so language stays in sync
+    // Shared with admin.html so language stays in sync
     let currentLang = localStorage.getItem("vmctk_admin_lang") || "en";
 
     function applyUploadLanguage() {
       const t = uploadText[currentLang] || uploadText.en;
 
-      // <title>
       document.title = t.pageTitle;
 
-      // Header
       const headingEl = document.getElementById("pageHeading");
       const subtitleEl = document.getElementById("pageSubtitle");
       const dashboardLink = document.getElementById("dashboardLink");
       const backToLibrary = document.getElementById("backToLibraryLink");
+      const adminBadge = document.getElementById("adminOnlyBadgeUpload");
 
       if (headingEl) headingEl.textContent = t.heading;
+      if (adminBadge) adminBadge.textContent = t.adminOnlyBadge;
       if (subtitleEl) subtitleEl.textContent = t.subtitle;
       if (dashboardLink) dashboardLink.textContent = t.dashboardLink;
       if (backToLibrary) backToLibrary.textContent = t.backToLibrary;
 
-      // Labels
       const setText = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
@@ -387,7 +481,6 @@
       setText("labelFeatured", t.featuredLabel);
       setText("labelDescription", t.descriptionLabel);
 
-      // Placeholders & help texts
       const adminKeyInput = document.getElementById("adminKey");
       const titleInput = document.getElementById("title");
       const authorInput = document.getElementById("author");
@@ -409,7 +502,6 @@
       if (helpPdf) helpPdf.textContent = t.pdfHelp;
       if (helpCover) helpCover.textContent = t.coverOriginalHelp;
 
-      // Language select options
       const optDefault = document.getElementById("optLangDefault");
       const optKhmer = document.getElementById("optLangKhmer");
       const optEnglish = document.getElementById("optLangEnglish");
@@ -422,17 +514,20 @@
       if (optBilingual) optBilingual.textContent = t.languageBilingual;
       if (optOther) optOther.textContent = t.languageOther;
 
-      // Featured options
       const optFeatNo = document.getElementById("optFeaturedNo");
       const optFeatYes = document.getElementById("optFeaturedYes");
       if (optFeatNo) optFeatNo.textContent = t.featuredNo;
       if (optFeatYes) optFeatYes.textContent = t.featuredYes;
 
-      // Button label
       const submitBtn = document.getElementById("submitBtn");
       if (submitBtn) submitBtn.textContent = t.buttonAdd;
 
-      // Status text shouldn't be auto-cleared here
+      // Login overlay text
+      setText("loginTitleUpload", t.loginTitle);
+      setText("loginSubtitleUpload", t.loginSubtitle);
+      setText("loginUserLabelUpload", t.loginUserLabel);
+      setText("loginPassLabelUpload", t.loginPassLabel);
+      setText("loginButtonUpload", t.loginButton);
 
       // Language toggle visuals
       const enBtn = document.getElementById("uploadEnBtn");
@@ -448,6 +543,33 @@
           enBtn.classList.add("text-slate-600");
         }
       }
+    }
+
+    /*************** SIMPLE LOGIN ***************/
+    function setupLogin() {
+      const overlay = document.getElementById("adminLoginOverlay");
+      const form = document.getElementById("adminLoginForm");
+      const errorEl = document.getElementById("loginErrorUpload");
+      if (!overlay || !form) return;
+
+      const loggedIn = localStorage.getItem(LOGIN_KEY) === "yes";
+      if (loggedIn) {
+        overlay.classList.add("hidden");
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const t = uploadText[currentLang] || uploadText.en;
+        const user = document.getElementById("loginUserUpload").value.trim();
+        const pass = document.getElementById("loginPassUpload").value;
+        if (user === ADMIN_USER && pass === ADMIN_PASS) {
+          localStorage.setItem(LOGIN_KEY, "yes");
+          overlay.classList.add("hidden");
+          errorEl.textContent = "";
+        } else {
+          errorEl.textContent = t.loginError;
+        }
+      });
     }
 
     /*************** FORM SUBMIT ***************/
@@ -493,7 +615,6 @@
           return;
         }
 
-        // Prefer data.id, but also support data.book?.id if your script returns that
         const newId = data.id ?? (data.book && data.book.id) ?? "";
         statusMsg.textContent = t.statusBookAddedPrefix + newId;
         form.reset();
@@ -526,6 +647,7 @@
 
     // Initial load
     applyUploadLanguage();
+    setupLogin();
   </script>
 </body>
 </html>
