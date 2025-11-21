@@ -102,6 +102,23 @@
     #enBtn:hover { background-color: var(--vmc-light-blue); }
     #khBtn:hover { background-color: #fbbf24; }
 
+    /* ---------- Search input styles ---------- */
+    #searchInput {
+      background-color: #ffffff;
+      color: #111827;
+    }
+    #searchInput::placeholder {
+      color: #9ca3af;
+    }
+    body.dark #searchInput {
+      background-color: #111827;
+      color: #f9fafb;
+      border-color: #4b5563;
+    }
+    body.dark #searchInput::placeholder {
+      color: #9ca3af;
+    }
+
     /* ---------- Featured Carousel ---------- */
     #featuredSection { background: linear-gradient(to right, #e0f2fe, #fef9c3); }
     body.dark #featuredSection { background: linear-gradient(to right, #1e293b, #1f2937); }
@@ -297,7 +314,18 @@
 
   <!-- Search -->
   <section class="p-4 flex justify-center">
-    <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow" aria-label="Search books">
+    <div class="w-full max-w-xl">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search books..."
+        class="w-full p-2 border rounded shadow"
+        aria-label="Search books"
+        list="titleList"
+      >
+      <!-- Suggestions: filled from JS with book titles -->
+      <datalist id="titleList"></datalist>
+    </div>
   </section>
 
   <!-- Category + Favorites -->
@@ -634,11 +662,6 @@
       return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w600` : url;
     }
 
-    // NEW: prefer "Cover Link", fall back to "Cover Original"
-    function getCoverSource(book) {
-      return book["Cover Link"] || book["Cover Original"] || "";
-    }
-
     // Increment view counter via Google Apps Script web app
     async function incrementViews(book) {
       const id = book.ID;
@@ -684,9 +707,11 @@
       const featuredList = document.getElementById("featuredList");
       const categoryDropdown = document.getElementById("categoryDropdown");
       const favoritesToggle = document.getElementById("favoritesToggle");
+      const titleDatalist = document.getElementById("titleList");
 
       bookListEl.innerHTML = "";
       featuredList.innerHTML = "";
+      if (titleDatalist) titleDatalist.innerHTML = "";
 
       const categories = [...new Set(books.map(b => b.Category?.trim()).filter(Boolean))];
       const t = uiText[currentLang] || uiText.en;
@@ -706,17 +731,32 @@
 
       updateFavoritesToggleButton();
 
+      // --- Fill featured cards ---
       books.forEach((b, originalIdx) => {
         if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
           const f = document.createElement("div");
           f.className = "featured-card";
           f.innerHTML = `
-            <img src="${getThumbCover(getCoverSource(b))}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+            <img src="${getThumbCover(b["Cover Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
             <h3 class="font-semibold">${b.Title}</h3>`;
           f.onclick = () => openModal(originalIdx);
           featuredList.appendChild(f);
         }
       });
+
+      // --- Fill search suggestions (book titles) ---
+      if (titleDatalist) {
+        const seenTitles = new Set();
+        books.forEach(b => {
+          const title = (b.Title || "").trim();
+          if (title && !seenTitles.has(title)) {
+            seenTitles.add(title);
+            const opt = document.createElement("option");
+            opt.value = title;
+            titleDatalist.appendChild(opt);
+          }
+        });
+      }
 
       showBooks("All");
       loadingScreen.classList.add("fade-out");
@@ -776,7 +816,7 @@
 
         card.innerHTML = `
           <button class="favorite-btn" type="button" aria-label="Toggle favorite">♡</button>
-          <img src="${getThumbCover(getCoverSource(b))}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+          <img src="${getThumbCover(b["Cover Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
           <h3 class="font-bold">${b.Title}</h3>
           <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
           <p class="text-sm text-blue-500"> ${b.Language}</p>
@@ -792,7 +832,7 @@
           ev.stopPropagation();
           const nowFav = !isFavorite(bookId);
           setFavorite(bookId, nowFav);
-          updateFavoriteButton(favBtn, bookId);
+          updateFavoriteButton(favBtn, nowFav);
 
           // Record favorite in Google Sheet when adding
           if (nowFav && typeof TRACKING_URL !== "undefined") {
@@ -937,7 +977,7 @@
       currentBookIdx = idx;
       const t = uiText[currentLang] || uiText.en;
 
-      document.getElementById("modalCover").src = getHdCover(getCoverSource(b));
+      document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
       document.getElementById("modalTitle").textContent = b.Title || "Untitled";
       document.getElementById("modalAuthor").textContent = b.Author || "Unknown author";
       document.getElementById("modalLang").textContent = b.Language || "";
