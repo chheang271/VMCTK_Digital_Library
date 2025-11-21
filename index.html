@@ -102,23 +102,6 @@
     #enBtn:hover { background-color: var(--vmc-light-blue); }
     #khBtn:hover { background-color: #fbbf24; }
 
-    /* ---------- Search input styles ---------- */
-    #searchInput {
-      background-color: #ffffff;
-      color: #111827;
-    }
-    #searchInput::placeholder {
-      color: #9ca3af;
-    }
-    body.dark #searchInput {
-      background-color: #111827;
-      color: #f9fafb;
-      border-color: #4b5563;
-    }
-    body.dark #searchInput::placeholder {
-      color: #9ca3af;
-    }
-
     /* ---------- Featured Carousel ---------- */
     #featuredSection { background: linear-gradient(to right, #e0f2fe, #fef9c3); }
     body.dark #featuredSection { background: linear-gradient(to right, #1e293b, #1f2937); }
@@ -284,6 +267,20 @@
     body.dark .favorite-btn.favorited {
       color: #fb7185;
     }
+
+    /* ---------- Dark mode fixes for search input ---------- */
+    #searchInput {
+      background-color: #ffffff;
+      color: #111827;
+    }
+    body.dark #searchInput {
+      background-color: #111827;
+      color: #f9fafb;
+      border-color: #4b5563;
+    }
+    body.dark #searchInput::placeholder {
+      color: #6b7280;
+    }
   </style>
 </head>
 
@@ -301,31 +298,41 @@
     <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2" alt="VMCTK Logo">
     <h1 id="mainTitle" class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
     <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
-    <div class="mt-2 flex gap-2">
-      <!-- Flag icons on language buttons -->
-      <button id="enBtn" class="px-3 py-1 flex items-center gap-1 rounded">
-        <span>🇬🇧</span><span>English</span>
-      </button>
-      <button id="khBtn" class="px-3 py-1 ml-2 flex items-center gap-1 rounded">
-        <span>🇰🇭</span><span>ខ្មែរ</span>
-      </button>
+
+    <div class="mt-2 flex flex-col items-center gap-1">
+      <!-- Language buttons -->
+      <div class="flex gap-2">
+        <button id="enBtn" class="px-3 py-1 flex items-center gap-1 rounded">
+          <span>🇬🇧</span><span>English</span>
+        </button>
+        <button id="khBtn" class="px-3 py-1 ml-2 flex items-center gap-1 rounded">
+          <span>🇰🇭</span><span>ខ្មែរ</span>
+        </button>
+      </div>
+      <!-- About the Creator link -->
+      <a
+        id="aboutCreatorLink"
+        href="about_creator.html"
+        class="text-xs text-yellow-300 hover:text-yellow-200 underline underline-offset-2"
+      >
+        About the Creator
+      </a>
     </div>
   </header>
 
   <!-- Search -->
-  <section class="p-4 flex justify-center">
-    <div class="w-full max-w-xl">
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Search books..."
-        class="w-full p-2 border rounded shadow"
-        aria-label="Search books"
-        list="titleList"
-      >
-      <!-- Suggestions: filled from JS with book titles -->
-      <datalist id="titleList"></datalist>
-    </div>
+  <section class="p-4 flex flex-col items-center gap-2">
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search books..."
+      class="w-full max-w-xl p-2 border rounded shadow"
+      aria-label="Search books"
+    >
+    <p
+      id="searchStatus"
+      class="text-xs text-gray-600 dark:text-gray-300 hidden"
+    ></p>
   </section>
 
   <!-- Category + Favorites -->
@@ -436,16 +443,9 @@
     <div id="aboutKH" class="hidden">
       <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">អំពី VMCTK</h2>
       <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
-        <strong>ស្វាគមន៍មកកាន់បណ្ណាល័យ"បណ្ដុះគំនិតថ្មីនៃយុគសម័យឌីជីថល" VMCTK</strong> បណ្ណាល័យនេះត្រូវបានបង្កើតឡើងដោយក្រុម"ពន្លកថ្មីនៃសហគមន៍ខ្ញុំ" មកពីវិទ្យាល័យព្រៃទប់ ស្ថិតនៅក្នុងខេត្តតាកែវ
-        <em>នៃកម្មវិធី"ការស្ម័គ្រចិត្តដើម្បីសហគមន៍ខ្ញុំឆ្នាំ 2025"</em> បណ្ណាល័យនេះត្រូវបានបង្កើតឡើងក្រោមគោលបំណងដូចជា៖
-        <span class="text-blue-500 dark:text-blue-300 font-medium">
-          - គាំទ្រការសិក្សារៀនសូត្រ និងស្រាវជ្រាវ
-          - បង្កើនសមត្ថភាពក្នុងសតវត្សទី21 
-          - អានដោយសេរី
-          - ទទួលឱកាសអប់រំស្មើៗគ្នា
-          - ពោរពេញដោយឯកសារច្រើនប្រភេទ
-          - លើកកម្ពស់វិស័យអំណាន
-          - រួមចំណែកអភិវឌ្ឍសង្គម។</span>។
+        <strong>បណ្ណាល័យឌីជីថល VMCTK</strong> គឺជាគម្រោងស្ម័គ្រចិត្ត
+        <em>Volunteer for My Community</em> ដើម្បីជួយ
+        <span class="text-blue-500 dark:text-blue-300 font-medium">យុវជនអានសៀវភៅឥតគិតថ្លៃ</span>។
       </p>
     </div>
   </section>
@@ -509,6 +509,7 @@
         favorites: "⭐ My favorites",
         favoritesOn: "⭐ My favorites (ON)",
         featuredHeading: "⭐ Featured Books",
+        aboutCreator: "About the Creator",
 
         readOnline: "Read Online",
         download: "Download",
@@ -529,7 +530,9 @@
         readsLabel: (n) => `${n} reads`,
         paginationShowing: (start, end, total) =>
           `Showing ${start}–${end} of ${total} books`,
-        noBooks: "No books found."
+        noBooks: "No books found.",
+        searchStatus: (term) =>
+          term ? `Showing results for "${term}"` : ""
       },
       kh: {
         pageTitle: "បណ្ណាល័យឌីជីថល VMCTK",
@@ -540,6 +543,7 @@
         favorites: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត",
         favoritesOn: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត (បើក)",
         featuredHeading: "⭐ សៀវភៅពិសេស",
+        aboutCreator: "អំពីអ្នកបង្កើតគេហទំព័រ",
 
         readOnline: "អានអនឡាញ",
         download: "ទាញយក",
@@ -560,7 +564,9 @@
         readsLabel: (n) => `${n} ដងអាន`,
         paginationShowing: (start, end, total) =>
           `កំពុងបង្ហាញ ${start}–${end} នៃសៀវភៅសរុប ${total} ក្បាល`,
-        noBooks: "រកមិនឃើញសៀវភៅទេ។"
+        noBooks: "រកមិនឃើញសៀវភៅទេ។",
+        searchStatus: (term) =>
+          term ? `កំពុងស្វែងរក "${term}"` : ""
       }
     };
 
@@ -644,18 +650,32 @@
       btn.textContent = fav ? "❤" : "♡";
     }
 
-    // Robust Google Drive thumbnail helpers
-    function getHdCover(link, orig, pdf) {
-      const url = link || orig || pdf || "";
-      if (!url) return "";
-      const match = url.match(/[-\w]{25,}/);
-      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
+    function updateFavoritesToggleButton() {
+      const favoritesToggle = document.getElementById("favoritesToggle");
+      if (!favoritesToggle) return;
+      const t = uiText[currentLang] || uiText.en;
+
+      if (favoritesOnly) {
+        favoritesToggle.textContent = t.favoritesOn;
+        favoritesToggle.classList.add("ring-2", "ring-yellow-400", "ring-offset-2");
+      } else {
+        favoritesToggle.textContent = t.favorites;
+        favoritesToggle.classList.remove("ring-2", "ring-yellow-400", "ring-offset-2");
+      }
     }
-    function getThumbCover(link, orig, pdf) {
-      const url = link || orig || pdf || "";
-      if (!url) return "";
-      const match = url.match(/[-\w]{25,}/);
-      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w600` : url;
+
+    // Helpers to build Drive thumbnails, falling back to Cover Original if needed
+    function getHdCover(url, fallbackUrl) {
+      const finalUrl = url || fallbackUrl || "";
+      if (!finalUrl) return "";
+      const match = finalUrl.match(/[-\w]{25,}/);
+      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : finalUrl;
+    }
+    function getThumbCover(url, fallbackUrl) {
+      const finalUrl = url || fallbackUrl || "";
+      if (!finalUrl) return "";
+      const match = finalUrl.match(/[-\w]{25,}/);
+      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w600` : finalUrl;
     }
 
     // Increment view counter via Google Apps Script web app
@@ -703,11 +723,9 @@
       const featuredList = document.getElementById("featuredList");
       const categoryDropdown = document.getElementById("categoryDropdown");
       const favoritesToggle = document.getElementById("favoritesToggle");
-      const titleDatalist = document.getElementById("titleList");
 
       bookListEl.innerHTML = "";
       featuredList.innerHTML = "";
-      if (titleDatalist) titleDatalist.innerHTML = "";
 
       const categories = [...new Set(books.map(b => b.Category?.trim()).filter(Boolean))];
       const t = uiText[currentLang] || uiText.en;
@@ -727,32 +745,17 @@
 
       updateFavoritesToggleButton();
 
-      // --- Fill featured cards ---
       books.forEach((b, originalIdx) => {
         if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
           const f = document.createElement("div");
           f.className = "featured-card";
           f.innerHTML = `
-            <img src="${getThumbCover(b["Cover Link"], b["Cover Original"], b["PDF Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+            <img src="${getThumbCover(b["Cover Link"], b["Cover Original"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
             <h3 class="font-semibold">${b.Title}</h3>`;
           f.onclick = () => openModal(originalIdx);
           featuredList.appendChild(f);
         }
       });
-
-      // --- Fill search suggestions (book titles) ---
-      if (titleDatalist) {
-        const seenTitles = new Set();
-        books.forEach(b => {
-          const title = (b.Title || "").trim();
-          if (title && !seenTitles.has(title)) {
-            seenTitles.add(title);
-            const opt = document.createElement("option");
-            opt.value = title;
-            titleDatalist.appendChild(opt);
-          }
-        });
-      }
 
       showBooks("All");
       loadingScreen.classList.add("fade-out");
@@ -790,6 +793,18 @@
       const totalPages = totalItems ? Math.ceil(totalItems / BOOKS_PER_PAGE) : 0;
       const t = uiText[currentLang] || uiText.en;
 
+      // Update "searchStatus" label
+      const searchStatus = document.getElementById("searchStatus");
+      if (searchStatus) {
+        if (currentSearchTerm) {
+          searchStatus.textContent = t.searchStatus(currentSearchTerm);
+          searchStatus.classList.remove("hidden");
+        } else {
+          searchStatus.textContent = "";
+          searchStatus.classList.add("hidden");
+        }
+      }
+
       if (!totalPages) {
         bookListEl.innerHTML =
           `<p class="text-center text-gray-500 dark:text-gray-300 col-span-full">${t.noBooks}</p>`;
@@ -812,7 +827,7 @@
 
         card.innerHTML = `
           <button class="favorite-btn" type="button" aria-label="Toggle favorite">♡</button>
-          <img src="${getThumbCover(b["Cover Link"], b["Cover Original"], b["PDF Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+          <img src="${getThumbCover(b["Cover Link"], b["Cover Original"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
           <h3 class="font-bold">${b.Title}</h3>
           <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
           <p class="text-sm text-blue-500"> ${b.Language}</p>
@@ -855,7 +870,7 @@
     function goToTopOfBooks() {
       const target = document.getElementById("categorySection") || document.getElementById("bookList");
       if (!target) return;
-      const offset = 170; // scroll a bit higher so books are nicely centered on screen
+      const offset = 170;
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: "smooth" });
     }
@@ -973,8 +988,7 @@
       currentBookIdx = idx;
       const t = uiText[currentLang] || uiText.en;
 
-      document.getElementById("modalCover").src =
-        getHdCover(b["Cover Link"], b["Cover Original"], b["PDF Link"]);
+      document.getElementById("modalCover").src = getHdCover(b["Cover Link"], b["Cover Original"]);
       document.getElementById("modalTitle").textContent = b.Title || "Untitled";
       document.getElementById("modalAuthor").textContent = b.Author || "Unknown author";
       document.getElementById("modalLang").textContent = b.Language || "";
@@ -1116,6 +1130,10 @@
       const fh = document.getElementById("featuredHeading");
       if (fh) fh.textContent = t.featuredHeading;
 
+      // about creator link
+      const aboutLink = document.getElementById("aboutCreatorLink");
+      if (aboutLink) aboutLink.textContent = t.aboutCreator;
+
       // read/download labels (if modal is open)
       const readLink = document.getElementById("modalRead");
       const dlLink = document.getElementById("modalDownload");
@@ -1133,20 +1151,6 @@
       if (feedbackSubmit) feedbackSubmit.textContent = t.feedbackSubmit;
 
       updateFavoritesToggleButton();
-    }
-
-    function updateFavoritesToggleButton() {
-      const favoritesToggle = document.getElementById("favoritesToggle");
-      if (!favoritesToggle) return;
-      const t = uiText[currentLang] || uiText.en;
-
-      if (favoritesOnly) {
-        favoritesToggle.textContent = t.favoritesOn;
-        favoritesToggle.classList.add("ring-2", "ring-yellow-400", "ring-offset-2");
-      } else {
-        favoritesToggle.textContent = t.favorites;
-        favoritesToggle.classList.remove("ring-2", "ring-yellow-400", "ring-offset-2");
-      }
     }
 
     // Language toggle (EN / KH)
