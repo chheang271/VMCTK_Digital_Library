@@ -637,26 +637,15 @@
       btn.textContent = fav ? "❤" : "♡";
     }
 
-    function updateFavoritesToggleButton() {
-      const favoritesToggle = document.getElementById("favoritesToggle");
-      if (!favoritesToggle) return;
-      const t = uiText[currentLang] || uiText.en;
-
-      if (favoritesOnly) {
-        favoritesToggle.textContent = t.favoritesOn;
-        favoritesToggle.classList.add("ring-2", "ring-yellow-400", "ring-offset-2");
-      } else {
-        favoritesToggle.textContent = t.favorites;
-        favoritesToggle.classList.remove("ring-2", "ring-yellow-400", "ring-offset-2");
-      }
-    }
-
-    function getHdCover(url) {
+    // Robust Google Drive thumbnail helpers
+    function getHdCover(link, orig, pdf) {
+      const url = link || orig || pdf || "";
       if (!url) return "";
       const match = url.match(/[-\w]{25,}/);
       return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
     }
-    function getThumbCover(url) {
+    function getThumbCover(link, orig, pdf) {
+      const url = link || orig || pdf || "";
       if (!url) return "";
       const match = url.match(/[-\w]{25,}/);
       return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w600` : url;
@@ -737,7 +726,7 @@
           const f = document.createElement("div");
           f.className = "featured-card";
           f.innerHTML = `
-            <img src="${getThumbCover(b["Cover Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+            <img src="${getThumbCover(b["Cover Link"], b["Cover Original"], b["PDF Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
             <h3 class="font-semibold">${b.Title}</h3>`;
           f.onclick = () => openModal(originalIdx);
           featuredList.appendChild(f);
@@ -816,7 +805,7 @@
 
         card.innerHTML = `
           <button class="favorite-btn" type="button" aria-label="Toggle favorite">♡</button>
-          <img src="${getThumbCover(b["Cover Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+          <img src="${getThumbCover(b["Cover Link"], b["Cover Original"], b["PDF Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
           <h3 class="font-bold">${b.Title}</h3>
           <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
           <p class="text-sm text-blue-500"> ${b.Language}</p>
@@ -832,7 +821,7 @@
           ev.stopPropagation();
           const nowFav = !isFavorite(bookId);
           setFavorite(bookId, nowFav);
-          updateFavoriteButton(favBtn, nowFav);
+          updateFavoriteButton(favBtn, bookId);
 
           // Record favorite in Google Sheet when adding
           if (nowFav && typeof TRACKING_URL !== "undefined") {
@@ -977,7 +966,8 @@
       currentBookIdx = idx;
       const t = uiText[currentLang] || uiText.en;
 
-      document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
+      document.getElementById("modalCover").src =
+        getHdCover(b["Cover Link"], b["Cover Original"], b["PDF Link"]);
       document.getElementById("modalTitle").textContent = b.Title || "Untitled";
       document.getElementById("modalAuthor").textContent = b.Author || "Unknown author";
       document.getElementById("modalLang").textContent = b.Language || "";
@@ -1136,6 +1126,20 @@
       if (feedbackSubmit) feedbackSubmit.textContent = t.feedbackSubmit;
 
       updateFavoritesToggleButton();
+    }
+
+    function updateFavoritesToggleButton() {
+      const favoritesToggle = document.getElementById("favoritesToggle");
+      if (!favoritesToggle) return;
+      const t = uiText[currentLang] || uiText.en;
+
+      if (favoritesOnly) {
+        favoritesToggle.textContent = t.favoritesOn;
+        favoritesToggle.classList.add("ring-2", "ring-yellow-400", "ring-offset-2");
+      } else {
+        favoritesToggle.textContent = t.favorites;
+        favoritesToggle.classList.remove("ring-2", "ring-yellow-400", "ring-offset-2");
+      }
     }
 
     // Language toggle (EN / KH)
