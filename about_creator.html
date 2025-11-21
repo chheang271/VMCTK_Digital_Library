@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>About This Website – VMCTK Digital Library</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-50">
+  <div class="min-h-screen flex flex-col">
+    <!-- Top bar / header -->
+    <header class="bg-gradient-to-r from-blue-700 via-blue-900 to-slate-900 text-white shadow">
+      <div class="max-w-5xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <img
+            src="LOGO VMC.png"
+            alt="VMCTK Logo"
+            class="w-12 h-12 rounded-full bg-white/10 p-1"
+          />
+          <div>
+            <h1 id="headerTitle" class="text-lg sm:text-2xl font-bold">
+              About This Website
+            </h1>
+            <p id="headerSubtitle" class="text-xs sm:text-sm text-blue-100">
+              VMCTK Digital Library – creator & story
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 text-sm">
+          <!-- Language toggle -->
+          <div class="inline-flex items-center rounded-full border border-blue-300 bg-blue-900/40 overflow-hidden">
+            <button
+              id="langEnBtn"
+              type="button"
+              class="px-3 py-1 text-xs flex items-center gap-1 bg-white text-slate-900 font-semibold"
+            >
+              <span>🇬🇧</span><span>EN</span>
+            </button>
+            <button
+              id="langKhBtn"
+              type="button"
+              class="px-3 py-1 text-xs flex items-center gap-1 text-blue-100"
+            >
+              <span>🇰🇭</span><span>KH</span>
+            </button>
+          </div>
+
+          <!-- Links back -->
+          <a
+            id="backLibraryLink"
+            href="index.html"
+            class="text-xs sm:text-sm text-yellow-300 hover:text-yellow-200 underline underline-offset-4"
+          >
+            ← Back to Library
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="flex-1">
+      <div class="max-w-5xl mx-auto px-4 py-8 sm:py-10 space-y-8">
+        <!-- Hero / intro -->
+        <section class="grid md:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)] gap-6 items-center">
+          <div class="space-y-4">
+            <h2
+              id="introHeading"
+              class="text-2xl sm:text-3xl font-extrabold text-yellow-300 tracking-tight"
+            >
+              Hello! I’m the creator of VMCTK Digital Library 👋
+            </h2>
+            <p
+              id="introParagraph1"
+              class="text-sm sm:text-base text-slate-200 leading-relaxed"
+            >
+              <!-- text from JS -->
+            </p>
+            <p
+              id="introParagraph2"
+              class="text-sm sm:text-base text-slate-200 leading-relaxed"
+            >
+              <!-- text from JS -->
+            </p>
+          </div>
+
+          <!-- Creator card with photo -->
+          <div
+            class="bg-slate-900/70 border border-slate-700 rounded-2xl shadow-xl p-4 sm:p-5 flex flex-col items-center text-center space-y-3"
+          >
+            <div class="relative">
+              <!-- Replace "my-photo.jpg" with your real image filename -->
+              <img
+                src="my-photo.jpg"
+                alt="Creator photo"
+                class="w-32 h-32 sm:w-36 sm:h-36 rounded-full object-cover border-4 border-yellow-300 shadow-lg bg-slate-800"
+                onerror="this.src='LOGO VMC.png';"
+              />
+              <span
+                class="absolute -bottom-2 right-0 bg-yellow-300 text-slate-900 text-xs font-semibold px-2 py-0.5 rounded-full shadow"
+              >
+                Admin / Volunteer
+              </span>
+            </div>
+            <div>
+              <!-- Change this to your real name -->
+              <h3 id="creatorName" class="text-lg font-bold">
+                Your Name
+              </h3>
+              <p
+                id="creatorRole"
+                class="text-xs uppercase tracking-wide text-blue-200"
+              >
+                Founder – VMCTK Digital Library
+              </p>
+            </div>
+            <p
+              id="creatorShortText"
+              class="text-xs sm:text-sm text-slate-300 leading-relaxed"
+            >
+              <!-- text from JS -->
+            </p>
+          </div>
+        </section>
+
+        <!-- Gallery / extra pictures -->
+        <section class="space-y-3">
+          <h2
+            id="galleryHeading"
+            class="text-xl sm:text-2xl font-semibold text-yellow-200"
+          >
+            Behind the scenes
+          </h2>
+          <p
+            id="galleryText"
+            class="text-sm sm:text-base text-slate-200 max-w-3xl"
+          >
+            <!-- text from JS -->
+          </p>
+
+          <!-- Simple 3-image gallery; replace image filenames -->
+          <div class="grid sm:grid-cols-3 gap-4 mt-3">
+            <figure
+              class="bg-slate-900/70 border border-slate-700 rounded-xl overflow-hidden shadow"
+            >
+              <img
+                src="vmctk-workshop-1.jpg"
+                alt="VMCTK activity 1"
+                class="w-full h-40 object-cover"
+                onerror="this.style.display='none';"
+              />
+              <figcaption
+                id="caption1"
+                class="px-3 py-2 text-xs text-slate-200"
+              >
+                <!-- text from JS -->
+              </figcaption>
+            </figure>
+
+            <figure
+              class="bg-slate-900/70 border border-slate-700 rounded-xl overflow-hidden shadow"
+            >
+              <img
+                src="vmctk-workshop-2.jpg"
+                alt="VMCTK activity 2"
+                class="w-full h-40 object-cover"
+                onerror="this.style.display='none';"
+              />
+              <figcaption
+                id="caption2"
+                class="px-3 py-2 text-xs text-slate-200"
+              >
+                <!-- text from JS -->
+              </figcaption>
+            </figure>
+
+            <figure
+              class="bg-slate-900/70 border border-slate-700 rounded-xl overflow-hidden shadow"
+            >
+              <img
+                src="vmctk-library-setup.jpg"
+                alt="VMCTK library setup"
+                class="w-full h-40 object-cover"
+                onerror="this.style.display='none';"
+              />
+              <figcaption
+                id="caption3"
+                class="px-3 py-2 text-xs text-slate-200"
+              >
+                <!-- text from JS -->
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <!-- Tech / thanks section -->
+        <section class="space-y-3">
+          <h2
+            id="techHeading"
+            class="text-xl sm:text-2xl font-semibold text-yellow-200"
+          >
+            How this website was built
+          </h2>
+          <p
+            id="techText"
+            class="text-sm sm:text-base text-slate-200 max-w-3xl"
+          >
+            <!-- text from JS -->
+          </p>
+
+          <ul class="text-xs sm:text-sm text-slate-300 space-y-1 list-disc list-inside">
+            <li id="techItem1"></li>
+            <li id="techItem2"></li>
+            <li id="techItem3"></li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950/90">
+      <div
+        class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400"
+      >
+        <p id="footerText">
+          © <span id="footerYear"></span> VMCTK Digital Library. All rights reserved.
+        </p>
+        <a
+          href="index.html"
+          class="text-blue-300 hover:text-blue-200 underline underline-offset-4"
+        >
+          ⬅ Back to main page
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Reuse same key as other pages so language stays in sync
+    let currentLang = localStorage.getItem("vmctk_lang") || "en";
+
+    const aboutText = {
+      en: {
+        headerTitle: "About This Website",
+        headerSubtitle: "VMCTK Digital Library – creator & story",
+        backToLibrary: "← Back to Library",
+
+        introHeading: "Hello! I’m the creator of VMCTK Digital Library 👋",
+        introParagraph1:
+          "VMCTK Digital Library was created with one simple dream: to make reading easier for young people in Cambodia. I started this project as a volunteer, building it step-by-step in my free time.",
+        introParagraph2:
+          "Every book here is carefully collected and organized so that students, teachers, and book lovers can access free learning materials in both Khmer and English.",
+
+        creatorShortText:
+          "I believe that even a small digital library can open big doors for someone who loves to learn. Thank you for visiting and sharing this project with others!",
+
+        galleryHeading: "Behind the scenes",
+        galleryText:
+          "Here are a few moments from working on VMCTK – from preparing digital files to testing the website and sharing it with the community.",
+        caption1: "Preparing and organizing digital book files.",
+        caption2: "Sharing VMCTK with students and friends.",
+        caption3: "Testing the online library interface.",
+
+        techHeading: "How this website was built",
+        techText:
+          "The VMCTK Digital Library uses simple but powerful tools: Google Sheets to store book data, Google Drive to host PDFs and covers, and a static website hosted on GitHub Pages.",
+        techItem1: "Book list and statistics are stored in Google Sheets.",
+        techItem2:
+          "All book files and cover images are hosted securely in Google Drive.",
+        techItem3:
+          "The website itself is pure HTML, CSS, and JavaScript – no paid hosting required.",
+
+        footerText:
+          "© YEAR VMCTK Digital Library. All rights reserved."
+      },
+      kh: {
+        headerTitle: "អំពីគេហទំព័រនេះ",
+        headerSubtitle: "បណ្ណាល័យឌីជីថល VMCTK – អ្នកបង្កើត និងរឿងរ៉ាវ",
+        backToLibrary: "← ត្រលប់ទៅបណ្ណាល័យ",
+
+        introHeading:
+          "សួស្តី! ខ្ញុំគឺជាអ្នកបង្កើត បណ្ណាល័យឌីជីថល VMCTK 👋",
+        introParagraph1:
+          "បណ្ណាល័យឌីជីថល VMCTK ត្រូវបានបង្កើតឡើងពីសុបិន់តូចមួយ៖ ធ្វើឱ្យការអានក្លាយជារឿងងាយស្រួលសម្រាប់យុវជនកម្ពុជា។ ខ្ញុំបានចាប់ផ្តើមគម្រោងនេះជាស្ម័គ្រចិត្ត ដោយធ្វើបន្តិចម្តងៗនៅពេលទំនេរ។",
+        introParagraph2:
+          "សៀវភៅក្នុងគេហទំព័រនេះ ត្រូវបានប្រមូលនិងរៀបចំយ៉ាងប្រុងប្រយ័ត្ន ដើម្បីឱ្យនិស្សិត គ្រូ និងអ្នកស្រលាញ់ការអាន អាចចូលដំណើរការឯកសារអប់រំឥតគិតថ្លៃ ទាំងជាភាសាខ្មែរ និងអង់គ្លេស។",
+
+        creatorShortText:
+          "ខ្ញុំជឿជាក់ថា បណ្ណាល័យតូចមួយក៏អាចបើកទ្វារធំៗ ទៅកាន់ចំណេះដឹងសម្រាប់មនុស្សម្នាក់។ សូមអរគុណចំពោះការមកទស្សនា និងចែករំលែកគម្រោងនេះ។",
+
+        galleryHeading: "ខាងក្រោយវេទិកា",
+        galleryText:
+          "រូបភាពខ្លះៗអំពីការធ្វើការ​លើ VMCTK ពីការរៀបចំបណ្ណសារ​ ដល់ការសាកល្បងគេហទំព័រ និងចែករំលែកទៅកាន់សហគមន៍។",
+        caption1: "រៀបចំឯកសារសៀវភៅឌីជីថល។",
+        caption2: "ចែករំលែក VMCTK ជាមួយសិស្ស និងមិត្តភក្តិ។",
+        caption3: "សាកល្បងមុខមាត់បណ្ណាល័យអនឡាញ។",
+
+        techHeading: "គេហទំព័រនេះត្រូវបានបង្កើតដូចម្តេច?",
+        techText:
+          "បណ្ណាល័យឌីជីថល VMCTK ប្រើឧបករណ៍សាមញ្ញប៉ុន្តែមានអត្ថប្រយោជន៍៖ Google Sheets សម្រាប់រក្សាទុកទិន្នន័យសៀវភៅ, Google Drive សម្រាប់ផ្ទុក PDF និងរូបគម្រប និង GitHub Pages សម្រាប់បង្ហោះគេហទំព័រ។",
+        techItem1: "បញ្ជីសៀវភៅ និងស្ថិតិត្រូវបានរក្សាទុកនៅក្នុង Google Sheets។",
+        techItem2:
+          "ឯកសារ PDF និងរូបគម្របសៀវភៅទាំងអស់ត្រូវបានផ្ទុកនៅ Google Drive។",
+        techItem3:
+          "គេហទំព័រប្រើតែ HTML / CSS / JavaScript ប៉ុណ្ណោះ ដោយមិនចាំបាច់បង់ថ្លៃបង្ហោះ។",
+
+        footerText:
+          "© YEAR បណ្ណាល័យឌីជីថល VMCTK។ រក្សាសិទ្ធិគ្រប់យ៉ាង។"
+      }
+    };
+
+    function applyLang() {
+      const t = aboutText[currentLang] || aboutText.en;
+
+      document.title =
+        currentLang === "kh"
+          ? "អំពីគេហទំព័រ – បណ្ណាល័យឌីជីថល VMCTK"
+          : "About This Website – VMCTK Digital Library";
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el && value !== undefined) el.textContent = value;
+      };
+
+      setText("headerTitle", t.headerTitle);
+      setText("headerSubtitle", t.headerSubtitle);
+      setText("backLibraryLink", t.backToLibrary);
+      setText("introHeading", t.introHeading);
+      setText("introParagraph1", t.introParagraph1);
+      setText("introParagraph2", t.introParagraph2);
+      setText("creatorShortText", t.creatorShortText);
+      setText("galleryHeading", t.galleryHeading);
+      setText("galleryText", t.galleryText);
+      setText("caption1", t.caption1);
+      setText("caption2", t.caption2);
+      setText("caption3", t.caption3);
+      setText("techHeading", t.techHeading);
+      setText("techText", t.techText);
+      setText("techItem1", t.techItem1);
+      setText("techItem2", t.techItem2);
+      setText("techItem3", t.techItem3);
+
+      // Footer year
+      const year = new Date().getFullYear();
+      const footerText = t.footerText.replace("YEAR", year);
+      setText("footerText", footerText);
+
+      // Creator name / role can be edited directly in HTML if you want
+      const enBtn = document.getElementById("langEnBtn");
+      const khBtn = document.getElementById("langKhBtn");
+      if (enBtn && khBtn) {
+        if (currentLang === "en") {
+          enBtn.classList.add("bg-white", "text-slate-900", "font-semibold");
+          khBtn.classList.remove("bg-white", "text-slate-900", "font-semibold");
+          khBtn.classList.add("text-blue-100");
+        } else {
+          khBtn.classList.add("bg-white", "text-slate-900", "font-semibold");
+          enBtn.classList.remove("bg-white", "text-slate-900", "font-semibold");
+          enBtn.classList.add("text-blue-100");
+        }
+      }
+    }
+
+    // Language toggle
+    document.getElementById("langEnBtn").addEventListener("click", () => {
+      currentLang = "en";
+      localStorage.setItem("vmctk_lang", currentLang);
+      applyLang();
+    });
+
+    document.getElementById("langKhBtn").addEventListener("click", () => {
+      currentLang = "kh";
+      localStorage.setItem("vmctk_lang", currentLang);
+      applyLang();
+    });
+
+    // Initial load
+    document.getElementById("footerYear").textContent =
+      new Date().getFullYear();
+    applyLang();
+  </script>
+</body>
+</html>
