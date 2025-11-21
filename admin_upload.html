@@ -14,9 +14,8 @@
         <p id="pageSubtitle" class="text-sm text-slate-500">
           This form will append a new row to <strong>Sheet1</strong> in your Google Sheet.
         </p>
-        <!-- 🔒 Admin-only message -->
-        <p id="adminOnlyTag" class="text-xs text-red-600 mt-1">
-          🔒 Admin only – please keep this page private.
+        <p class="text-xs text-red-600 mt-1">
+          🔐 <span id="adminOnlyLabel">Admin only – please keep this page private.</span>
         </p>
       </div>
 
@@ -136,13 +135,16 @@
             >
               Category
             </label>
+            <!-- Text input + datalist for dropdown-style suggestions -->
             <input
               id="category"
               name="category"
               type="text"
+              list="categoryList"
               class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
               placeholder="e.g. Novel, Education, Children"
             />
+            <datalist id="categoryList"></datalist>
           </div>
         </div>
 
@@ -235,8 +237,7 @@
           >
             Add book
           </button>
-          <!-- class is controlled in JS (grey/green/red) -->
-          <span id="statusMsg" class="text-xs"></span>
+          <span id="statusMsg" class="text-xs text-slate-500"></span>
         </div>
       </form>
     </section>
@@ -253,7 +254,7 @@
         pageTitle: "VMCTK – Add New Book",
         heading: "Add New Book",
         subtitle: 'This form will append a new row to "Sheet1" in your Google Sheet.',
-        adminOnly: "🔒 Admin only – please keep this page private.",
+        adminOnlyLabel: "Admin only – please keep this page private.",
         dashboardLink: "📊 Dashboard",
         backToLibrary: "← Back to Library",
 
@@ -300,15 +301,14 @@
         statusErrorPrefix: "Error: ",
         statusUnknownError: "Unknown error",
         statusBookAddedPrefix: "✅ Book added with ID ",
-        statusNetworkError: "Network error while adding book.",
-        statusInvalidKey: "Invalid admin key. Please check your password."
+        statusNetworkError: "Network error while adding book."
       },
       kh: {
         pageTitle: "VMCTK – បន្ថែមសៀវភៅថ្មី",
         heading: "បន្ថែមសៀវភៅថ្មី",
         subtitle:
           "ទម្រង់នេះនឹងបន្ថែមជួរដេកថ្មីទៅ \"Sheet1\" ក្នុង Google Sheet របស់អ្នក។",
-        adminOnly: "🔒 សម្រាប់អ្នកគ្រប់គ្រងប៉ុណ្ណោះ – សូមកុំចែករំលែកតំណនេះ។",
+        adminOnlyLabel: "សម្រាប់អ្នកគ្រប់គ្រងប៉ុណ្ណោះ – សូមរក្សាទុកទំព័រនេះជាសម្ងាត់។",
         dashboardLink: "📊 ផ្ទាំងគ្រប់គ្រង",
         backToLibrary: "← ត្រលប់ទៅបណ្ណាល័យ",
 
@@ -355,9 +355,36 @@
         statusErrorPrefix: "កំហុស៖ ",
         statusUnknownError: "មិនដឹងមូលហេតុ",
         statusBookAddedPrefix: "✅ បានបន្ថែមសៀវភៅជាមួយ ID ",
-        statusNetworkError: "បញ្ហាបណ្ដាញពេលបន្ថែមសៀវភៅ។",
-        statusInvalidKey: "លេខសម្ងាត់អ្នកគ្រប់គ្រងមិនត្រឹមត្រូវទេ។ សូមពិនិត្យម្តងទៀត។"
+        statusNetworkError: "បញ្ហាបណ្ដាញពេលបន្ថែមសៀវភៅ។"
       }
+    };
+
+    // Category suggestions for the dropdown (datalist)
+    const categoryOptions = {
+      en: [
+        "Novel",
+        "Education",
+        "Children",
+        "Story Book",
+        "Comics",
+        "Self-help",
+        "Life Skills",
+        "Reference",
+        "History",
+        "Science"
+      ],
+      kh: [
+        "នាវល",
+        "អប់រំ",
+        "កុមារ",
+        "សៀវភៅរឿង",
+        "កំប្លែង",
+        "សៀវភៅអភិវឌ្ឍខ្លួនឯង",
+        "ជំនាញជីវិត",
+        "សៀវភៅយោង",
+        "ប្រវត្តិសាស្ត្រ",
+        "វិទ្យាសាស្ត្រ"
+      ]
     };
 
     // Share the same key with admin.html so language stays in sync
@@ -372,15 +399,15 @@
       // Header
       const headingEl = document.getElementById("pageHeading");
       const subtitleEl = document.getElementById("pageSubtitle");
+      const adminOnlyEl = document.getElementById("adminOnlyLabel");
       const dashboardLink = document.getElementById("dashboardLink");
       const backToLibrary = document.getElementById("backToLibraryLink");
-      const adminOnlyTag = document.getElementById("adminOnlyTag");
 
       if (headingEl) headingEl.textContent = t.heading;
       if (subtitleEl) subtitleEl.textContent = t.subtitle;
+      if (adminOnlyEl) adminOnlyEl.textContent = t.adminOnlyLabel;
       if (dashboardLink) dashboardLink.textContent = t.dashboardLink;
       if (backToLibrary) backToLibrary.textContent = t.backToLibrary;
-      if (adminOnlyTag) adminOnlyTag.textContent = t.adminOnly;
 
       // Labels
       const setText = (id, value) => {
@@ -439,6 +466,18 @@
       if (optFeatNo) optFeatNo.textContent = t.featuredNo;
       if (optFeatYes) optFeatYes.textContent = t.featuredYes;
 
+      // Category dropdown suggestions (datalist)
+      const categoryList = document.getElementById("categoryList");
+      if (categoryList) {
+        categoryList.innerHTML = "";
+        const opts = categoryOptions[currentLang] || categoryOptions.en;
+        opts.forEach((label) => {
+          const opt = document.createElement("option");
+          opt.value = label;
+          categoryList.appendChild(opt);
+        });
+      }
+
       // Button label
       const submitBtn = document.getElementById("submitBtn");
       if (submitBtn) submitBtn.textContent = t.buttonAdd;
@@ -468,8 +507,6 @@
       e.preventDefault();
       const t = uploadText[currentLang] || uploadText.en;
 
-      // neutral style first
-      statusMsg.className = "text-xs text-slate-500";
       statusMsg.textContent = "";
       submitBtn.disabled = true;
       submitBtn.textContent = t.buttonAdding;
@@ -492,34 +529,25 @@
         } catch (parseErr) {
           const text = await res.text();
           console.error("Non-JSON response:", text);
-          statusMsg.className = "text-xs text-red-600";
           statusMsg.textContent = t.statusNonJson;
           return;
         }
 
         if (!data.success) {
           console.error("Add book error:", data);
-          statusMsg.className = "text-xs text-red-600";
-
-          if (data.error === "Invalid admin key") {
-            statusMsg.textContent = t.statusInvalidKey;
-          } else {
-            const msg =
-              t.statusErrorPrefix + (data.error || t.statusUnknownError);
-            statusMsg.textContent = msg;
-          }
+          const msg =
+            t.statusErrorPrefix + (data.error || t.statusUnknownError);
+          statusMsg.textContent = msg;
           return;
         }
 
         // Prefer data.id, but also support data.book?.id if your script returns that
         const newId = data.id ?? (data.book && data.book.id) ?? "";
-        statusMsg.className = "text-xs text-green-600";
         statusMsg.textContent = t.statusBookAddedPrefix + newId;
         form.reset();
       } catch (err) {
         console.error(err);
         const tNow = uploadText[currentLang] || uploadText.en;
-        statusMsg.className = "text-xs text-red-600";
         statusMsg.textContent = tNow.statusNetworkError;
       } finally {
         const tNow = uploadText[currentLang] || uploadText.en;
