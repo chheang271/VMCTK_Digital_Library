@@ -36,13 +36,11 @@
 
     /* 🌙 About + Contact contrasts */
     body.dark #aboutVMCTK h2,
-    body.dark #contactSection h2,
-    body.dark #creatorSection h2 {
+    body.dark #contactSection h2 {
       color: var(--vmc-yellow) !important;
     }
     body.dark #aboutVMCTK p,
-    body.dark #contactSection p,
-    body.dark #creatorSection p {
+    body.dark #contactSection p {
       color: #f9fafb !important;
     }
     body.dark #aboutVMCTK strong,
@@ -104,18 +102,14 @@
     #enBtn:hover { background-color: var(--vmc-light-blue); }
     #khBtn:hover { background-color: #fbbf24; }
 
-    /* Header “About creator” button */
-    #creatorNavBtn {
-      font-size: 0.8rem;
-      text-decoration: underline;
-      margin-top: 0.25rem;
-      color: #fef3c7;
+    /* ---------- Search box (including dark mode) ---------- */
+    #searchInput {
+      background-color: #ffffff;
+      color: #111827;
     }
-    body.dark #creatorNavBtn {
-      color: var(--vmc-yellow);
+    #searchInput::placeholder {
+      color: #9ca3af;
     }
-
-    /* ---------- Search input (including dark mode) ---------- */
     body.dark #searchInput {
       background-color: #111827;
       color: #f9fafb;
@@ -303,6 +297,15 @@
 
   <!-- Header -->
   <header class="shadow p-4 flex flex-col items-center relative">
+    <!-- About the Creator link -->
+    <a
+      id="aboutCreatorLink"
+      href="about_creator.html"
+      class="absolute top-4 left-4 text-xs sm:text-sm text-yellow-100 hover:text-yellow-300 hover:underline"
+    >
+      About the Creator
+    </a>
+
     <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
     <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2" alt="VMCTK Logo">
     <h1 id="mainTitle" class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
@@ -316,24 +319,16 @@
         <span>🇰🇭</span><span>ខ្មែរ</span>
       </button>
     </div>
-    <button id="creatorNavBtn" class="mt-2 text-xs underline">
-      About the creator
-    </button>
   </header>
 
   <!-- Search -->
-  <section class="p-4 flex flex-col items-center gap-2">
-    <input
-      id="searchInput"
-      type="text"
-      placeholder="Search books..."
-      class="w-full max-w-xl p-2 border rounded shadow"
-      aria-label="Search books"
-    >
-    <p
-      id="searchInfo"
-      class="text-xs text-gray-500 dark:text-gray-300 text-center max-w-xl"
-    ></p>
+  <section class="p-4 flex justify-center">
+    <input id="searchInput" type="text" placeholder="Search books..." class="w-full max-w-xl p-2 border rounded shadow" aria-label="Search books">
+  </section>
+
+  <!-- Search status text -->
+  <section class="px-4 -mt-2 mb-1">
+    <p id="searchStatus" class="text-center text-xs text-gray-600 dark:text-gray-300"></p>
   </section>
 
   <!-- Category + Favorites -->
@@ -451,30 +446,6 @@
     </div>
   </section>
 
-  <!-- About the Creator -->
-  <section id="creatorSection" class="px-6 py-10 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 text-center">
-    <div id="creatorEN">
-      <h2 class="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-3">About the Creator</h2>
-      <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-200 text-lg leading-relaxed">
-        This digital library was created and is maintained by <strong>Cheang</strong> as a volunteer project
-        to support Cambodian youth with better access to reading materials.
-      </p>
-      <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300 text-sm mt-3">
-        Thank you for visiting and using VMCTK Digital Library. Every book you read helps this project grow. 💙
-      </p>
-    </div>
-    <div id="creatorKH" class="hidden">
-      <h2 class="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-3">អំពីអ្នកបង្កើត</h2>
-      <p class="max-w-2xl mx-auto text-gray-700 dark:text-gray-200 text-lg leading-relaxed">
-        បណ្ណាល័យឌីជីថលនេះត្រូវបានបង្កើត និងថែរក្សាដោយ <strong>ជាង</strong> ជាគម្រោងស្ម័គ្រចិត្ត
-        ដើម្បីជួយយុវជនកម្ពុជា អោយមានការចូលដំណើរការចំណេះដឹងកាន់តែងាយស្រួល។
-      </p>
-      <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300 text-sm mt-3">
-        សូមអរគុណចំពោះការចូលមកប្រើប្រាស់ បណ្ណាល័យឌីជីថល VMCTK។ រាល់សៀវភៅដែលអ្នកអាន ជួយគាំទ្រគម្រោងនេះ។ 💙
-      </p>
-    </div>
-  </section>
-
   <!-- Contact -->
   <section id="contactSection" class="px-6 py-10 bg-gradient-to-r from-indigo-100 to-blue-100 dark:from-gray-900 dark:to-gray-800 text-center">
     <div id="contactEN">
@@ -522,6 +493,7 @@
     const quoteText = document.getElementById("quoteText");
     const bookListEl = document.getElementById("bookList");
     const paginationEl = document.getElementById("pagination");
+    const searchStatusEl = document.getElementById("searchStatus");
 
     // ----- UI translations (English / Khmer) -----
     const uiText = {
@@ -529,8 +501,10 @@
         pageTitle: "VMCTK Digital Library",
         headerTitle: "VMCTK Digital Library",
         subtitle: "Volunteer for My Community",
-        creatorNav: "About the creator",
+        aboutCreator: "About the Creator",
         searchPlaceholder: "Search books...",
+        searchAll: "Showing all books",
+        searchResultsFor: (q) => `Results for “${q}”`,
         allCategories: "All Categories",
         favorites: "⭐ My favorites",
         favoritesOn: "⭐ My favorites (ON)",
@@ -555,18 +529,16 @@
         readsLabel: (n) => `${n} reads`,
         paginationShowing: (start, end, total) =>
           `Showing ${start}–${end} of ${total} books`,
-        noBooks: "No books found.",
-        searchInfoSome: (term, count) =>
-          `Showing ${count} result(s) for "${term}"`,
-        searchInfoNone: (term) =>
-          `No books found for "${term}"`
+        noBooks: "No books found."
       },
       kh: {
         pageTitle: "បណ្ណាល័យឌីជីថល VMCTK",
         headerTitle: "បណ្ណាល័យឌីជីថល VMCTK",
         subtitle: "ស្ម័គ្រចិត្តសម្រាប់សហគមន៍របស់ខ្ញុំ",
-        creatorNav: "អំពីអ្នកបង្កើត",
+        aboutCreator: "អំពីអ្នកបង្កើតគេហទំព័រ",
         searchPlaceholder: "ស្វែងរកសៀវភៅ...",
+        searchAll: "កំពុងបង្ហាញសៀវភៅទាំងអស់",
+        searchResultsFor: (q) => `លទ្ធផលស្វែងរកសម្រាប់ “${q}”`,
         allCategories: "ប្រភេទទាំងអស់",
         favorites: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត",
         favoritesOn: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត (បើក)",
@@ -591,11 +563,7 @@
         readsLabel: (n) => `${n} ដងអាន`,
         paginationShowing: (start, end, total) =>
           `កំពុងបង្ហាញ ${start}–${end} នៃសៀវភៅសរុប ${total} ក្បាល`,
-        noBooks: "រកមិនឃើញសៀវភៅទេ។",
-        searchInfoSome: (term, count) =>
-          `រកឃើញ ${count} ក្បាលសម្រាប់ "${term}"`,
-        searchInfoNone: (term) =>
-          `មិនមានសៀវភៅសម្រាប់ "${term}"`
+        noBooks: "រកមិនឃើញសៀវភៅទេ។"
       }
     };
 
@@ -616,7 +584,7 @@
       kh: [
         "📚 អ្នកអានសៀវភៅគឺជាអ្នកដឹកនាំនាពេលអនាគតរបស់យើង។",
         "🌞 ការអានសៀវភៅជាគន្លងទៅរកពន្លឺនៃចំណេះដឹង។",
-        "📘 កុំឈប់រៀន ព្រោះពិភពលោកមិនឈប់ផ្លាស់ប្ដូរឡើយ।",
+        "📘 កុំឈប់រៀន ព្រោះពិភពលោកមិនឈប់ផ្លាស់ប្ដូរឡើយ។",
         "🌟 សៀវភៅល្អមួយ អាចផ្លាស់ប្ដូរជីវិតអ្នកបាន។"
       ]
     };
@@ -693,27 +661,25 @@
       }
     }
 
-    // Helpers to extract Google Drive thumbnail
-    function driveThumbFromUrl(url, size) {
-      if (!url) return "";
-      const match = url.match(/[-\w]{25,}/);
-      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w${size}` : url;
-    }
-    function getHdCover(url) {
-      return driveThumbFromUrl(url, 2000);
-    }
-    function getThumbCover(url) {
-      return driveThumbFromUrl(url, 600);
-    }
-
-    // Choose the best cover link available for a book
-    function getBestCoverUrl(book) {
+    // Choose best cover URL for a book (Cover Link → Cover Original → PDF)
+    function pickCoverUrl(book) {
       return (
         book["Cover Link"] ||
         book["Cover Original"] ||
-        book["Cover image link (Google Drive)"] ||
+        book["PDF Link"] ||
         ""
       );
+    }
+
+    function getHdCover(url) {
+      if (!url) return "";
+      const match = url.match(/[-\w]{25,}/);
+      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
+    }
+    function getThumbCover(url) {
+      if (!url) return "";
+      const match = url.match(/[-\w]{25,}/);
+      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w600` : url;
     }
 
     // Increment view counter via Google Apps Script web app
@@ -787,9 +753,8 @@
         if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
           const f = document.createElement("div");
           f.className = "featured-card";
-          const coverSrc = getThumbCover(getBestCoverUrl(b));
           f.innerHTML = `
-            <img src="${coverSrc}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+            <img src="${getThumbCover(pickCoverUrl(b))}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
             <h3 class="font-semibold">${b.Title}</h3>`;
           f.onclick = () => openModal(originalIdx);
           featuredList.appendChild(f);
@@ -810,55 +775,27 @@
     function renderBooks() {
       bookListEl.innerHTML = "";
 
-      // 1) Category filter
       let filtered = books.filter(
         (b) => currentCategory === "All" || (b.Category || "").trim() === currentCategory
       );
 
-      // 2) Favorites only
       if (favoritesOnly) {
         const favIds = getFavoriteIds();
         filtered = filtered.filter((b) => favIds.includes(String(b.ID)));
       }
 
-      const t = uiText[currentLang] || uiText.en;
-      const searchInfoEl = document.getElementById("searchInfo");
-      const searchInputEl = document.getElementById("searchInput");
-      const rawSearch = (searchInputEl?.value || "").trim();
-
-      // 3) Search filter (title + author + category)
       if (currentSearchTerm) {
         const term = currentSearchTerm;
         filtered = filtered.filter((b) => {
           const title = (b.Title || "").toLowerCase();
           const author = (b.Author || "").toLowerCase();
-          const cat = (b.Category || "").toLowerCase();
-          return (
-            title.includes(term) ||
-            author.includes(term) ||
-            cat.includes(term)
-          );
+          return title.includes(term) || author.includes(term);
         });
-
-        if (searchInfoEl && rawSearch) {
-          if (filtered.length) {
-            searchInfoEl.textContent = t.searchInfoSome
-              ? t.searchInfoSome(rawSearch, filtered.length)
-              : `Showing ${filtered.length} result(s) for "${rawSearch}"`;
-          } else {
-            searchInfoEl.textContent = t.searchInfoNone
-              ? t.searchInfoNone(rawSearch)
-              : `No books found for "${rawSearch}"`;
-          }
-        }
-      } else if (searchInfoEl) {
-        // No search – clear helper text
-        searchInfoEl.textContent = "";
       }
 
-      // 4) Pagination
       const totalItems = filtered.length;
       const totalPages = totalItems ? Math.ceil(totalItems / BOOKS_PER_PAGE) : 0;
+      const t = uiText[currentLang] || uiText.en;
 
       if (!totalPages) {
         bookListEl.innerHTML =
@@ -873,18 +810,16 @@
       const end = start + BOOKS_PER_PAGE;
       const pageItems = filtered.slice(start, end);
 
-      // 5) Render cards
       pageItems.forEach((b) => {
         const card = document.createElement("div");
         card.className =
           "relative rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
 
         const bookId = b.ID || b._idx;
-        const coverSrc = getThumbCover(getBestCoverUrl(b));
 
         card.innerHTML = `
           <button class="favorite-btn" type="button" aria-label="Toggle favorite">♡</button>
-          <img src="${coverSrc}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+          <img src="${getThumbCover(pickCoverUrl(b))}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
           <h3 class="font-bold">${b.Title}</h3>
           <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
           <p class="text-sm text-blue-500"> ${b.Language}</p>
@@ -1045,7 +980,7 @@
       currentBookIdx = idx;
       const t = uiText[currentLang] || uiText.en;
 
-      document.getElementById("modalCover").src = getHdCover(getBestCoverUrl(b));
+      document.getElementById("modalCover").src = getHdCover(pickCoverUrl(b));
       document.getElementById("modalTitle").textContent = b.Title || "Untitled";
       document.getElementById("modalAuthor").textContent = b.Author || "Unknown author";
       document.getElementById("modalLang").textContent = b.Language || "";
@@ -1162,6 +1097,16 @@
       }
     });
 
+    function refreshSearchStatus() {
+      if (!searchStatusEl) return;
+      const t = uiText[currentLang] || uiText.en;
+      if (!currentSearchTerm) {
+        searchStatusEl.textContent = t.searchAll;
+      } else {
+        searchStatusEl.textContent = t.searchResultsFor(currentSearchTerm);
+      }
+    }
+
     // Language-aware UI update
     function applyLanguage() {
       const t = uiText[currentLang] || uiText.en;
@@ -1173,8 +1118,8 @@
       const mainTitleEl = document.getElementById("mainTitle");
       if (mainTitleEl) mainTitleEl.textContent = t.headerTitle;
 
-      const creatorNavBtn = document.getElementById("creatorNavBtn");
-      if (creatorNavBtn) creatorNavBtn.textContent = t.creatorNav;
+      const aboutCreatorLink = document.getElementById("aboutCreatorLink");
+      if (aboutCreatorLink) aboutCreatorLink.textContent = t.aboutCreator;
 
       // search placeholder
       const searchEl = document.getElementById("searchInput");
@@ -1207,23 +1152,25 @@
       if (feedbackSubmit) feedbackSubmit.textContent = t.feedbackSubmit;
 
       updateFavoritesToggleButton();
-      renderBooks(); // also refresh searchInfo language
+      refreshSearchStatus();
     }
 
     // Language toggle (EN / KH)
     document.getElementById("enBtn").onclick = () => {
       currentLang = "en";
       localStorage.setItem("vmctk_lang", currentLang);
-      ["aboutEN","contactEN","footerEN","creatorEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
-      ["aboutKH","contactKH","footerKH","creatorKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
+      ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
+      ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
+      renderBooks(); // refresh pagination and list texts
     };
     document.getElementById("khBtn").onclick = () => {
       currentLang = "kh";
       localStorage.setItem("vmctk_lang", currentLang);
-      ["aboutKH","contactKH","footerKH","creatorKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
-      ["aboutEN","contactEN","footerEN","creatorEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
+      ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
+      ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
+      renderBooks();
     };
 
     // Theme toggle
@@ -1270,23 +1217,15 @@
       currentSearchTerm = e.target.value.toLowerCase();
       currentPage = 1;
       renderBooks();
+      refreshSearchStatus();
     });
-
-    // Header "About the creator" scroll
-    const creatorNavBtn = document.getElementById("creatorNavBtn");
-    if (creatorNavBtn) {
-      creatorNavBtn.addEventListener("click", () => {
-        const sec = document.getElementById("creatorSection");
-        if (sec) sec.scrollIntoView({ behavior: "smooth" });
-      });
-    }
 
     // Initial load
     window.onload = () => {
       // show correct language sections first
       if (currentLang === "kh") {
-        ["aboutKH","contactKH","footerKH","creatorKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
-        ["aboutEN","contactEN","footerEN","creatorEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
+        ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
+        ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
       }
       applyLanguage();
       showRandomQuote();
