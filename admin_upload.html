@@ -395,7 +395,7 @@
       ]
     };
 
-    // Share the same key with admin.html so language stays in sync
+    // Shared key with admin.html
     let currentLang = localStorage.getItem("vmctk_admin_lang") || "en";
 
     function populateCategoryDatalist() {
@@ -414,10 +414,10 @@
     function applyUploadLanguage() {
       const t = uploadText[currentLang] || uploadText.en;
 
-      // <title>
+      // Title
       document.title = t.pageTitle;
 
-      // Header
+      // Header texts
       const headingEl = document.getElementById("pageHeading");
       const subtitleEl = document.getElementById("pageSubtitle");
       const adminNoticeEl = document.getElementById("adminNotice");
@@ -430,7 +430,7 @@
       if (dashboardLink) dashboardLink.textContent = t.dashboardLink;
       if (backToLibrary) backToLibrary.textContent = t.backToLibrary;
 
-      // Labels
+      // Helper
       const setText = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
@@ -446,7 +446,7 @@
       setText("labelFeatured", t.featuredLabel);
       setText("labelDescription", t.descriptionLabel);
 
-      // Placeholders & help texts
+      // Placeholders
       const adminKeyInput = document.getElementById("adminKey");
       const titleInput = document.getElementById("title");
       const authorInput = document.getElementById("author");
@@ -487,11 +487,11 @@
       if (optFeatNo) optFeatNo.textContent = t.featuredNo;
       if (optFeatYes) optFeatYes.textContent = t.featuredYes;
 
-      // Button label
+      // Button
       const submitBtn = document.getElementById("submitBtn");
       if (submitBtn) submitBtn.textContent = t.buttonAdd;
 
-      // Language toggle visuals
+      // Toggle visuals
       const enBtn = document.getElementById("uploadEnBtn");
       const khBtn = document.getElementById("uploadKhBtn");
       if (enBtn && khBtn) {
@@ -508,7 +508,7 @@
         }
       }
 
-      // Update category suggestions for current language
+      // Update category datalist
       populateCategoryDatalist();
     }
 
@@ -526,8 +526,6 @@
       submitBtn.textContent = t.buttonAdding;
 
       const formData = new FormData(form);
-
-      // type matches Apps Script: 'admin-add-book'
       formData.append("type", "admin-add-book");
 
       try {
@@ -549,9 +547,8 @@
 
         if (!data.success) {
           console.error("Add book error:", data);
-          const msg =
+          statusMsg.textContent =
             t.statusErrorPrefix + (data.error || t.statusUnknownError);
-          statusMsg.textContent = msg;
           return;
         }
 
@@ -573,17 +570,23 @@
     const uploadEnBtn = document.getElementById("uploadEnBtn");
     const uploadKhBtn = document.getElementById("uploadKhBtn");
 
-    uploadEnBtn.addEventListener("click", () => {
-      currentLang = "en";
-      localStorage.setItem("vmctk_admin_lang", currentLang);
-      applyUploadLanguage();
-    });
+    if (uploadEnBtn) {
+      uploadEnBtn.addEventListener("click", () => {
+        if (currentLang === "en") return;
+        currentLang = "en";
+        localStorage.setItem("vmctk_admin_lang", currentLang);
+        applyUploadLanguage();
+      });
+    }
 
-    uploadKhBtn.addEventListener("click", () => {
-      currentLang = "kh";
-      localStorage.setItem("vmctk_admin_lang", currentLang);
-      applyUploadLanguage();
-    });
+    if (uploadKhBtn) {
+      uploadKhBtn.addEventListener("click", () => {
+        if (currentLang === "kh") return;
+        currentLang = "kh";
+        localStorage.setItem("vmctk_admin_lang", currentLang);
+        applyUploadLanguage();
+      });
+    }
 
     // Initial load
     applyUploadLanguage();
