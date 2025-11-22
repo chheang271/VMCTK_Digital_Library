@@ -94,6 +94,21 @@
     }
     #themeToggle { font-size: 1.4rem; color: var(--vmc-yellow); }
 
+    /* About creator small button */
+    #aboutCreatorBtn {
+      margin-top: 0.3rem;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      color: #f9fafb;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    #aboutCreatorBtn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.03);
+    }
+
     /* ---------- Buttons & links ---------- */
     button, a { transition: background-color 0.3s, color 0.3s, transform 0.2s; }
     button:hover, a:hover { transform: scale(1.05); }
@@ -102,43 +117,14 @@
     #enBtn:hover { background-color: var(--vmc-light-blue); }
     #khBtn:hover { background-color: #fbbf24; }
 
-    /* About-creator button */
-    #aboutCreatorLink {
-      border-radius: 9999px;
-      border: 1px solid rgba(255,255,255,0.4);
-      padding: 0.3rem 0.9rem;
-      font-size: 0.8rem;
-      background-color: rgba(255,255,255,0.15);
-      color: #fefce8;
-      white-space: nowrap;
-    }
-    #aboutCreatorLink:hover {
-      background-color: rgba(255,255,255,0.25);
-    }
-    body.dark #aboutCreatorLink {
-      background-color: #374151;
-      border-color: #4b5563;
-      color: #fef9c3;
-    }
-    body.dark #aboutCreatorLink:hover {
-      background-color: #4b5563;
-    }
-
-    /* ---------- Search box ---------- */
+    /* ---------- Search input ---------- */
     #searchInput {
-      background-color: #ffffff;
       color: #111827;
-    }
-    #searchInput::placeholder {
-      color: #9ca3af;
     }
     body.dark #searchInput {
       background-color: #111827;
       color: #f9fafb;
-      border-color: #4b5563;
-    }
-    body.dark #searchInput::placeholder {
-      color: #6b7280;
+      border-color: #e5e7eb;
     }
 
     /* ---------- Featured Carousel ---------- */
@@ -320,16 +306,13 @@
   <!-- Header -->
   <header class="shadow p-4 flex flex-col items-center relative">
     <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
-
     <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2" alt="VMCTK Logo">
     <h1 id="mainTitle" class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
-    <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">
-      Volunteer for My Community
-    </p>
+    <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
 
-    <!-- Language + About Creator row -->
-    <div class="mt-2 flex flex-wrap items-center gap-3 justify-center">
+    <div class="mt-2 flex flex-col items-center gap-1">
       <div class="flex gap-2">
+        <!-- Flag icons on language buttons -->
         <button id="enBtn" class="px-3 py-1 flex items-center gap-1 rounded">
           <span>🇬🇧</span><span>English</span>
         </button>
@@ -337,40 +320,29 @@
           <span>🇰🇭</span><span>ខ្មែរ</span>
         </button>
       </div>
-
-      <a
-        id="aboutCreatorLink"
-        href="about_creator.html"
-        class="inline-flex items-center gap-1 text-xs"
-      >
-        👨‍💻 About the Creator
-      </a>
+      <!-- About creator link -->
+      <button id="aboutCreatorBtn" type="button">
+        About the Creator
+      </button>
     </div>
   </header>
 
   <!-- Search -->
-  <section class="p-4 flex flex-col items-center gap-2">
+  <section class="p-4 flex flex-col items-center">
     <input
       id="searchInput"
       type="text"
       placeholder="Search books..."
-      class="w-full max-w-xl p-2 border rounded shadow"
+      class="w-full max-w-xl p-2 border rounded shadow bg-white dark:bg-gray-900"
       aria-label="Search books"
     >
-    <p
-      id="searchSummary"
-      class="text-xs text-gray-600 dark:text-gray-300 text-center"
-    ></p>
+    <p id="searchSummary" class="mt-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300 text-center"></p>
   </section>
 
   <!-- Category + Favorites -->
   <section id="categorySection" class="p-4 flex justify-center">
     <div class="flex flex-wrap items-center gap-3">
-      <select
-        id="categoryDropdown"
-        class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800"
-        aria-label="Filter by category"
-      >
+      <select id="categoryDropdown" class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800" aria-label="Filter by category">
         <option value="All">All Categories</option>
       </select>
 
@@ -542,6 +514,7 @@
         favorites: "⭐ My favorites",
         favoritesOn: "⭐ My favorites (ON)",
         featuredHeading: "⭐ Featured Books",
+        aboutCreator: "About the Creator",
 
         readOnline: "Read Online",
         download: "Download",
@@ -564,12 +537,12 @@
           `Showing ${start}–${end} of ${total} books`,
         noBooks: "No books found.",
 
-        searchSummaryAll: "Showing all books",
-        searchSummaryTerm: (term, count) => {
-          if (!count) return `No books found for "${term}"`;
-          const suffix = count === 1 ? "book" : "books";
-          return `Results for "${term}" – ${count} ${suffix}`;
-        }
+        searchFoundPrefix: (n) =>
+          n === 1 ? "Found 1 book: " : `Found ${n} books: `,
+        searchMoreSuffix: (extra) =>
+          extra > 0 ? ` … and ${extra} more.` : "",
+        searchNoResults: (q) =>
+          q ? `No books found for “${q}”.` : ""
       },
       kh: {
         pageTitle: "បណ្ណាល័យឌីជីថល VMCTK",
@@ -580,6 +553,7 @@
         favorites: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត",
         favoritesOn: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត (បើក)",
         featuredHeading: "⭐ សៀវភៅពិសេស",
+        aboutCreator: "អំពីអ្នកបង្កើត",
 
         readOnline: "អានអនឡាញ",
         download: "ទាញយក",
@@ -602,12 +576,12 @@
           `កំពុងបង្ហាញ ${start}–${end} នៃសៀវភៅសរុប ${total} ក្បាល`,
         noBooks: "រកមិនឃើញសៀវភៅទេ។",
 
-        searchSummaryAll: "កំពុងបង្ហាញសៀវភៅទាំងអស់",
-        searchSummaryTerm: (term, count) => {
-          if (!count) return `រកមិនឃើញសៀវភៅ "${term}" ទេ`;
-          const suffix = "ក្បាល";
-          return `លទ្ធផលស្វែងរក "${term}" – ${count} ${suffix}`;
-        }
+        searchFoundPrefix: (n) =>
+          n === 1 ? "រកឃើញសៀវភៅ 1 ក្បាល៖ " : `រកឃើញសៀវភៅ ${n} ក្បាល៖ `,
+        searchMoreSuffix: (extra) =>
+          extra > 0 ? ` … និង ${extra} ក្បាលទៀត។` : "",
+        searchNoResults: (q) =>
+          q ? `រកមិនឃើញសៀវភៅសម្រាប់ “${q}” ទេ។` : ""
       }
     };
 
@@ -657,6 +631,7 @@
     let favoritesOnly = false;
     let currentCategory = "All";
     let currentSearchTerm = "";
+    let currentSearchTermRaw = "";
     let currentPage = 1;
     const BOOKS_PER_PAGE = 12;
 
@@ -806,6 +781,32 @@
       renderBooks();
     }
 
+    function updateSearchSummary(filteredArray) {
+      if (!searchSummaryEl) return;
+      const t = uiText[currentLang] || uiText.en;
+      const q = (currentSearchTermRaw || "").trim();
+
+      if (!q) {
+        searchSummaryEl.textContent = "";
+        return;
+      }
+
+      const totalItems = filteredArray.length;
+      if (!totalItems) {
+        searchSummaryEl.textContent = t.searchNoResults(q);
+        return;
+      }
+
+      const titles = filteredArray.map(b => b.Title || "Untitled");
+      const maxTitles = 8;
+      const shown = titles.slice(0, maxTitles);
+      let text = t.searchFoundPrefix(totalItems) + shown.join(" • ");
+      if (titles.length > maxTitles) {
+        text += t.searchMoreSuffix(titles.length - maxTitles);
+      }
+      searchSummaryEl.textContent = text;
+    }
+
     function renderBooks() {
       bookListEl.innerHTML = "";
 
@@ -827,18 +828,12 @@
         });
       }
 
+      // update small search summary text under search bar
+      updateSearchSummary(filtered);
+
       const totalItems = filtered.length;
       const totalPages = totalItems ? Math.ceil(totalItems / BOOKS_PER_PAGE) : 0;
       const t = uiText[currentLang] || uiText.en;
-
-      // Update search summary text
-      if (searchSummaryEl) {
-        if (!currentSearchTerm) {
-          searchSummaryEl.textContent = t.searchSummaryAll;
-        } else {
-          searchSummaryEl.textContent = t.searchSummaryTerm(currentSearchTerm, totalItems);
-        }
-      }
 
       if (!totalPages) {
         bookListEl.innerHTML =
@@ -905,7 +900,7 @@
     function goToTopOfBooks() {
       const target = document.getElementById("categorySection") || document.getElementById("bookList");
       if (!target) return;
-      const offset = 170;
+      const offset = 170; // scroll a bit higher so books are nicely centered on screen
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: "smooth" });
     }
@@ -1151,6 +1146,10 @@
       const mainTitleEl = document.getElementById("mainTitle");
       if (mainTitleEl) mainTitleEl.textContent = t.headerTitle;
 
+      // About creator button text
+      const aboutBtn = document.getElementById("aboutCreatorBtn");
+      if (aboutBtn) aboutBtn.textContent = t.aboutCreator;
+
       // search placeholder
       const searchEl = document.getElementById("searchInput");
       if (searchEl) searchEl.placeholder = t.searchPlaceholder;
@@ -1181,15 +1180,6 @@
       if (feedbackName) feedbackName.placeholder = t.namePlaceholder;
       if (feedbackSubmit) feedbackSubmit.textContent = t.feedbackSubmit;
 
-      // search summary base text
-      if (searchSummaryEl) {
-        if (!currentSearchTerm) {
-          searchSummaryEl.textContent = t.searchSummaryAll;
-        } else {
-          searchSummaryEl.textContent = t.searchSummaryTerm(currentSearchTerm, 0);
-        }
-      }
-
       updateFavoritesToggleButton();
     }
 
@@ -1200,7 +1190,7 @@
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
-      renderBooks(); // refresh text
+      renderBooks(); // refresh pagination and list texts
     };
     document.getElementById("khBtn").onclick = () => {
       currentLang = "kh";
@@ -1209,6 +1199,11 @@
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
       renderBooks();
+    };
+
+    // About Creator button
+    document.getElementById("aboutCreatorBtn").onclick = () => {
+      window.location.href = "about_creator.html";
     };
 
     // Theme toggle
@@ -1227,47 +1222,54 @@
       logoImage.src = "LOGO_VMC_white.png";
     }
 
-    // Featured scroll arrows
-    document.getElementById("scrollLeft").onclick = () => {
-      document.getElementById("featuredList").scrollBy({ left: -320, behavior: "smooth" });
-    };
-    document.getElementById("scrollRight").onclick = () => {
-      document.getElementById("featuredList").scrollBy({ left: 320, behavior: "smooth" });
-    };
-
-    // Smoother auto-scroll for featured
+    // -------- Featured scroll arrows: move exactly one card per click --------
     const fList = document.getElementById("featuredList");
-    const FEATURED_SCROLL_STEP = 320;         // pixels per step
-    const FEATURED_SCROLL_INTERVAL = 4000;    // ms between steps
     let autoScrollActive = true;
+    let featuredAutoResume = null;
 
-    function stepFeaturedScroll() {
-      if (!autoScrollActive || !fList) return;
-      if (fList.scrollWidth <= fList.clientWidth + 5) return; // nothing to scroll
-
-      const maxScrollLeft = fList.scrollWidth - fList.clientWidth;
-      const next = fList.scrollLeft + FEATURED_SCROLL_STEP;
-
-      if (next >= maxScrollLeft - 5) {
-        fList.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        fList.scrollBy({ left: FEATURED_SCROLL_STEP, behavior: "smooth" });
-      }
+    function getFeaturedStep() {
+      const card = fList.querySelector(".featured-card");
+      if (!card) return 250;
+      const rect = card.getBoundingClientRect();
+      const listStyle = window.getComputedStyle(fList);
+      const gap = parseFloat(listStyle.columnGap || listStyle.gap || "0");
+      return rect.width + gap;
     }
 
-    setInterval(stepFeaturedScroll, FEATURED_SCROLL_INTERVAL);
+    function scrollFeaturedByOne(direction) {
+      const step = getFeaturedStep();
+      fList.scrollBy({ left: direction * step, behavior: "smooth" });
 
-    ["mouseenter", "touchstart", "focusin"].forEach(ev =>
-      fList.addEventListener(ev, () => { autoScrollActive = false; })
-    );
-    ["mouseleave", "touchend", "focusout"].forEach(ev =>
-      fList.addEventListener(ev, () => { autoScrollActive = true; })
-    );
+      // pause auto-scroll for a few seconds after manual click
+      autoScrollActive = false;
+      if (featuredAutoResume) clearTimeout(featuredAutoResume);
+      featuredAutoResume = setTimeout(() => {
+        autoScrollActive = true;
+      }, 4000);
+    }
 
-    // Search: integrated with pagination
+    document.getElementById("scrollLeft").onclick = () => scrollFeaturedByOne(-1);
+    document.getElementById("scrollRight").onclick = () => scrollFeaturedByOne(1);
+
+    // Auto-scroll featured (gentle)
+    function autoScroll() {
+      if (!autoScrollActive) return;
+      if (!fList) return;
+
+      fList.scrollBy({ left: 1, behavior: "smooth" });
+      if (fList.scrollLeft + fList.clientWidth >= fList.scrollWidth - 1) {
+        fList.scrollTo({ left: 0, behavior: "smooth" });
+      }
+    }
+    setInterval(autoScroll, 40);
+    ["mouseenter", "touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
+    ["mouseleave", "touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
+
+    // Search: integrated with pagination + summary
     const searchEl = document.getElementById("searchInput");
     searchEl.addEventListener("input", e => {
-      currentSearchTerm = e.target.value.toLowerCase();
+      currentSearchTermRaw = e.target.value;
+      currentSearchTerm = currentSearchTermRaw.toLowerCase();
       currentPage = 1;
       renderBooks();
     });
@@ -1286,4 +1288,3 @@
   </script>
 </body>
 </html>
-
