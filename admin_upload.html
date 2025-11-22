@@ -14,8 +14,8 @@
         <p id="pageSubtitle" class="text-sm text-slate-500">
           This form will append a new row to <strong>Sheet1</strong> in your Google Sheet.
         </p>
-        <p class="text-xs text-red-600 mt-1">
-          🔐 <span id="adminOnlyLabel">Admin only – please keep this page private.</span>
+        <p id="adminNotice" class="mt-1 text-xs text-amber-600">
+          🔒 Admin only – please keep this page private.
         </p>
       </div>
 
@@ -135,16 +135,18 @@
             >
               Category
             </label>
-            <!-- Text input + datalist for dropdown-style suggestions -->
-            <input
-              id="category"
-              name="category"
-              type="text"
-              list="categoryList"
-              class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
-              placeholder="e.g. Novel, Education, Children"
-            />
-            <datalist id="categoryList"></datalist>
+            <!-- Category input with datalist suggestions -->
+            <div class="relative">
+              <input
+                id="category"
+                name="category"
+                type="text"
+                class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-blue-200"
+                placeholder="e.g. Novel, Education, Children"
+                list="categoryDatalist"
+              />
+              <datalist id="categoryDatalist"></datalist>
+            </div>
           </div>
         </div>
 
@@ -254,7 +256,7 @@
         pageTitle: "VMCTK – Add New Book",
         heading: "Add New Book",
         subtitle: 'This form will append a new row to "Sheet1" in your Google Sheet.',
-        adminOnlyLabel: "Admin only – please keep this page private.",
+        adminNotice: "🔒 Admin only – please keep this page private.",
         dashboardLink: "📊 Dashboard",
         backToLibrary: "← Back to Library",
 
@@ -308,7 +310,7 @@
         heading: "បន្ថែមសៀវភៅថ្មី",
         subtitle:
           "ទម្រង់នេះនឹងបន្ថែមជួរដេកថ្មីទៅ \"Sheet1\" ក្នុង Google Sheet របស់អ្នក។",
-        adminOnlyLabel: "សម្រាប់អ្នកគ្រប់គ្រងប៉ុណ្ណោះ – សូមរក្សាទុកទំព័រនេះជាសម្ងាត់។",
+        adminNotice: "🔒 សម្រាប់អ្នកគ្រប់គ្រងប៉ុណ្ណោះ – សូមរក្សាទុកទំព័រនេះជាឯកជន។",
         dashboardLink: "📊 ផ្ទាំងគ្រប់គ្រង",
         backToLibrary: "← ត្រលប់ទៅបណ្ណាល័យ",
 
@@ -359,7 +361,7 @@
       }
     };
 
-    // Category suggestions for the dropdown (datalist)
+    // Category suggestions for the datalist
     const categoryOptions = {
       en: [
         "Lessons, exercises and tests",
@@ -371,30 +373,43 @@
         "Life Skills",
         "Dictionary reference book",
         "Educational books and philosophy",
-        "Books on Khmer Literature"
+        "Books on Khmer Literature",
         "Business economics book",
         "Biography of an outstanding person",
         "Religion"
       ],
       kh: [
-        "មេរៀន លំហាត់ និងវិញ្ញាសារ",
+        "មេរៀន លំហាត់ និងតេស្ត",
         "បច្ចេកវិទ្យា និងកុំព្យូទ័រ",
-        "សៀវភៅកំណាព្យ សុភាសិត",
-        "សៀវភៅរឿង",
+        "សៀវភៅគុណបាត្រគន្លឹះបំណិន",
+        "សៀវភៅរឿង កំប្លែង និងរឿងខ្លី",
         "សៀវភៅច្បាប់ និងឯកសារ",
-        "សៀវភៅប្រវិត្តិសាស្រ្ត",
-        "សៀភៅចំណេះដឹងផ្សេងៗ",
-        "សៀវភៅយោងវចនានុក្រមសទ្ទានុក្រម",
-        "សៀវភៅអប់រំ​​ និងទស្សនៈវិជ្ជា",
-        "សៀវភៅអក្សរសាស្រ្តខ្មែរ"
-        "សៀវភៅអាជីរកម្ម សេដ្ឋកិច្ច",
-        "ជីវប្រវត្តិ បុគ្គលឆ្នើម",
+        "សៀវភៅប្រវត្តិសាស្ត្រ",
+        "សៀវភៅជំនាញជីវិត",
+        "វចនានុក្រម និងសៀវភៅយោង",
+        "សៀវភៅអប់រំ និងទស្សនវិជ្ជា",
+        "សៀវភៅអក្សរសិល្ប៍ខ្មែរ",
+        "សៀវភៅសេដ្ឋកិច្ច និងអាជីវកម្ម",
+        "ជីវប្រវត្តិបុគ្គលល្បី",
         "សាសនា"
       ]
     };
 
     // Share the same key with admin.html so language stays in sync
     let currentLang = localStorage.getItem("vmctk_admin_lang") || "en";
+
+    function populateCategoryDatalist() {
+      const dataList = document.getElementById("categoryDatalist");
+      if (!dataList) return;
+
+      const list = categoryOptions[currentLang] || categoryOptions.en;
+      dataList.innerHTML = "";
+      list.forEach((label) => {
+        const opt = document.createElement("option");
+        opt.value = label;
+        dataList.appendChild(opt);
+      });
+    }
 
     function applyUploadLanguage() {
       const t = uploadText[currentLang] || uploadText.en;
@@ -405,13 +420,13 @@
       // Header
       const headingEl = document.getElementById("pageHeading");
       const subtitleEl = document.getElementById("pageSubtitle");
-      const adminOnlyEl = document.getElementById("adminOnlyLabel");
+      const adminNoticeEl = document.getElementById("adminNotice");
       const dashboardLink = document.getElementById("dashboardLink");
       const backToLibrary = document.getElementById("backToLibraryLink");
 
       if (headingEl) headingEl.textContent = t.heading;
       if (subtitleEl) subtitleEl.textContent = t.subtitle;
-      if (adminOnlyEl) adminOnlyEl.textContent = t.adminOnlyLabel;
+      if (adminNoticeEl) adminNoticeEl.textContent = t.adminNotice;
       if (dashboardLink) dashboardLink.textContent = t.dashboardLink;
       if (backToLibrary) backToLibrary.textContent = t.backToLibrary;
 
@@ -472,18 +487,6 @@
       if (optFeatNo) optFeatNo.textContent = t.featuredNo;
       if (optFeatYes) optFeatYes.textContent = t.featuredYes;
 
-      // Category dropdown suggestions (datalist)
-      const categoryList = document.getElementById("categoryList");
-      if (categoryList) {
-        categoryList.innerHTML = "";
-        const opts = categoryOptions[currentLang] || categoryOptions.en;
-        opts.forEach((label) => {
-          const opt = document.createElement("option");
-          opt.value = label;
-          categoryList.appendChild(opt);
-        });
-      }
-
       // Button label
       const submitBtn = document.getElementById("submitBtn");
       if (submitBtn) submitBtn.textContent = t.buttonAdd;
@@ -494,14 +497,19 @@
       if (enBtn && khBtn) {
         if (currentLang === "en") {
           enBtn.classList.add("bg-white", "text-slate-800", "font-semibold");
+          enBtn.classList.remove("text-slate-600");
           khBtn.classList.remove("bg-white", "text-slate-800", "font-semibold");
           khBtn.classList.add("text-slate-600");
         } else {
           khBtn.classList.add("bg-white", "text-slate-800", "font-semibold");
+          khBtn.classList.remove("text-slate-600");
           enBtn.classList.remove("bg-white", "text-slate-800", "font-semibold");
           enBtn.classList.add("text-slate-600");
         }
       }
+
+      // Update category suggestions for current language
+      populateCategoryDatalist();
     }
 
     /*************** FORM SUBMIT ***************/
@@ -519,7 +527,7 @@
 
       const formData = new FormData(form);
 
-      // NOTE: this type matches Apps Script: 'admin-add-book'
+      // type matches Apps Script: 'admin-add-book'
       formData.append("type", "admin-add-book");
 
       try {
@@ -547,7 +555,6 @@
           return;
         }
 
-        // Prefer data.id, but also support data.book?.id if your script returns that
         const newId = data.id ?? (data.book && data.book.id) ?? "";
         statusMsg.textContent = t.statusBookAddedPrefix + newId;
         form.reset();
