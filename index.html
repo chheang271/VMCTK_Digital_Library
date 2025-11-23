@@ -94,32 +94,6 @@
     }
     #themeToggle { font-size: 1.4rem; color: var(--vmc-yellow); }
 
-    /* About Creator button in header */
-    #aboutCreatorBtn {
-      font-size: 0.75rem;
-      padding: 0.35rem 0.85rem;
-      border-radius: 9999px;
-      border: 1px solid rgba(255,255,255,0.8);
-      background: rgba(255,255,255,0.08);
-      color: #f9fafb;
-      text-decoration: none;
-      transition: background-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
-    }
-    #aboutCreatorBtn:hover {
-      background: #f9fafb;
-      color: #1d4ed8;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      transform: translateY(-1px);
-    }
-    body.dark #aboutCreatorBtn {
-      border-color: var(--vmc-yellow);
-      background: rgba(15,23,42,0.6);
-    }
-    body.dark #aboutCreatorBtn:hover {
-      background: var(--vmc-yellow);
-      color: #111827;
-    }
-
     /* ---------- Buttons & links ---------- */
     button, a { transition: background-color 0.3s, color 0.3s, transform 0.2s; }
     button:hover, a:hover { transform: scale(1.05); }
@@ -127,6 +101,16 @@
     #khBtn { background-color: var(--vmc-yellow); color: black; }
     #enBtn:hover { background-color: var(--vmc-light-blue); }
     #khBtn:hover { background-color: #fbbf24; }
+
+    /* About the creator button */
+    #aboutCreatorBtn {
+      background-color: rgba(255,255,255,0.95);
+      color: #1e3a8a;
+    }
+    body.dark #aboutCreatorBtn {
+      background-color: #facc15;
+      color: #111827;
+    }
 
     /* ---------- Featured Carousel ---------- */
     #featuredSection { background: linear-gradient(to right, #e0f2fe, #fef9c3); }
@@ -267,15 +251,6 @@
       color: #9ca3af;
     }
 
-    /* Search input text in dark mode */
-    body.dark #searchInput {
-      background-color: #f9fafb;
-      color: #111827;
-    }
-    body.dark #searchInput::placeholder {
-      color: #6b7280;
-    }
-
     /* ---------- Favorite button on each card ---------- */
     .favorite-btn {
       position: absolute;
@@ -304,45 +279,16 @@
     }
 
     /* ---------- Search suggestions dropdown ---------- */
-    #searchWrapper {
-      position: relative;
-    }
     #searchSuggestions {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 100%;
-      margin-top: 0.25rem;
-      background: #ffffff;
+      max-height: 260px;
+      overflow-y: auto;
       border-radius: 0.5rem;
       border: 1px solid #e5e7eb;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      max-height: 14rem;
-      overflow-y: auto;
-      z-index: 30;
-      font-size: 0.875rem;
-    }
-    #searchSuggestions.hidden {
-      display: none;
-    }
-    .search-suggestion-item {
-      padding: 0.4rem 0.75rem;
-      cursor: pointer;
-      color: #111827;
-    }
-    .search-suggestion-item:hover {
-      background-color: #eff6ff;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
     }
     body.dark #searchSuggestions {
-      background: #111827;
-      border-color: #374151;
-      color: #f9fafb;
-    }
-    body.dark .search-suggestion-item {
-      color: #f9fafb;
-    }
-    body.dark .search-suggestion-item:hover {
-      background-color: #1f2937;
+      background-color: #111827;
+      border-color: #4b5563;
     }
   </style>
 </head>
@@ -363,7 +309,7 @@
     <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
 
     <div class="mt-2 flex flex-col items-center gap-2">
-      <!-- language buttons -->
+      <!-- Language buttons -->
       <div class="flex gap-2">
         <button id="enBtn" class="px-3 py-1 flex items-center gap-1 rounded">
           <span>🇬🇧</span><span>English</span>
@@ -374,26 +320,36 @@
       </div>
 
       <!-- About the Creator button -->
-      <a id="aboutCreatorBtn" href="about_creator.html">
-        About the Creator
+      <a
+        href="about_creator.html"
+        id="aboutCreatorBtn"
+        class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs shadow hover:shadow-md"
+      >
+        🎨 About the Creator
       </a>
     </div>
   </header>
 
   <!-- Search -->
-  <section class="p-4 flex flex-col items-center gap-1">
-    <div id="searchWrapper" class="w-full max-w-xl">
+  <section class="p-4 flex justify-center">
+    <div class="w-full max-w-xl relative">
       <input
         id="searchInput"
         type="text"
         placeholder="Search books..."
-        class="w-full p-2 border rounded shadow"
+        class="w-full p-2 border rounded shadow bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100"
         aria-label="Search books"
         autocomplete="off"
       >
-      <div id="searchSuggestions" class="hidden"></div>
+      <div
+        id="searchSuggestions"
+        class="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-900 text-sm hidden z-20 rounded-lg"
+      ></div>
+      <p
+        id="searchStatus"
+        class="mt-1 text-xs text-center text-gray-600 dark:text-gray-300"
+      ></p>
     </div>
-    <p id="searchInfo" class="text-xs text-gray-600 dark:text-gray-300 mt-1"></p>
   </section>
 
   <!-- Category + Favorites -->
@@ -558,8 +514,6 @@
     const quoteText = document.getElementById("quoteText");
     const bookListEl = document.getElementById("bookList");
     const paginationEl = document.getElementById("pagination");
-    const searchSuggestionsEl = document.getElementById("searchSuggestions");
-    const searchInfoEl = document.getElementById("searchInfo");
 
     // ----- UI translations (English / Khmer) -----
     const uiText = {
@@ -567,13 +521,10 @@
         pageTitle: "VMCTK Digital Library",
         headerTitle: "VMCTK Digital Library",
         subtitle: "Volunteer for My Community",
-        aboutCreator: "About the Creator",
         searchPlaceholder: "Search books...",
-        searchSummaryAll: (count) => `Showing all ${count} books`,
-        searchSummaryFiltered: (term, count) =>
-          count === 0
-            ? `No books found for “${term}”`
-            : `Showing ${count} book(s) for “${term}”`,
+        searchAll: (total) => `Showing all ${total} books`,
+        searchResults: (term, count) =>
+          count === 1 ? `Showing 1 book for “${term}”` : `Showing ${count} books for “${term}”`,
         allCategories: "All Categories",
         favorites: "⭐ My favorites",
         favoritesOn: "⭐ My favorites (ON)",
@@ -604,17 +555,16 @@
         pageTitle: "បណ្ណាល័យឌីជីថល VMCTK",
         headerTitle: "បណ្ណាល័យឌីជីថល VMCTK",
         subtitle: "ស្ម័គ្រចិត្តសម្រាប់សហគមន៍របស់ខ្ញុំ",
-        aboutCreator: "អំពីអ្នកបង្កើតវេបសាយ",
         searchPlaceholder: "ស្វែងរកសៀវភៅ...",
-        searchSummaryAll: (count) => `កំពុងបង្ហាញសៀវភៅសរុប ${count} ក្បាល`,
-        searchSummaryFiltered: (term, count) =>
-          count === 0
-            ? `រកមិនឃើញសៀវភៅសម្រាប់ “${term}” ទេ`
-            : `កំពុងបង្ហាញសៀវភៅចំនួន ${count} ក្បាល សម្រាប់ “${term}”`,
+        searchAll: (total) => `បង្ហាញសៀវភៅសរុប ${total} ក្បាល`,
+        searchResults: (term, count) =>
+          count === 1
+            ? `បង្ហាញសៀវភៅ 1 ក្បាល សម្រាប់ “${term}”`
+            : `បង្ហាញសៀវភៅ ${count} ក្បាល សម្រាប់ “${term}”`,
         allCategories: "ប្រភេទទាំងអស់",
         favorites: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត",
         favoritesOn: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត (បើក)",
-        featuredHeading: "⭐ សៀវភៅពិសេស",
+        featuredHeading: "⭐ សៀវ​ភៅ​ពិសេស",
 
         readOnline: "អានអនឡាញ",
         download: "ទាញយក",
@@ -688,7 +638,6 @@
     let currentPage = 1;
     const BOOKS_PER_PAGE = 12;
 
-    // ----- Favorites (stored per user in localStorage) -----
     const FAVORITES_KEY = "vmctk_favorites";
 
     function getFavoriteIds() {
@@ -733,36 +682,22 @@
       }
     }
 
-    // Drive cover helpers (robust for different kinds of links)
-    function extractDriveId(url) {
-      if (!url) return null;
-      try {
-        const match = url.match(/[-\w]{25,}/);
-        if (match) return match[0];
+    function getIdFromUrl(url) {
+      if (!url) return "";
+      const match = url.match(/[-\w]{25,}/);
+      return match ? match[0] : "";
+    }
 
-        const u = new URL(url);
-        const idParam = u.searchParams.get("id");
-        if (idParam) return idParam;
-      } catch (e) {
-        // ignore invalid URL
-      }
-      return null;
+    function getHdCoverFromBook(book) {
+      const link = book["Cover Link"] || book["Cover Original"];
+      const id = getIdFromUrl(link);
+      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w2000` : "";
     }
-    function getThumbCoverFromUrl(url) {
-      if (!url) return "";
-      const id = extractDriveId(url);
-      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w600` : url;
-    }
-    function getHdCoverFromUrl(url) {
-      if (!url) return "";
-      const id = extractDriveId(url);
-      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w2000` : url;
-    }
-    function getHdCover(url) {
-      return getHdCoverFromUrl(url);
-    }
-    function getThumbCover(url) {
-      return getThumbCoverFromUrl(url);
+
+    function getThumbCoverFromBook(book) {
+      const link = book["Cover Link"] || book["Cover Original"];
+      const id = getIdFromUrl(link);
+      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w600` : "";
     }
 
     // Increment view counter via Google Apps Script web app
@@ -832,17 +767,15 @@
 
       updateFavoritesToggleButton();
 
-      // Featured books (max 5)
       books.forEach((b, originalIdx) => {
-        if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
+        if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 8) {
           const f = document.createElement("div");
           f.className = "featured-card cursor-pointer";
-          const coverSrc = getThumbCoverFromUrl(
-            b["Cover Link"] || b["Cover Original"] || b["PDF Link"]
-          );
           f.innerHTML = `
-            <img src="${coverSrc}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
-            <h3 class="font-semibold">${b.Title}</h3>`;
+            <img src="${getThumbCoverFromBook(b)}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+            <h3 class="font-semibold truncate">${b.Title}</h3>
+            <p class="text-xs text-gray-600 dark:text-gray-300 truncate">${b.Author || ""}</p>
+          `;
           f.onclick = () => openModal(originalIdx);
           featuredList.appendChild(f);
         }
@@ -852,11 +785,22 @@
       loadingScreen.classList.add("fade-out");
     }
 
-    // wrapper so we don't lose this function
     function showBooks(category) {
       currentCategory = category;
       currentPage = 1;
       renderBooks();
+    }
+
+    function updateSearchStatus(visibleCount, totalBooks) {
+      const statusEl = document.getElementById("searchStatus");
+      if (!statusEl) return;
+      const t = uiText[currentLang] || uiText.en;
+      const term = (currentSearchTerm || "").trim();
+      if (!term) {
+        statusEl.textContent = t.searchAll(totalBooks);
+      } else {
+        statusEl.textContent = t.searchResults(term, visibleCount);
+      }
     }
 
     function renderBooks() {
@@ -884,14 +828,7 @@
       const totalPages = totalItems ? Math.ceil(totalItems / BOOKS_PER_PAGE) : 0;
       const t = uiText[currentLang] || uiText.en;
 
-      // Update search summary line
-      if (!searchInfoEl) {
-        // nothing
-      } else if (!currentSearchTerm) {
-        searchInfoEl.textContent = t.searchSummaryAll(books.length);
-      } else {
-        searchInfoEl.textContent = t.searchSummaryFiltered(currentSearchTerm, totalItems);
-      }
+      updateSearchStatus(totalItems, books.length);
 
       if (!totalPages) {
         bookListEl.innerHTML =
@@ -912,15 +849,12 @@
           "relative rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
 
         const bookId = b.ID || b._idx;
-        const coverSrc = getThumbCoverFromUrl(
-          b["Cover Link"] || b["Cover Original"] || b["PDF Link"]
-        );
 
         card.innerHTML = `
           <button class="favorite-btn" type="button" aria-label="Toggle favorite">♡</button>
-          <img src="${coverSrc}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
-          <h3 class="font-bold">${b.Title}</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
+          <img src="${getThumbCoverFromBook(b)}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+          <h3 class="font-bold line-clamp-2 min-h-[2.5rem]">${b.Title}</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-300 truncate">${b.Author}</p>
           <p class="text-sm text-blue-500"> ${b.Language}</p>
         `;
 
@@ -936,7 +870,6 @@
           setFavorite(bookId, nowFav);
           updateFavoriteButton(favBtn, bookId);
 
-          // Record favorite in Google Sheet when adding
           if (nowFav && typeof TRACKING_URL !== "undefined") {
             try {
               fetch(TRACKING_URL, {
@@ -961,7 +894,7 @@
     function goToTopOfBooks() {
       const target = document.getElementById("categorySection") || document.getElementById("bookList");
       if (!target) return;
-      const offset = 170; // scroll a bit higher so books are nicely centered on screen
+      const offset = 170;
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: "smooth" });
     }
@@ -1079,11 +1012,7 @@
       currentBookIdx = idx;
       const t = uiText[currentLang] || uiText.en;
 
-      const coverSrc = getHdCoverFromUrl(
-        b["Cover Link"] || b["Cover Original"] || b["PDF Link"]
-      );
-
-      document.getElementById("modalCover").src = coverSrc;
+      document.getElementById("modalCover").src = getHdCoverFromBook(b);
       document.getElementById("modalTitle").textContent = b.Title || "Untitled";
       document.getElementById("modalAuthor").textContent = b.Author || "Unknown author";
       document.getElementById("modalLang").textContent = b.Language || "";
@@ -1101,7 +1030,6 @@
       const dlLink = document.getElementById("modalDownload");
       const pdf = b["PDF Link"];
 
-      // update button labels based on language
       readLink.textContent = t.readOnline;
       dlLink.textContent = t.download;
 
@@ -1204,38 +1132,28 @@
     function applyLanguage() {
       const t = uiText[currentLang] || uiText.en;
 
-      // document title & header subtitle/title
       document.title = t.pageTitle;
       const subtitleEl = document.getElementById("subtitle");
       if (subtitleEl) subtitleEl.textContent = t.subtitle;
       const mainTitleEl = document.getElementById("mainTitle");
       if (mainTitleEl) mainTitleEl.textContent = t.headerTitle;
 
-      // About creator button
-      const aboutBtn = document.getElementById("aboutCreatorBtn");
-      if (aboutBtn) aboutBtn.textContent = t.aboutCreator;
-
-      // search placeholder
       const searchEl = document.getElementById("searchInput");
       if (searchEl) searchEl.placeholder = t.searchPlaceholder;
 
-      // "All categories" option (first)
       const catDropdown = document.getElementById("categoryDropdown");
       if (catDropdown && catDropdown.options.length > 0) {
         catDropdown.options[0].textContent = t.allCategories;
       }
 
-      // featured heading
       const fh = document.getElementById("featuredHeading");
       if (fh) fh.textContent = t.featuredHeading;
 
-      // read/download labels (if modal is open)
       const readLink = document.getElementById("modalRead");
       const dlLink = document.getElementById("modalDownload");
       if (readLink) readLink.textContent = t.readOnline;
       if (dlLink) dlLink.textContent = t.download;
 
-      // feedback section
       const fbHeading = document.getElementById("feedbackHeading");
       const ratingLabel = document.getElementById("ratingLabel");
       if (fbHeading) fbHeading.textContent = t.feedbackHeading;
@@ -1245,23 +1163,8 @@
       if (feedbackName) feedbackName.placeholder = t.namePlaceholder;
       if (feedbackSubmit) feedbackSubmit.textContent = t.feedbackSubmit;
 
-      // search summary line
-      if (searchInfoEl) {
-        if (!currentSearchTerm) {
-          searchInfoEl.textContent = t.searchSummaryAll(books.length || 0);
-        } else {
-          // when switching language keep same count
-          const filteredCount = books.filter(b => {
-            const term = currentSearchTerm;
-            const title = (b.Title || "").toLowerCase();
-            const author = (b.Author || "").toLowerCase();
-            return title.includes(term) || author.includes(term);
-          }).length;
-          searchInfoEl.textContent = t.searchSummaryFiltered(currentSearchTerm, filteredCount);
-        }
-      }
-
       updateFavoritesToggleButton();
+      updateSearchStatus(books.length, books.length);
     }
 
     // Language toggle (EN / KH)
@@ -1271,7 +1174,7 @@
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
-      renderBooks(); // refresh pagination and list texts
+      renderBooks();
     };
     document.getElementById("khBtn").onclick = () => {
       currentLang = "kh";
@@ -1298,101 +1201,116 @@
       logoImage.src = "LOGO_VMC_white.png";
     }
 
-    // Featured scroll arrows -> move one card at a time
+    // ---- Featured left/right arrows: move exactly ONE card per click, no auto-scroll ----
     const featuredListEl = document.getElementById("featuredList");
+
     function scrollFeatured(direction) {
       if (!featuredListEl) return;
       const card = featuredListEl.querySelector(".featured-card");
-      const step = card ? card.offsetWidth + 16 : 260;
-      featuredListEl.scrollBy({ left: step * direction, behavior: "smooth" });
+      if (!card) return;
+
+      const cardRect = card.getBoundingClientRect();
+      const styles = getComputedStyle(featuredListEl);
+      const gap = parseFloat(styles.columnGap || styles.gap || "16");
+      const step = cardRect.width + (isNaN(gap) ? 16 : gap);
+
+      featuredListEl.scrollBy({
+        left: direction * step,
+        behavior: "smooth"
+      });
     }
+
     document.getElementById("scrollLeft").onclick = () => scrollFeatured(-1);
     document.getElementById("scrollRight").onclick = () => scrollFeatured(1);
 
-    // Auto-scroll featured
-    let autoScrollActive = true;
-    function autoScroll() {
-      if (!autoScrollActive) return;
-      featuredListEl.scrollBy({ left: 1, behavior: "smooth" });
-      if (featuredListEl.scrollLeft + featuredListEl.clientWidth >= featuredListEl.scrollWidth - 1) {
-        featuredListEl.scrollTo({ left: 0, behavior: "smooth" });
-      }
+    // ---- Search suggestions ----
+    const searchInput = document.getElementById("searchInput");
+    const searchSuggestionsEl = document.getElementById("searchSuggestions");
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, ch => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[ch]));
     }
-    setInterval(autoScroll, 40);
-    ["mouseenter", "touchstart"].forEach(ev => featuredListEl.addEventListener(ev, () => autoScrollActive = false));
-    ["mouseleave", "touchend"].forEach(ev => featuredListEl.addEventListener(ev, () => autoScrollActive = true));
 
-    // Search: integrated with pagination + suggestions
-    const searchEl = document.getElementById("searchInput");
-
-    function updateSearchSuggestions(term) {
+    function buildSearchSuggestions(termRaw) {
       if (!searchSuggestionsEl) return;
-      term = term.trim().toLowerCase();
-
+      const term = (termRaw || "").trim().toLowerCase();
       if (!term) {
         searchSuggestionsEl.classList.add("hidden");
         searchSuggestionsEl.innerHTML = "";
         return;
       }
 
-      const suggestions = [];
+      const matches = [];
+      const seen = new Set();
+
       for (const b of books) {
-        const title = (b.Title || "");
-        const author = (b.Author || "");
-        if (
-          title.toLowerCase().includes(term) ||
-          author.toLowerCase().includes(term)
-        ) {
-          suggestions.push({ title, author });
+        const title = b.Title || "";
+        const author = b.Author || "";
+        const combined = (title + " " + author).toLowerCase();
+        if (combined.includes(term)) {
+          const key = title + "||" + author;
+          if (!seen.has(key)) {
+            seen.add(key);
+            matches.push({ title, author });
+            if (matches.length >= 8) break;
+          }
         }
-        if (suggestions.length >= 8) break;
       }
 
-      if (!suggestions.length) {
+      if (!matches.length) {
         searchSuggestionsEl.classList.add("hidden");
         searchSuggestionsEl.innerHTML = "";
         return;
       }
 
-      searchSuggestionsEl.innerHTML = "";
-      suggestions.forEach(s => {
-        const div = document.createElement("div");
-        div.className = "search-suggestion-item";
-        div.textContent = s.title || s.author || "";
-        div.onclick = () => {
-          searchEl.value = s.title || s.author || "";
-          currentSearchTerm = searchEl.value.toLowerCase();
+      searchSuggestionsEl.innerHTML = matches.map(m => `
+        <button type="button" class="w-full text-left px-3 py-2 bg-white dark:bg-gray-900 hover:bg-blue-50 dark:hover:bg-gray-700 border-b last:border-b-0 border-gray-100 dark:border-gray-700">
+          <span class="font-medium block truncate">${escapeHtml(m.title)}</span>
+          ${m.author ? `<span class="block text-xs text-gray-500 dark:text-gray-400 truncate">${escapeHtml(m.author)}</span>` : ""}
+        </button>
+      `).join("");
+
+      Array.from(searchSuggestionsEl.querySelectorAll("button")).forEach((btn, idx) => {
+        const { title } = matches[idx];
+        btn.addEventListener("click", () => {
+          searchInput.value = title;
+          currentSearchTerm = title.toLowerCase();
           currentPage = 1;
           renderBooks();
           searchSuggestionsEl.classList.add("hidden");
-        };
-        searchSuggestionsEl.appendChild(div);
+        });
       });
+
       searchSuggestionsEl.classList.remove("hidden");
     }
 
-    searchEl.addEventListener("input", e => {
-      currentSearchTerm = e.target.value.toLowerCase();
-      currentPage = 1;
-      renderBooks();
-      updateSearchSuggestions(e.target.value);
-    });
+    if (searchInput) {
+      searchInput.addEventListener("input", e => {
+        currentSearchTerm = e.target.value.toLowerCase();
+        currentPage = 1;
+        renderBooks();
+        buildSearchSuggestions(e.target.value);
+      });
 
-    searchEl.addEventListener("focus", e => {
-      updateSearchSuggestions(e.target.value);
-    });
+      searchInput.addEventListener("focus", e => {
+        if (e.target.value) buildSearchSuggestions(e.target.value);
+      });
 
-    searchEl.addEventListener("blur", () => {
-      setTimeout(() => {
-        if (searchSuggestionsEl) {
-          searchSuggestionsEl.classList.add("hidden");
-        }
-      }, 200);
-    });
+      searchInput.addEventListener("blur", () => {
+        setTimeout(() => {
+          if (searchSuggestionsEl) searchSuggestionsEl.classList.add("hidden");
+        }, 160);
+      });
+    }
 
     // Initial load
     window.onload = () => {
-      // show correct language sections first
       if (currentLang === "kh") {
         ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
         ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
