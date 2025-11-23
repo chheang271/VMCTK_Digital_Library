@@ -102,6 +102,62 @@
     #enBtn:hover { background-color: var(--vmc-light-blue); }
     #khBtn:hover { background-color: #fbbf24; }
 
+    /* ---------- Search box + suggestions ---------- */
+    #searchInput {
+      background-color: #ffffff;
+      color: #111827;
+    }
+    body.dark #searchInput {
+      background-color: #111827;
+      color: #f9fafb;
+      border-color: #4b5563;
+    }
+    body.dark #searchInput::placeholder {
+      color: #9ca3af;
+    }
+
+    #searchWrapper {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    #searchSuggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-top: none;
+      max-height: 260px;
+      overflow-y: auto;
+      z-index: 30;
+      display: none;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      border-radius: 0 0 0.75rem 0.75rem;
+    }
+    body.dark #searchSuggestions {
+      background: #111827;
+      border-color: #374151;
+      color: #e5e7eb;
+    }
+    .search-suggestion-item {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(229,231,235,0.6);
+    }
+    .search-suggestion-item:last-child {
+      border-bottom: none;
+    }
+    .search-suggestion-item:hover {
+      background: #eff6ff;
+    }
+    body.dark .search-suggestion-item:hover {
+      background: #1f2937;
+    }
+
     /* ---------- Featured Carousel ---------- */
     #featuredSection { background: linear-gradient(to right, #e0f2fe, #fef9c3); }
     body.dark #featuredSection { background: linear-gradient(to right, #1e293b, #1f2937); }
@@ -267,47 +323,6 @@
     body.dark .favorite-btn.favorited {
       color: #fb7185;
     }
-
-    /* ---------- Search suggestions dropdown ---------- */
-    #searchWrapper {
-      position: relative;
-    }
-    #searchSuggestions {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 100%;
-      margin-top: 0.25rem;
-      background-color: #ffffff;
-      border-radius: 0.5rem;
-      border: 1px solid #d1d5db;
-      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
-      max-height: 14rem;
-      overflow-y: auto;
-      z-index: 30;
-    }
-    body.dark #searchSuggestions {
-      background-color: #111827;
-      border-color: #4b5563;
-    }
-    #searchSuggestions.hidden {
-      display: none;
-    }
-    #searchSuggestions button {
-      width: 100%;
-      text-align: left;
-      padding: 0.4rem 0.75rem;
-      font-size: 0.875rem;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-    }
-    #searchSuggestions button:hover {
-      background-color: #eff6ff;
-    }
-    body.dark #searchSuggestions button:hover {
-      background-color: #1f2937;
-    }
   </style>
 </head>
 
@@ -322,14 +337,22 @@
   <!-- Header -->
   <header class="shadow p-4 flex flex-col items-center relative">
     <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
+
+    <!-- About the Creator button (top-left) -->
+    <a
+      href="about_creator.html"
+      class="absolute top-4 left-4 text-xs sm:text-sm px-2 py-1 rounded bg-white/20 hover:bg-white/30 text-white backdrop-blur shadow"
+    >
+      About the Creator
+    </a>
+
     <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2" alt="VMCTK Logo">
     <h1 id="mainTitle" class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
     <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
 
-    <!-- language + about creator -->
-    <div class="mt-3 flex flex-col items-center gap-1">
+    <div class="mt-2 flex flex-col sm:flex-row items-center gap-2">
+      <!-- Language buttons -->
       <div class="flex gap-2">
-        <!-- Flag icons on language buttons -->
         <button id="enBtn" class="px-3 py-1 flex items-center gap-1 rounded">
           <span>🇬🇧</span><span>English</span>
         </button>
@@ -337,38 +360,37 @@
           <span>🇰🇭</span><span>ខ្មែរ</span>
         </button>
       </div>
-      <a
-        id="aboutCreatorLink"
-        href="about_creator.html"
-        class="text-xs sm:text-sm underline decoration-yellow-300 hover:text-yellow-200"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        About the Creator
-      </a>
     </div>
   </header>
 
   <!-- Search -->
   <section class="p-4 flex justify-center">
-    <div id="searchWrapper" class="w-full max-w-xl">
+    <div id="searchWrapper">
       <input
         id="searchInput"
         type="text"
         placeholder="Search books..."
-        class="w-full p-2 border rounded shadow bg-white text-gray-900 placeholder-gray-400
-               dark:bg-gray-900 dark:text-gray-100 dark:border-gray-500 dark:placeholder-gray-400"
+        class="w-full p-2 border rounded shadow"
         aria-label="Search books"
         autocomplete="off"
       >
-      <div id="searchSuggestions" class="hidden"></div>
+      <div id="searchSuggestions"></div>
     </div>
   </section>
+
+  <!-- Search summary -->
+  <div class="text-center text-xs text-gray-500 dark:text-gray-300 pb-1">
+    <span id="searchSummaryText"></span>
+  </div>
 
   <!-- Category + Favorites -->
   <section id="categorySection" class="p-4 flex justify-center">
     <div class="flex flex-wrap items-center gap-3">
-      <select id="categoryDropdown" class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800" aria-label="Filter by category">
+      <select
+        id="categoryDropdown"
+        class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800"
+        aria-label="Filter by category"
+      >
         <option value="All">All Categories</option>
       </select>
 
@@ -527,6 +549,7 @@
     const quoteText = document.getElementById("quoteText");
     const bookListEl = document.getElementById("bookList");
     const paginationEl = document.getElementById("pagination");
+    const searchSummaryText = document.getElementById("searchSummaryText");
 
     // ----- UI translations (English / Khmer) -----
     const uiText = {
@@ -539,7 +562,6 @@
         favorites: "⭐ My favorites",
         favoritesOn: "⭐ My favorites (ON)",
         featuredHeading: "⭐ Featured Books",
-        aboutCreator: "About the Creator",
 
         readOnline: "Read Online",
         download: "Download",
@@ -560,7 +582,12 @@
         readsLabel: (n) => `${n} reads`,
         paginationShowing: (start, end, total) =>
           `Showing ${start}–${end} of ${total} books`,
-        noBooks: "No books found."
+        noBooks: "No books found.",
+        searchSummaryAll: (n) => n ? `Showing all ${n} books` : "No books available.",
+        searchSummaryFiltered: (term, n) =>
+          n
+            ? `Found ${n} book(s) for “${term}”`
+            : `No books found for “${term}”`
       },
       kh: {
         pageTitle: "បណ្ណាល័យឌីជីថល VMCTK",
@@ -571,7 +598,6 @@
         favorites: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត",
         favoritesOn: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត (បើក)",
         featuredHeading: "⭐ សៀវភៅពិសេស",
-        aboutCreator: "អំពីអ្នកបង្កើតគេហទំព័រ",
 
         readOnline: "អានអនឡាញ",
         download: "ទាញយក",
@@ -592,7 +618,13 @@
         readsLabel: (n) => `${n} ដងអាន`,
         paginationShowing: (start, end, total) =>
           `កំពុងបង្ហាញ ${start}–${end} នៃសៀវភៅសរុប ${total} ក្បាល`,
-        noBooks: "រកមិនឃើញសៀវភៅទេ។"
+        noBooks: "រកមិនឃើញសៀវភៅទេ។",
+        searchSummaryAll: (n) =>
+          n ? `កំពុងបង្ហាញសៀវភៅចំនួន ${n} ក្បាលទាំងអស់` : "មិនទាន់មានសៀវភៅនៅឡើយទេ។",
+        searchSummaryFiltered: (term, n) =>
+          n
+            ? `រកឃើញសៀវភៅ ${n} ក្បាល សម្រាប់ “${term}”`
+            : `រកមិនឃើញសៀវភៅសម្រាប់ “${term}” ទេ`
       }
     };
 
@@ -690,15 +722,25 @@
       }
     }
 
-    function getHdCover(url) {
-      if (!url) return "";
+    // ---- COVER HELPERS (fix: use Cover Link, then Cover Original) ----
+    function driveIdFromUrl(url) {
+      if (!url) return null;
       const match = url.match(/[-\w]{25,}/);
-      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w2000` : url;
+      return match ? match[0] : null;
     }
-    function getThumbCover(url) {
-      if (!url) return "";
-      const match = url.match(/[-\w]{25,}/);
-      return match ? `https://drive.google.com/thumbnail?id=${match[0]}&sz=w600` : url;
+
+    function getThumbCover(primaryUrl, fallbackUrl) {
+      let raw = primaryUrl || fallbackUrl || "";
+      if (!raw) return "";
+      const id = driveIdFromUrl(raw);
+      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w600` : raw;
+    }
+
+    function getHdCover(primaryUrl, fallbackUrl) {
+      let raw = primaryUrl || fallbackUrl || "";
+      if (!raw) return "";
+      const id = driveIdFromUrl(raw);
+      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w2000` : raw;
     }
 
     // Increment view counter via Google Apps Script web app
@@ -768,12 +810,15 @@
 
       updateFavoritesToggleButton();
 
+      // Featured books (max 5)
       books.forEach((b, originalIdx) => {
         if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
           const f = document.createElement("div");
-          f.className = "featured-card cursor-pointer";
+          f.className = "featured-card";
           f.innerHTML = `
-            <img src="${getThumbCover(b["Cover Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+            <img src="${getThumbCover(b["Cover Link"], b["Cover Original"])}"
+                 loading="lazy" decoding="async"
+                 alt="Cover of ${b.Title}" class="book-cover mb-2">
             <h3 class="font-semibold">${b.Title}</h3>`;
           f.onclick = () => openModal(originalIdx);
           featuredList.appendChild(f);
@@ -789,6 +834,18 @@
       currentCategory = category;
       currentPage = 1;
       renderBooks();
+    }
+
+    function updateSearchSummary(totalItems) {
+      const t = uiText[currentLang] || uiText.en;
+      const term = currentSearchTerm.trim();
+      if (!searchSummaryText) return;
+
+      if (!term) {
+        searchSummaryText.textContent = t.searchSummaryAll(totalItems);
+      } else {
+        searchSummaryText.textContent = t.searchSummaryFiltered(term, totalItems);
+      }
     }
 
     function renderBooks() {
@@ -808,13 +865,16 @@
         filtered = filtered.filter((b) => {
           const title = (b.Title || "").toLowerCase();
           const author = (b.Author || "").toLowerCase();
-          return title.includes(term) || author.includes(term);
+          const category = (b.Category || "").toLowerCase();
+          return title.includes(term) || author.includes(term) || category.includes(term);
         });
       }
 
       const totalItems = filtered.length;
       const totalPages = totalItems ? Math.ceil(totalItems / BOOKS_PER_PAGE) : 0;
       const t = uiText[currentLang] || uiText.en;
+
+      updateSearchSummary(totalItems);
 
       if (!totalPages) {
         bookListEl.innerHTML =
@@ -838,7 +898,9 @@
 
         card.innerHTML = `
           <button class="favorite-btn" type="button" aria-label="Toggle favorite">♡</button>
-          <img src="${getThumbCover(b["Cover Link"])}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
+          <img src="${getThumbCover(b["Cover Link"], b["Cover Original"])}"
+               loading="lazy" decoding="async"
+               alt="Cover of ${b.Title}" class="book-cover mb-2">
           <h3 class="font-bold">${b.Title}</h3>
           <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
           <p class="text-sm text-blue-500"> ${b.Language}</p>
@@ -999,7 +1061,8 @@
       currentBookIdx = idx;
       const t = uiText[currentLang] || uiText.en;
 
-      document.getElementById("modalCover").src = getHdCover(b["Cover Link"]);
+      document.getElementById("modalCover").src =
+        getHdCover(b["Cover Link"], b["Cover Original"]);
       document.getElementById("modalTitle").textContent = b.Title || "Untitled";
       document.getElementById("modalAuthor").textContent = b.Author || "Unknown author";
       document.getElementById("modalLang").textContent = b.Language || "";
@@ -1141,10 +1204,6 @@
       const fh = document.getElementById("featuredHeading");
       if (fh) fh.textContent = t.featuredHeading;
 
-      // about creator link
-      const aboutCreatorLink = document.getElementById("aboutCreatorLink");
-      if (aboutCreatorLink) aboutCreatorLink.textContent = t.aboutCreator;
-
       // read/download labels (if modal is open)
       const readLink = document.getElementById("modalRead");
       const dlLink = document.getElementById("modalDownload");
@@ -1162,6 +1221,8 @@
       if (feedbackSubmit) feedbackSubmit.textContent = t.feedbackSubmit;
 
       updateFavoritesToggleButton();
+      // refresh search summary wording
+      renderBooks();
     }
 
     // Language toggle (EN / KH)
@@ -1171,7 +1232,6 @@
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
-      renderBooks(); // refresh pagination and list texts
     };
     document.getElementById("khBtn").onclick = () => {
       currentLang = "kh";
@@ -1179,7 +1239,6 @@
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
-      renderBooks();
     };
 
     // Theme toggle
@@ -1198,93 +1257,87 @@
       logoImage.src = "LOGO_VMC_white.png";
     }
 
-    // Featured scroll arrows – move one card at a time
+    // Featured scroll arrows – move roughly one card at a time
     const featuredListEl = document.getElementById("featuredList");
-    function scrollFeaturedByCard(direction) {
+    function scrollFeatured(direction) {
       if (!featuredListEl) return;
       const card = featuredListEl.querySelector(".featured-card");
-      const base = card ? card.getBoundingClientRect().width : 260;
-      const gap = 16; // approx gap between cards
-      const step = base + gap;
+      const step = card ? card.getBoundingClientRect().width + 16 : 250;
       featuredListEl.scrollBy({ left: direction * step, behavior: "smooth" });
     }
-
-    document.getElementById("scrollLeft").onclick = () => scrollFeaturedByCard(-1);
-    document.getElementById("scrollRight").onclick = () => scrollFeaturedByCard(1);
+    document.getElementById("scrollLeft").onclick = () => scrollFeatured(-1);
+    document.getElementById("scrollRight").onclick = () => scrollFeatured(1);
 
     // Auto-scroll featured
     let autoScrollActive = true;
-    const fList = featuredListEl;
     function autoScroll() {
-      if (!autoScrollActive || !fList) return;
-      fList.scrollBy({ left: 1, behavior: "smooth" });
-      if (fList.scrollLeft + fList.clientWidth >= fList.scrollWidth - 1) {
-        fList.scrollTo({ left: 0, behavior: "smooth" });
+      if (!autoScrollActive || !featuredListEl) return;
+      featuredListEl.scrollBy({ left: 1, behavior: "smooth" });
+      if (featuredListEl.scrollLeft + featuredListEl.clientWidth >= featuredListEl.scrollWidth - 1) {
+        featuredListEl.scrollTo({ left: 0, behavior: "smooth" });
       }
     }
     setInterval(autoScroll, 40);
-    if (fList) {
-      ["mouseenter", "touchstart"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = false));
-      ["mouseleave", "touchend"].forEach(ev => fList.addEventListener(ev, () => autoScrollActive = true));
+    ["mouseenter", "touchstart"].forEach(ev => featuredListEl.addEventListener(ev, () => autoScrollActive = false));
+    ["mouseleave", "touchend"].forEach(ev => featuredListEl.addEventListener(ev, () => autoScrollActive = true));
+
+    // Search + suggestions
+    const searchEl = document.getElementById("searchInput");
+    const suggestionsBox = document.getElementById("searchSuggestions");
+
+    function clearSuggestions() {
+      suggestionsBox.innerHTML = "";
+      suggestionsBox.style.display = "none";
     }
 
-    // Search: integrated with pagination + suggestions
-    const searchEl = document.getElementById("searchInput");
-    const suggestionsEl = document.getElementById("searchSuggestions");
-    const searchWrapper = document.getElementById("searchWrapper");
-
-    function updateSearchSuggestions(query) {
-      if (!suggestionsEl) return;
-      const term = query.trim().toLowerCase();
-      suggestionsEl.innerHTML = "";
-
+    function updateSuggestions(term) {
+      suggestionsBox.innerHTML = "";
       if (!term) {
-        suggestionsEl.classList.add("hidden");
+        suggestionsBox.style.display = "none";
         return;
       }
-
+      const lower = term.toLowerCase();
       const matches = books
-        .filter(b => (b.Title || "").toLowerCase().includes(term))
+        .filter(b => (b.Title || "").toLowerCase().includes(lower))
         .slice(0, 8);
 
       if (!matches.length) {
-        suggestionsEl.classList.add("hidden");
+        suggestionsBox.style.display = "none";
         return;
       }
 
       matches.forEach(b => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.textContent = b.Title || "";
-        btn.addEventListener("click", () => {
-          const title = b.Title || "";
-          searchEl.value = title;
-          currentSearchTerm = title.toLowerCase();
+        const item = document.createElement("div");
+        item.className = "search-suggestion-item";
+        item.textContent = b.Title;
+        item.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          searchEl.value = b.Title;
+          currentSearchTerm = b.Title.toLowerCase();
           currentPage = 1;
           renderBooks();
-          suggestionsEl.classList.add("hidden");
-          suggestionsEl.innerHTML = "";
-          goToTopOfBooks();
+          clearSuggestions();
         });
-        suggestionsEl.appendChild(btn);
+        suggestionsBox.appendChild(item);
       });
-
-      suggestionsEl.classList.remove("hidden");
+      suggestionsBox.style.display = "block";
     }
 
     searchEl.addEventListener("input", e => {
-      const value = e.target.value;
-      currentSearchTerm = value.toLowerCase();
+      currentSearchTerm = e.target.value.toLowerCase();
       currentPage = 1;
       renderBooks();
-      updateSearchSuggestions(value);
+      updateSuggestions(e.target.value);
     });
 
-    // hide suggestions when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!searchWrapper.contains(e.target)) {
-        suggestionsEl.classList.add("hidden");
+    searchEl.addEventListener("focus", () => {
+      if (searchEl.value.trim()) {
+        updateSuggestions(searchEl.value.trim());
       }
+    });
+
+    searchEl.addEventListener("blur", () => {
+      setTimeout(clearSuggestions, 120);
     });
 
     // Initial load
