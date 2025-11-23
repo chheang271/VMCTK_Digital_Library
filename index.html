@@ -94,6 +94,32 @@
     }
     #themeToggle { font-size: 1.4rem; color: var(--vmc-yellow); }
 
+    /* About Creator button in header */
+    #aboutCreatorBtn {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.08);
+      color: #f9fafb;
+      text-decoration: none;
+      transition: background-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    #aboutCreatorBtn:hover {
+      background: #f9fafb;
+      color: #1d4ed8;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transform: translateY(-1px);
+    }
+    body.dark #aboutCreatorBtn {
+      border-color: var(--vmc-yellow);
+      background: rgba(15,23,42,0.6);
+    }
+    body.dark #aboutCreatorBtn:hover {
+      background: var(--vmc-yellow);
+      color: #111827;
+    }
+
     /* ---------- Buttons & links ---------- */
     button, a { transition: background-color 0.3s, color 0.3s, transform 0.2s; }
     button:hover, a:hover { transform: scale(1.05); }
@@ -101,62 +127,6 @@
     #khBtn { background-color: var(--vmc-yellow); color: black; }
     #enBtn:hover { background-color: var(--vmc-light-blue); }
     #khBtn:hover { background-color: #fbbf24; }
-
-    /* ---------- Search box + suggestions ---------- */
-    #searchInput {
-      background-color: #ffffff;
-      color: #111827;
-    }
-    body.dark #searchInput {
-      background-color: #111827;
-      color: #f9fafb;
-      border-color: #4b5563;
-    }
-    body.dark #searchInput::placeholder {
-      color: #9ca3af;
-    }
-
-    #searchWrapper {
-      position: relative;
-      width: 100%;
-      max-width: 640px;
-    }
-
-    #searchSuggestions {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-top: none;
-      max-height: 260px;
-      overflow-y: auto;
-      z-index: 30;
-      display: none;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      border-radius: 0 0 0.75rem 0.75rem;
-    }
-    body.dark #searchSuggestions {
-      background: #111827;
-      border-color: #374151;
-      color: #e5e7eb;
-    }
-    .search-suggestion-item {
-      padding: 0.4rem 0.75rem;
-      font-size: 0.85rem;
-      cursor: pointer;
-      border-bottom: 1px solid rgba(229,231,235,0.6);
-    }
-    .search-suggestion-item:last-child {
-      border-bottom: none;
-    }
-    .search-suggestion-item:hover {
-      background: #eff6ff;
-    }
-    body.dark .search-suggestion-item:hover {
-      background: #1f2937;
-    }
 
     /* ---------- Featured Carousel ---------- */
     #featuredSection { background: linear-gradient(to right, #e0f2fe, #fef9c3); }
@@ -297,6 +267,15 @@
       color: #9ca3af;
     }
 
+    /* Search input text in dark mode */
+    body.dark #searchInput {
+      background-color: #f9fafb;
+      color: #111827;
+    }
+    body.dark #searchInput::placeholder {
+      color: #6b7280;
+    }
+
     /* ---------- Favorite button on each card ---------- */
     .favorite-btn {
       position: absolute;
@@ -323,6 +302,48 @@
     body.dark .favorite-btn.favorited {
       color: #fb7185;
     }
+
+    /* ---------- Search suggestions dropdown ---------- */
+    #searchWrapper {
+      position: relative;
+    }
+    #searchSuggestions {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      margin-top: 0.25rem;
+      background: #ffffff;
+      border-radius: 0.5rem;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      max-height: 14rem;
+      overflow-y: auto;
+      z-index: 30;
+      font-size: 0.875rem;
+    }
+    #searchSuggestions.hidden {
+      display: none;
+    }
+    .search-suggestion-item {
+      padding: 0.4rem 0.75rem;
+      cursor: pointer;
+      color: #111827;
+    }
+    .search-suggestion-item:hover {
+      background-color: #eff6ff;
+    }
+    body.dark #searchSuggestions {
+      background: #111827;
+      border-color: #374151;
+      color: #f9fafb;
+    }
+    body.dark .search-suggestion-item {
+      color: #f9fafb;
+    }
+    body.dark .search-suggestion-item:hover {
+      background-color: #1f2937;
+    }
   </style>
 </head>
 
@@ -337,21 +358,12 @@
   <!-- Header -->
   <header class="shadow p-4 flex flex-col items-center relative">
     <button id="themeToggle" class="absolute top-4 right-4">🌙</button>
-
-    <!-- About the Creator button (top-left) -->
-    <a
-      href="about_creator.html"
-      class="absolute top-4 left-4 text-xs sm:text-sm px-2 py-1 rounded bg-white/20 hover:bg-white/30 text-white backdrop-blur shadow"
-    >
-      About the Creator
-    </a>
-
     <img id="logoImage" src="LOGO VMC.png" class="w-24 mb-2" alt="VMCTK Logo">
     <h1 id="mainTitle" class="text-2xl font-bold text-center">VMCTK Digital Library</h1>
     <p id="subtitle" class="text-gray-200 dark:text-gray-300 text-center">Volunteer for My Community</p>
 
-    <div class="mt-2 flex flex-col sm:flex-row items-center gap-2">
-      <!-- Language buttons -->
+    <div class="mt-2 flex flex-col items-center gap-2">
+      <!-- language buttons -->
       <div class="flex gap-2">
         <button id="enBtn" class="px-3 py-1 flex items-center gap-1 rounded">
           <span>🇬🇧</span><span>English</span>
@@ -360,12 +372,17 @@
           <span>🇰🇭</span><span>ខ្មែរ</span>
         </button>
       </div>
+
+      <!-- About the Creator button -->
+      <a id="aboutCreatorBtn" href="about_creator.html">
+        About the Creator
+      </a>
     </div>
   </header>
 
   <!-- Search -->
-  <section class="p-4 flex justify-center">
-    <div id="searchWrapper">
+  <section class="p-4 flex flex-col items-center gap-1">
+    <div id="searchWrapper" class="w-full max-w-xl">
       <input
         id="searchInput"
         type="text"
@@ -374,23 +391,15 @@
         aria-label="Search books"
         autocomplete="off"
       >
-      <div id="searchSuggestions"></div>
+      <div id="searchSuggestions" class="hidden"></div>
     </div>
+    <p id="searchInfo" class="text-xs text-gray-600 dark:text-gray-300 mt-1"></p>
   </section>
-
-  <!-- Search summary -->
-  <div class="text-center text-xs text-gray-500 dark:text-gray-300 pb-1">
-    <span id="searchSummaryText"></span>
-  </div>
 
   <!-- Category + Favorites -->
   <section id="categorySection" class="p-4 flex justify-center">
     <div class="flex flex-wrap items-center gap-3">
-      <select
-        id="categoryDropdown"
-        class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800"
-        aria-label="Filter by category"
-      >
+      <select id="categoryDropdown" class="p-2 border rounded shadow text-gray-700 dark:text-gray-200 dark:bg-gray-800" aria-label="Filter by category">
         <option value="All">All Categories</option>
       </select>
 
@@ -549,7 +558,8 @@
     const quoteText = document.getElementById("quoteText");
     const bookListEl = document.getElementById("bookList");
     const paginationEl = document.getElementById("pagination");
-    const searchSummaryText = document.getElementById("searchSummaryText");
+    const searchSuggestionsEl = document.getElementById("searchSuggestions");
+    const searchInfoEl = document.getElementById("searchInfo");
 
     // ----- UI translations (English / Khmer) -----
     const uiText = {
@@ -557,7 +567,13 @@
         pageTitle: "VMCTK Digital Library",
         headerTitle: "VMCTK Digital Library",
         subtitle: "Volunteer for My Community",
+        aboutCreator: "About the Creator",
         searchPlaceholder: "Search books...",
+        searchSummaryAll: (count) => `Showing all ${count} books`,
+        searchSummaryFiltered: (term, count) =>
+          count === 0
+            ? `No books found for “${term}”`
+            : `Showing ${count} book(s) for “${term}”`,
         allCategories: "All Categories",
         favorites: "⭐ My favorites",
         favoritesOn: "⭐ My favorites (ON)",
@@ -582,18 +598,19 @@
         readsLabel: (n) => `${n} reads`,
         paginationShowing: (start, end, total) =>
           `Showing ${start}–${end} of ${total} books`,
-        noBooks: "No books found.",
-        searchSummaryAll: (n) => n ? `Showing all ${n} books` : "No books available.",
-        searchSummaryFiltered: (term, n) =>
-          n
-            ? `Found ${n} book(s) for “${term}”`
-            : `No books found for “${term}”`
+        noBooks: "No books found."
       },
       kh: {
         pageTitle: "បណ្ណាល័យឌីជីថល VMCTK",
         headerTitle: "បណ្ណាល័យឌីជីថល VMCTK",
         subtitle: "ស្ម័គ្រចិត្តសម្រាប់សហគមន៍របស់ខ្ញុំ",
+        aboutCreator: "អំពីអ្នកបង្កើតវេបសាយ",
         searchPlaceholder: "ស្វែងរកសៀវភៅ...",
+        searchSummaryAll: (count) => `កំពុងបង្ហាញសៀវភៅសរុប ${count} ក្បាល`,
+        searchSummaryFiltered: (term, count) =>
+          count === 0
+            ? `រកមិនឃើញសៀវភៅសម្រាប់ “${term}” ទេ`
+            : `កំពុងបង្ហាញសៀវភៅចំនួន ${count} ក្បាល សម្រាប់ “${term}”`,
         allCategories: "ប្រភេទទាំងអស់",
         favorites: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត",
         favoritesOn: "⭐ សៀវភៅដែលខ្ញុំចូលចិត្ត (បើក)",
@@ -618,13 +635,7 @@
         readsLabel: (n) => `${n} ដងអាន`,
         paginationShowing: (start, end, total) =>
           `កំពុងបង្ហាញ ${start}–${end} នៃសៀវភៅសរុប ${total} ក្បាល`,
-        noBooks: "រកមិនឃើញសៀវភៅទេ។",
-        searchSummaryAll: (n) =>
-          n ? `កំពុងបង្ហាញសៀវភៅចំនួន ${n} ក្បាលទាំងអស់` : "មិនទាន់មានសៀវភៅនៅឡើយទេ។",
-        searchSummaryFiltered: (term, n) =>
-          n
-            ? `រកឃើញសៀវភៅ ${n} ក្បាល សម្រាប់ “${term}”`
-            : `រកមិនឃើញសៀវភៅសម្រាប់ “${term}” ទេ`
+        noBooks: "រកមិនឃើញសៀវភៅទេ។"
       }
     };
 
@@ -722,25 +733,36 @@
       }
     }
 
-    // ---- COVER HELPERS (fix: use Cover Link, then Cover Original) ----
-    function driveIdFromUrl(url) {
+    // Drive cover helpers (robust for different kinds of links)
+    function extractDriveId(url) {
       if (!url) return null;
-      const match = url.match(/[-\w]{25,}/);
-      return match ? match[0] : null;
-    }
+      try {
+        const match = url.match(/[-\w]{25,}/);
+        if (match) return match[0];
 
-    function getThumbCover(primaryUrl, fallbackUrl) {
-      let raw = primaryUrl || fallbackUrl || "";
-      if (!raw) return "";
-      const id = driveIdFromUrl(raw);
-      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w600` : raw;
+        const u = new URL(url);
+        const idParam = u.searchParams.get("id");
+        if (idParam) return idParam;
+      } catch (e) {
+        // ignore invalid URL
+      }
+      return null;
     }
-
-    function getHdCover(primaryUrl, fallbackUrl) {
-      let raw = primaryUrl || fallbackUrl || "";
-      if (!raw) return "";
-      const id = driveIdFromUrl(raw);
-      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w2000` : raw;
+    function getThumbCoverFromUrl(url) {
+      if (!url) return "";
+      const id = extractDriveId(url);
+      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w600` : url;
+    }
+    function getHdCoverFromUrl(url) {
+      if (!url) return "";
+      const id = extractDriveId(url);
+      return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w2000` : url;
+    }
+    function getHdCover(url) {
+      return getHdCoverFromUrl(url);
+    }
+    function getThumbCover(url) {
+      return getThumbCoverFromUrl(url);
     }
 
     // Increment view counter via Google Apps Script web app
@@ -814,11 +836,12 @@
       books.forEach((b, originalIdx) => {
         if (b.Featured && b.Featured.toLowerCase() === "yes" && featuredList.childElementCount < 5) {
           const f = document.createElement("div");
-          f.className = "featured-card";
+          f.className = "featured-card cursor-pointer";
+          const coverSrc = getThumbCoverFromUrl(
+            b["Cover Link"] || b["Cover Original"] || b["PDF Link"]
+          );
           f.innerHTML = `
-            <img src="${getThumbCover(b["Cover Link"], b["Cover Original"])}"
-                 loading="lazy" decoding="async"
-                 alt="Cover of ${b.Title}" class="book-cover mb-2">
+            <img src="${coverSrc}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
             <h3 class="font-semibold">${b.Title}</h3>`;
           f.onclick = () => openModal(originalIdx);
           featuredList.appendChild(f);
@@ -834,18 +857,6 @@
       currentCategory = category;
       currentPage = 1;
       renderBooks();
-    }
-
-    function updateSearchSummary(totalItems) {
-      const t = uiText[currentLang] || uiText.en;
-      const term = currentSearchTerm.trim();
-      if (!searchSummaryText) return;
-
-      if (!term) {
-        searchSummaryText.textContent = t.searchSummaryAll(totalItems);
-      } else {
-        searchSummaryText.textContent = t.searchSummaryFiltered(term, totalItems);
-      }
     }
 
     function renderBooks() {
@@ -865,8 +876,7 @@
         filtered = filtered.filter((b) => {
           const title = (b.Title || "").toLowerCase();
           const author = (b.Author || "").toLowerCase();
-          const category = (b.Category || "").toLowerCase();
-          return title.includes(term) || author.includes(term) || category.includes(term);
+          return title.includes(term) || author.includes(term);
         });
       }
 
@@ -874,7 +884,14 @@
       const totalPages = totalItems ? Math.ceil(totalItems / BOOKS_PER_PAGE) : 0;
       const t = uiText[currentLang] || uiText.en;
 
-      updateSearchSummary(totalItems);
+      // Update search summary line
+      if (!searchInfoEl) {
+        // nothing
+      } else if (!currentSearchTerm) {
+        searchInfoEl.textContent = t.searchSummaryAll(books.length);
+      } else {
+        searchInfoEl.textContent = t.searchSummaryFiltered(currentSearchTerm, totalItems);
+      }
 
       if (!totalPages) {
         bookListEl.innerHTML =
@@ -895,12 +912,13 @@
           "relative rounded-lg shadow hover:scale-105 transition p-4 bg-white dark:bg-gray-800 cursor-pointer";
 
         const bookId = b.ID || b._idx;
+        const coverSrc = getThumbCoverFromUrl(
+          b["Cover Link"] || b["Cover Original"] || b["PDF Link"]
+        );
 
         card.innerHTML = `
           <button class="favorite-btn" type="button" aria-label="Toggle favorite">♡</button>
-          <img src="${getThumbCover(b["Cover Link"], b["Cover Original"])}"
-               loading="lazy" decoding="async"
-               alt="Cover of ${b.Title}" class="book-cover mb-2">
+          <img src="${coverSrc}" loading="lazy" decoding="async" alt="Cover of ${b.Title}" class="book-cover mb-2">
           <h3 class="font-bold">${b.Title}</h3>
           <p class="text-sm text-gray-500 dark:text-gray-300">${b.Author}</p>
           <p class="text-sm text-blue-500"> ${b.Language}</p>
@@ -943,7 +961,7 @@
     function goToTopOfBooks() {
       const target = document.getElementById("categorySection") || document.getElementById("bookList");
       if (!target) return;
-      const offset = 170;
+      const offset = 170; // scroll a bit higher so books are nicely centered on screen
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: "smooth" });
     }
@@ -1061,8 +1079,11 @@
       currentBookIdx = idx;
       const t = uiText[currentLang] || uiText.en;
 
-      document.getElementById("modalCover").src =
-        getHdCover(b["Cover Link"], b["Cover Original"]);
+      const coverSrc = getHdCoverFromUrl(
+        b["Cover Link"] || b["Cover Original"] || b["PDF Link"]
+      );
+
+      document.getElementById("modalCover").src = coverSrc;
       document.getElementById("modalTitle").textContent = b.Title || "Untitled";
       document.getElementById("modalAuthor").textContent = b.Author || "Unknown author";
       document.getElementById("modalLang").textContent = b.Language || "";
@@ -1190,6 +1211,10 @@
       const mainTitleEl = document.getElementById("mainTitle");
       if (mainTitleEl) mainTitleEl.textContent = t.headerTitle;
 
+      // About creator button
+      const aboutBtn = document.getElementById("aboutCreatorBtn");
+      if (aboutBtn) aboutBtn.textContent = t.aboutCreator;
+
       // search placeholder
       const searchEl = document.getElementById("searchInput");
       if (searchEl) searchEl.placeholder = t.searchPlaceholder;
@@ -1220,9 +1245,23 @@
       if (feedbackName) feedbackName.placeholder = t.namePlaceholder;
       if (feedbackSubmit) feedbackSubmit.textContent = t.feedbackSubmit;
 
+      // search summary line
+      if (searchInfoEl) {
+        if (!currentSearchTerm) {
+          searchInfoEl.textContent = t.searchSummaryAll(books.length || 0);
+        } else {
+          // when switching language keep same count
+          const filteredCount = books.filter(b => {
+            const term = currentSearchTerm;
+            const title = (b.Title || "").toLowerCase();
+            const author = (b.Author || "").toLowerCase();
+            return title.includes(term) || author.includes(term);
+          }).length;
+          searchInfoEl.textContent = t.searchSummaryFiltered(currentSearchTerm, filteredCount);
+        }
+      }
+
       updateFavoritesToggleButton();
-      // refresh search summary wording
-      renderBooks();
     }
 
     // Language toggle (EN / KH)
@@ -1232,6 +1271,7 @@
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
+      renderBooks(); // refresh pagination and list texts
     };
     document.getElementById("khBtn").onclick = () => {
       currentLang = "kh";
@@ -1239,6 +1279,7 @@
       ["aboutKH","contactKH","footerKH"].forEach(id => document.getElementById(id).classList.remove("hidden"));
       ["aboutEN","contactEN","footerEN"].forEach(id => document.getElementById(id).classList.add("hidden"));
       applyLanguage();
+      renderBooks();
     };
 
     // Theme toggle
@@ -1257,13 +1298,13 @@
       logoImage.src = "LOGO_VMC_white.png";
     }
 
-    // Featured scroll arrows – move roughly one card at a time
+    // Featured scroll arrows -> move one card at a time
     const featuredListEl = document.getElementById("featuredList");
     function scrollFeatured(direction) {
       if (!featuredListEl) return;
       const card = featuredListEl.querySelector(".featured-card");
-      const step = card ? card.getBoundingClientRect().width + 16 : 250;
-      featuredListEl.scrollBy({ left: direction * step, behavior: "smooth" });
+      const step = card ? card.offsetWidth + 16 : 260;
+      featuredListEl.scrollBy({ left: step * direction, behavior: "smooth" });
     }
     document.getElementById("scrollLeft").onclick = () => scrollFeatured(-1);
     document.getElementById("scrollRight").onclick = () => scrollFeatured(1);
@@ -1271,7 +1312,7 @@
     // Auto-scroll featured
     let autoScrollActive = true;
     function autoScroll() {
-      if (!autoScrollActive || !featuredListEl) return;
+      if (!autoScrollActive) return;
       featuredListEl.scrollBy({ left: 1, behavior: "smooth" });
       if (featuredListEl.scrollLeft + featuredListEl.clientWidth >= featuredListEl.scrollWidth - 1) {
         featuredListEl.scrollTo({ left: 0, behavior: "smooth" });
@@ -1281,63 +1322,72 @@
     ["mouseenter", "touchstart"].forEach(ev => featuredListEl.addEventListener(ev, () => autoScrollActive = false));
     ["mouseleave", "touchend"].forEach(ev => featuredListEl.addEventListener(ev, () => autoScrollActive = true));
 
-    // Search + suggestions
+    // Search: integrated with pagination + suggestions
     const searchEl = document.getElementById("searchInput");
-    const suggestionsBox = document.getElementById("searchSuggestions");
 
-    function clearSuggestions() {
-      suggestionsBox.innerHTML = "";
-      suggestionsBox.style.display = "none";
-    }
+    function updateSearchSuggestions(term) {
+      if (!searchSuggestionsEl) return;
+      term = term.trim().toLowerCase();
 
-    function updateSuggestions(term) {
-      suggestionsBox.innerHTML = "";
       if (!term) {
-        suggestionsBox.style.display = "none";
-        return;
-      }
-      const lower = term.toLowerCase();
-      const matches = books
-        .filter(b => (b.Title || "").toLowerCase().includes(lower))
-        .slice(0, 8);
-
-      if (!matches.length) {
-        suggestionsBox.style.display = "none";
+        searchSuggestionsEl.classList.add("hidden");
+        searchSuggestionsEl.innerHTML = "";
         return;
       }
 
-      matches.forEach(b => {
-        const item = document.createElement("div");
-        item.className = "search-suggestion-item";
-        item.textContent = b.Title;
-        item.addEventListener("mousedown", (e) => {
-          e.preventDefault();
-          searchEl.value = b.Title;
-          currentSearchTerm = b.Title.toLowerCase();
+      const suggestions = [];
+      for (const b of books) {
+        const title = (b.Title || "");
+        const author = (b.Author || "");
+        if (
+          title.toLowerCase().includes(term) ||
+          author.toLowerCase().includes(term)
+        ) {
+          suggestions.push({ title, author });
+        }
+        if (suggestions.length >= 8) break;
+      }
+
+      if (!suggestions.length) {
+        searchSuggestionsEl.classList.add("hidden");
+        searchSuggestionsEl.innerHTML = "";
+        return;
+      }
+
+      searchSuggestionsEl.innerHTML = "";
+      suggestions.forEach(s => {
+        const div = document.createElement("div");
+        div.className = "search-suggestion-item";
+        div.textContent = s.title || s.author || "";
+        div.onclick = () => {
+          searchEl.value = s.title || s.author || "";
+          currentSearchTerm = searchEl.value.toLowerCase();
           currentPage = 1;
           renderBooks();
-          clearSuggestions();
-        });
-        suggestionsBox.appendChild(item);
+          searchSuggestionsEl.classList.add("hidden");
+        };
+        searchSuggestionsEl.appendChild(div);
       });
-      suggestionsBox.style.display = "block";
+      searchSuggestionsEl.classList.remove("hidden");
     }
 
     searchEl.addEventListener("input", e => {
       currentSearchTerm = e.target.value.toLowerCase();
       currentPage = 1;
       renderBooks();
-      updateSuggestions(e.target.value);
+      updateSearchSuggestions(e.target.value);
     });
 
-    searchEl.addEventListener("focus", () => {
-      if (searchEl.value.trim()) {
-        updateSuggestions(searchEl.value.trim());
-      }
+    searchEl.addEventListener("focus", e => {
+      updateSearchSuggestions(e.target.value);
     });
 
     searchEl.addEventListener("blur", () => {
-      setTimeout(clearSuggestions, 120);
+      setTimeout(() => {
+        if (searchSuggestionsEl) {
+          searchSuggestionsEl.classList.add("hidden");
+        }
+      }, 200);
     });
 
     // Initial load
