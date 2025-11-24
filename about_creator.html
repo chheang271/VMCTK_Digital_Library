@@ -148,8 +148,9 @@
             >
               <img
                 src="vmctk-workshop-1.jpg"
+                data-full-image="vmctk-workshop-1.jpg"
                 alt="VMCTK activity 1"
-                class="w-full h-40 object-cover"
+                class="about-gallery-image w-full h-40 object-cover cursor-pointer transition-transform duration-200 hover:scale-[1.02]"
                 onerror="this.style.display='none';"
               />
               <figcaption
@@ -165,8 +166,9 @@
             >
               <img
                 src="vmctk-workshop-2.jpg"
+                data-full-image="vmctk-workshop-2.jpg"
                 alt="VMCTK activity 2"
-                class="w-full h-40 object-cover"
+                class="about-gallery-image w-full h-40 object-cover cursor-pointer transition-transform duration-200 hover:scale-[1.02]"
                 onerror="this.style.display='none';"
               />
               <figcaption
@@ -182,8 +184,9 @@
             >
               <img
                 src="vmctk-library-setup.jpg"
+                data-full-image="vmctk-library-setup.jpg"
                 alt="VMCTK library setup"
-                class="w-full h-40 object-cover"
+                class="about-gallery-image w-full h-40 object-cover cursor-pointer transition-transform duration-200 hover:scale-[1.02]"
                 onerror="this.style.display='none';"
               />
               <figcaption
@@ -219,6 +222,33 @@
         </section>
       </div>
     </main>
+
+    <!-- Image modal (lightbox) -->
+    <div
+      id="imageModal"
+      class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4"
+    >
+      <div class="relative max-w-3xl w-full">
+        <button
+          id="closeModalBtn"
+          type="button"
+          class="absolute -top-3 -right-3 bg-slate-900 text-slate-100 rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold shadow-lg hover:bg-red-600 focus:outline-none"
+          aria-label="Close"
+        >
+          ×
+        </button>
+        <img
+          id="modalImage"
+          src=""
+          alt=""
+          class="w-full h-auto rounded-lg shadow-2xl border border-slate-700 bg-slate-900 object-contain max-h-[80vh]"
+        />
+        <p
+          id="modalCaption"
+          class="mt-2 text-center text-sm text-slate-200"
+        ></p>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="border-t border-slate-800 bg-slate-950/90">
@@ -343,7 +373,7 @@
       setText("techItem2", t.techItem2);
       setText("techItem3", t.techItem3);
 
-      // Footer year
+      // Footer year (replace YEAR in template)
       const year = new Date().getFullYear();
       const footerText = t.footerText.replace("YEAR", year);
       setText("footerText", footerText);
@@ -375,6 +405,55 @@
       currentLang = "kh";
       localStorage.setItem("vmctk_lang", currentLang);
       applyLang();
+    });
+
+    // ----- Image modal (lightbox) logic -----
+    const imageModal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    const modalCaption = document.getElementById("modalCaption");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    function openImageModal(imgEl) {
+      if (!imageModal || !modalImage) return;
+      const fullSrc = imgEl.dataset.fullImage || imgEl.src;
+      modalImage.src = fullSrc;
+      modalImage.alt = imgEl.alt || "";
+      if (modalCaption) {
+        const figcaption = imgEl.parentElement.querySelector("figcaption");
+        modalCaption.textContent = figcaption ? figcaption.textContent : "";
+      }
+      imageModal.classList.remove("hidden");
+      imageModal.classList.add("flex");
+    }
+
+    function closeImageModal() {
+      if (!imageModal || !modalImage) return;
+      imageModal.classList.add("hidden");
+      imageModal.classList.remove("flex");
+      modalImage.src = "";
+    }
+
+    // Attach click handlers to gallery images
+    document.querySelectorAll(".about-gallery-image").forEach((img) => {
+      img.addEventListener("click", () => openImageModal(img));
+    });
+
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener("click", closeImageModal);
+    }
+
+    if (imageModal) {
+      imageModal.addEventListener("click", (e) => {
+        if (e.target === imageModal) {
+          closeImageModal();
+        }
+      });
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeImageModal();
+      }
     });
 
     // Initial load
